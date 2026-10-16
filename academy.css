@@ -11,3 +11,9 @@
 
 /* v0.17 */
 .plan-controls{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}.plan-controls select{min-height:42px;border-radius:8px;padding:8px}.note-card{padding:12px;margin:8px 0;border:1px solid rgba(255,255,255,.14);border-radius:10px}.note-card small{opacity:.7}.note-form{display:grid;gap:10px;margin:12px 0}.note-form textarea{width:100%;min-height:90px;padding:12px;border-radius:10px;background:#101b2c;color:white;border:1px solid #526174}
+
+/* v0.22 lesson taxonomy filters */
+.lesson-filter-bar{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0 20px}
+.lesson-filter-bar select{min-height:44px;padding:10px 14px;max-width:100%;background:#182b38;color:#f7f4eb;border:1px solid #a78a55;border-radius:10px;font:inherit}
+.lesson-filter-bar select:focus-visible{outline:3px solid #e5bb70;outline-offset:2px}
+@media(max-width:600px){.lesson-filter-bar select{flex:1 1 100%}}
