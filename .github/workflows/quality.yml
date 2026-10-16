@@ -26,6 +26,8 @@ jobs:
           python-version: '3.12'
       - name: Satranç motoru
         run: node tests/engine.test.js
+      - name: Premium tahta ve ses kontrolleri
+        run: node tests/board_premium.test.js
       - name: Mat pozisyonları
         run: node tests/puzzles.test.js
       - name: Ders çevirileri
