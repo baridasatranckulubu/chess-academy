@@ -45,6 +45,7 @@ jobs:
       - name: Tarayıcı regresyon testi (v0.22+)
         run: |
           if [ -f tests/browser_v22_qa.py ]; then
+            sed -i "s@executable_path='/usr/bin/chromium'@executable_path=None@g" tests/browser_v22_qa.py
             python tests/browser_v22_qa.py
           else
             echo "v0.22 tarayıcı testi henüz depoda yok; atlanıyor."
