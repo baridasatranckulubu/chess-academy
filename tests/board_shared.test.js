@@ -22,5 +22,5 @@ assert(css.includes('grid-template-columns:repeat(8,minmax(0,1fr))'));
 const academy=read('academy.js');
 assert(academy.includes("practiceFrame.src='board.html'"),'assignments board missing');
 assert(academy.includes("embedded('classroom.html'"),'classroom link missing');
-assert(academy.includes("embedded('puzzles.html'"),'tactics link missing');
+assert(academy.includes("embedded('puzzles.html?maxLevel='"),'tactics link missing');
 console.log('PASS: tactics, classroom, assignments and standalone boards have premium features');
