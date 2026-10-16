@@ -1,10 +1,10 @@
 {
   "source": "Lichess Open Database (CC0)",
   "source_url": "https://database.lichess.org/#puzzles",
-  "count": 4,
-  "scanned": 4,
+  "count": 32,
+  "scanned": 32,
   "shards": [
-    "part-0000.json"
+    "part-beginner.json", "part-0000.json"
   ],
   "schema": [
     "id",
