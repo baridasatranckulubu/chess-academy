@@ -56,5 +56,9 @@ jobs:
           else
             echo "v0.22 tarayıcı testi henüz depoda yok; atlanıyor."
           fi
+      - name: v0.23 klavye, ses, çeviri ve tekrar regresyonu
+        run: |
+          sed -i "s@executable_path='/usr/bin/chromium'@executable_path=None@g" tests/browser_v23_qa.py
+          python tests/browser_v23_qa.py
       - name: Statik site kaynak kontrolü
         run: python tools/check_site_assets.py
