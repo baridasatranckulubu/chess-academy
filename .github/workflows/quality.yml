@@ -1,0 +1,53 @@
+name: Chess Academy | Quality Gate
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Satranç motoru, dersler ve tarayıcı
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Kaynak kodunu al
+        uses: actions/checkout@v4
+      - name: Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Satranç motoru
+        run: node tests/engine.test.js
+      - name: Mat pozisyonları
+        run: node tests/puzzles.test.js
+      - name: Ders çevirileri
+        run: node tools/check-i18n.js --strict
+      - name: Müfredat doğrulaması (v0.22+)
+        run: |
+          if [ -f tests/curriculum_v22.test.js ]; then
+            node tests/curriculum_v22.test.js
+          else
+            echo "v0.22 müfredat testi henüz depoda yok; atlanıyor."
+          fi
+      - name: Chromium ve Python bağımlılıkları
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install playwright beautifulsoup4
+          python -m playwright install --with-deps chromium
+      - name: Tarayıcı regresyon testi (v0.22+)
+        run: |
+          if [ -f tests/browser_v22_qa.py ]; then
+            python tests/browser_v22_qa.py
+          else
+            echo "v0.22 tarayıcı testi henüz depoda yok; atlanıyor."
+          fi
+      - name: Statik site kaynak kontrolü
+        run: python tools/check_site_assets.py
