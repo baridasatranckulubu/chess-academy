@@ -26,7 +26,7 @@ window.ChessAcademyBeginnerMissions=missions.map(m=>({...m}));
 const params=new URLSearchParams(location.search),student=/^(deniz|ece|mert)$/.test(params.get('student')||'')?params.get('student'):'guest';
 const KEY='chess-academy-beginner-v2:'+student;
 let completed=[];try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');if(Array.isArray(x))completed=x.filter(id=>missions.some(m=>m.id===id)).filter((id,i,a)=>a.indexOf(id)===i)}catch{}
-let index=0,game=null,mission=null,flipped=false,locked=false,timer=null;
+let index=0,game=null,mission=null,flipped=false,locked=false,selected=false,timer=null;
 const premium=window.ChessPremiumBoard.init({boardId:'board'});
 premium.flipButton.onclick=()=>premium.flip(()=>{flipped=!flipped;draw()});
 function xp(){return completed.length*20}
@@ -34,13 +34,13 @@ function sync(){try{localStorage.setItem(KEY,JSON.stringify(completed))}catch{}
  if(window.parent!==window)try{window.parent.postMessage({type:'chess-academy-beginner-xp',student,xp:xp()},location.origin)}catch{}
 }
 function menu(){const box=$('piece-menu');box.replaceChildren();pieces.forEach(([id,name],i)=>{const n=completed.filter(x=>x.startsWith(id)).length,b=document.createElement('button');b.type='button';b.textContent=icons[id]+' '+name+' '+n+'/3';b.className=index===i?'active':'';b.setAttribute('aria-pressed',String(index===i));b.onclick=()=>{index=i;setup()};box.append(b)});$('xp').textContent='Toplam XP: '+xp()+' / 360 · Tamamlanan görev: '+completed.length+'/18 · Profil: '+student}
-function setup(){clearTimeout(timer);locked=false;const id=pieces[index][0],list=missions.filter(m=>m.piece===id);mission=list.find(m=>!completed.includes(m.id))||list[0];try{game=new Engine(mission.fen)}catch(err){$('status').textContent='Görev açılamadı: '+err.message;return}
+function setup(){clearTimeout(timer);locked=false;selected=false;const id=pieces[index][0],list=missions.filter(m=>m.piece===id);mission=list.find(m=>!completed.includes(m.id))||list[0];try{game=new Engine(mission.fen)}catch(err){$('status').textContent='Görev açılamadı: '+err.message;return}
  const valid=game.moves({square:mission.from}).some(m=>m.to===mission.to);if(!valid){$('status').textContent='Bu görev geçerli değil.';return}
  $('piece-title').textContent=icons[id]+' '+pieces[index][1];$('explain').textContent=pieces[index][2]+' '+mission.tip;
  $('mission').textContent='Görev '+(list.indexOf(mission)+1)+'/3: '+mission.from+' → '+mission.to;
  $('status').className='';$('status').textContent=completed.includes(mission.id)?'Bu taşı tamamladın! Tekrar çalışabilirsin.':'Taşa dokun, sonra hedef kareye git.';menu();draw()}
 function draw(){if(!game)return;premium.coordinates(flipped);const board=$('board');board.replaceChildren();for(let i=0;i<64;i++){const n=flipped?63-i:i,sq='abcdefgh'[n%8]+(8-Math.floor(n/8)),p=game.at(sq),b=document.createElement('button');b.type='button';b.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(sq===mission.to?' target':'');b.setAttribute('aria-label',sq+(p?' '+p:''));b.dataset.square=sq;if(p)b.innerHTML=premium.pieceSVG(icons[p.toUpperCase()]||'',p);b.onclick=()=>attempt(sq);board.append(b)}}
-function attempt(sq){if(locked||!game)return;if(sq===mission.from){$('status').textContent='Şimdi '+mission.to+' karesini seç.';return}
+function attempt(sq){if(locked||!game)return;if(sq===mission.from){selected=true;$('status').textContent='Şimdi '+mission.to+' karesini seç.';return}if(!selected){$('status').textContent='Önce '+mission.from+' karesindeki taşı seç.';return}
  if(sq!==mission.to){$('status').className='';$('status').textContent='Bu hedef değil. '+mission.tip+' Hedef: '+mission.to;return}
  const move=game.move(mission.from,sq);if(!move){$('status').textContent='Kurallara aykırı hamle. Tekrar dene.';return}
  locked=true;const first=!completed.includes(mission.id);if(first){completed.push(mission.id);sync()}
