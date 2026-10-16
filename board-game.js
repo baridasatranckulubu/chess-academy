@@ -26,7 +26,7 @@ function sound(type){
    og.gain.exponentialRampToValueAtTime(.0001,t+delay+.075);
    osc.connect(og);og.connect(ctx.destination);osc.start(t+delay);osc.stop(t+delay+.08);
   };
-  if(type==='capture'){strike(0,165,2100,.29);strike(.055,115,1100,.21)}
+  if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,165,2100,.29);strike(.055,115,1100,.21)}
   else if(type==='mate'){strike(0,175,1800,.28);strike(.11,140,1400,.25);strike(.25,105,1050,.28)}
   else if(type==='check'){strike(0,195,2300,.23);strike(.085,170,1700,.15)}
   else{strike(0,240,2600,.20);strike(.052,175,1600,.13)}
@@ -128,26 +128,7 @@ function startMate(){cancelAdvance();mode='mate';challenge=0;game.load(puzzles[c
 function nextMate(){cancelAdvance();challenge=(challenge+1)%puzzles.length;game.load(puzzles[challenge].fen);selected=null;lastMove=null;announce(w().puzzle+' '+(challenge+1)+'/'+puzzles.length);renderBoard();}
 $('resetBoard').onclick=()=>{cancelAdvance();mode='free';game.load(window.ChessAcademyEngine.START);selected=null;lastMove=null;announce(boardStatus());renderBoard();};
 $('undoMove').onclick=()=>{if(mode!=='free')return;game.undo();selected=null;lastMove=null;announce(boardStatus());renderBoard();};
-$('flipBoard').onclick=()=>{
- const root=$('board'),frame=root.closest('.chess-board-frame');
- if(flipBusy)return;
- const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
- if(reduce){flipped=!flipped;renderBoard();return}
- flipBusy=true;$('flipBoard').disabled=true;
- const duration=620,half=duration/2;
- frame?.classList.add('board-is-flipping');
- root.classList.add('premium-flip-out');
- setTimeout(()=>{
-  flipped=!flipped;renderBoard();
-  root.classList.remove('premium-flip-out');root.classList.add('premium-flip-in');
-  requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove('premium-flip-in')));
- },half);
- setTimeout(()=>{
-  root.classList.remove('premium-flip-out','premium-flip-in');
-  frame?.classList.remove('board-is-flipping');
-  flipBusy=false;$('flipBoard').disabled=false;
- },duration+90);
-};$('mateMode').onclick=startMate;$('nextMate').onclick=nextMate;
+$('flipBoard').onclick=()=>{const root=$('board');if(flipBusy)return;const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;const finish=()=>{flipped=!flipped;renderBoard()};sound('flip');if(reduce){finish();return}flipBusy=true;$('flipBoard').disabled=true;root.classList.remove('ca-standalone-spin');void root.offsetWidth;root.classList.add('ca-standalone-spin');setTimeout(finish,390);setTimeout(()=>{root.classList.remove('ca-standalone-spin');flipBusy=false;$('flipBoard').disabled=false},820)};$('mateMode').onclick=startMate;$('nextMate').onclick=nextMate;
 const lessonsKey='academy-v04-lessons';let lessons=[];try{const v=JSON.parse(AcademyStorage.getItem(lessonsKey)||'[]');if(Array.isArray(v))lessons=v.filter(x=>Number.isInteger(x)&&x>=0&&x<6);}catch{}
 function updateLearning(){const target=$('lessonProgress'),parent=$('parentLive');if(target)target.textContent=`${w().course}: ${lessons.length}/6 · ${w().progress}: ${solved.size}/${puzzles.length}`;if(parent)parent.textContent=w().live+` · ${lessons.length}/6 · ${solved.size}/${puzzles.length}`;}
 function decorateLessons(){document.querySelectorAll('#courseCards .lessonitem').forEach((card,i)=>{const button=document.createElement('button');button.type='button';button.className='btn lessonButton';button.textContent=lessons.includes(i)?'✓ '+w().done:w().lesson;button.setAttribute('aria-pressed',String(lessons.includes(i)));button.onclick=()=>{if(!lessons.includes(i))lessons.push(i);else lessons=lessons.filter(n=>n!==i);try{AcademyStorage.setItem(lessonsKey,JSON.stringify(lessons));}catch{}decorateLessons();updateLearning();};const old=card.querySelector('.lessonButton');if(old)old.remove();card.append(button);});}
