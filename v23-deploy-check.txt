@@ -1,0 +1,1 @@
+Chess Academy v0.23 deployment check.
