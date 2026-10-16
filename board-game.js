@@ -10,20 +10,27 @@ function sound(type){
  if(!soundEnabled)return;
  try{
   const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-  audioContext=audioContext||new AC();
-  if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
-  const now=audioContext.currentTime;
-  const tones=type==='mate'?[[440,.00,.13],[554,.14,.14],[659,.28,.20]]:type==='capture'?[[190,0,.07],[115,.055,.10]]:type==='check'?[[480,0,.075],[360,.08,.09]]:[[310,0,.038],[230,.045,.055]];
-  for(const [freq,offset,duration] of tones){
-   const osc=audioContext.createOscillator(),gain=audioContext.createGain();
-   osc.type=type==='mate'?'sine':'triangle';osc.frequency.setValueAtTime(freq,now+offset);
-   if(type==='capture')osc.frequency.exponentialRampToValueAtTime(Math.max(60,freq*.65),now+offset+duration);
-   gain.gain.setValueAtTime(.0001,now+offset);
-   gain.gain.exponentialRampToValueAtTime(type==='mate'?.075:.045,now+offset+.008);
-   gain.gain.exponentialRampToValueAtTime(.0001,now+offset+duration);
-   osc.connect(gain);gain.connect(audioContext.destination);osc.start(now+offset);osc.stop(now+offset+duration+.01);
-  }
- }catch(e){/* Audio is an optional enhancement. */}
+  audioContext=audioContext||new AC();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+  const ctx=audioContext,t=ctx.currentTime,rate=ctx.sampleRate;
+  // Short filtered wood-on-wood transient, not a musical beep.
+  const strike=(delay,body,brightness,volume)=>{
+   const duration=.115,len=Math.ceil(rate*duration),buffer=ctx.createBuffer(1,len,rate),data=buffer.getChannelData(0);
+   let low=0;for(let i=0;i<len;i++){const sec=i/rate,env=Math.exp(-sec*48);low=low*.72+(Math.random()*2-1)*.28;data[i]=low*env}
+   const src=ctx.createBufferSource();src.buffer=buffer;
+   const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=brightness;
+   const gain=ctx.createGain();gain.gain.value=volume;
+   src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);
+   src.start(t+delay);src.stop(t+delay+duration);
+   const osc=ctx.createOscillator(),og=ctx.createGain();osc.type='sine';osc.frequency.value=body;
+   og.gain.setValueAtTime(.0001,t+delay);og.gain.exponentialRampToValueAtTime(volume*.25,t+delay+.003);
+   og.gain.exponentialRampToValueAtTime(.0001,t+delay+.075);
+   osc.connect(og);og.connect(ctx.destination);osc.start(t+delay);osc.stop(t+delay+.08);
+  };
+  if(type==='capture'){strike(0,165,2100,.29);strike(.055,115,1100,.21)}
+  else if(type==='mate'){strike(0,175,1800,.28);strike(.11,140,1400,.25);strike(.25,105,1050,.28)}
+  else if(type==='check'){strike(0,195,2300,.23);strike(.085,170,1700,.15)}
+  else{strike(0,240,2600,.20);strike(.052,175,1600,.13)}
+ }catch(e){/* Sound is optional. */}
 }
 function setupBoardFrame(){
  const board=boardRoot;if(!board||board.closest('.chess-board-frame'))return;
@@ -35,8 +42,8 @@ function setupBoardFrame(){
  const toggle=document.createElement('button');toggle.type='button';toggle.className='btn chess-sound-toggle';
  toggle.setAttribute('aria-label','Toggle chess sound effects');
  toggle.onclick=()=>{soundEnabled=!soundEnabled;try{AcademyStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}updateSoundToggle();if(soundEnabled)sound('move')};
- frame.append(toggle);
- function updateSoundToggle(){toggle.textContent=soundEnabled?'🔊 Ses: Açık':'🔇 Ses: Kapalı';toggle.setAttribute('aria-pressed',String(soundEnabled))}
+ frame.append(toggle);const controls=document.getElementById('flipBoard')?.parentElement;if(controls)controls.append(toggle);
+ function updateSoundToggle(){toggle.textContent=soundEnabled?'🔊 Ses açık':'🔇 Ses kapalı';toggle.setAttribute('aria-pressed',String(soundEnabled))}
  updateSoundToggle();
  window.ChessAcademyBoardFrame={updateCoordinates:()=>{
   files.replaceChildren();ranks.replaceChildren();
