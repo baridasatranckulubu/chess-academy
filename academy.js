@@ -20,7 +20,7 @@ function studentData(id){if(!store.students[id])store.students[id]=emptyStudent(
 function persist(){try{localStorage.setItem(storageKey,JSON.stringify(store))}catch{}}
 function syncStudent(){data=studentData(activeStudent)}
 function addSeconds(){if(role==='student'&&sessionStart){const n=Math.max(0,Math.min(300,Math.floor((Date.now()-sessionStart)/1000)));studentData(activeStudent).seconds+=n;sessionStart=Date.now();persist()}}
-function studentXP(d){return (d.completed?.length||0)*50+(d.correct||0)*10+Math.min(500,Math.floor((d.seconds||0)/60)*2)}
+function studentXP(d){return (d.beginnerXP||0)+(d.completed?.length||0)*50+(d.correct||0)*10+Math.min(500,Math.floor((d.seconds||0)/60)*2)}
 function studentLevel(d){return d.levelOverride==null?Math.min(20,1+Math.floor(studentXP(d)/250)):Math.max(1,Math.min(20,Number(d.levelOverride)||1))}
 function duration(sec){const m=Math.floor((sec||0)/60);return m>=60?Math.floor(m/60)+' sa '+m%60+' dk':m+' dk'}
 function currentName(){return roster.find(x=>x.id===activeStudent)?.name||'Öğrenci'}
@@ -30,6 +30,7 @@ let data=studentData(activeStudent);function save(){persist()}
 const t=i=>words[lang][i],name=i=>lx(i).title;
 function node(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
 function button(text,cb,cls='btn'){const b=node('button',cls,text);b.type='button';b.onclick=cb;return b}
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!=='chess-academy-beginner-xp'||role!=='student'||section!=='beginner')return;const n=Number(e.data.xp);if(!Number.isInteger(n)||n<0||n>360)return;data.beginnerXP=Math.max(data.beginnerXP||0,n);persist()});
 function showSection(s){section=s;render()}
 function login(r){role=r;sessionStart=r==='student'?Date.now():0;syncStudent();section=r==='teacher'?'students':'courses';$('entry').hidden=true;$('app').hidden=false;render()}
 function logout(){addSeconds();sessionStart=0;role='';$('entry').hidden=false;$('app').hidden=true;renderEntry()}
