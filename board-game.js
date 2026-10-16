@@ -3,6 +3,51 @@
 'use strict';
 const {ChessEngine}=window.ChessAcademyEngine;
 const game=new ChessEngine();let selected=null,flipped=false,mode='free',challenge=0,solved=new Set(),advanceTimer=null;
+const boardRoot=document.getElementById('board');
+let soundEnabled=true,audioContext=null,lastMove=null,flipBusy=false;
+try{soundEnabled=AcademyStorage.getItem('chess-academy-sound')!=='off'}catch{}
+function sound(type){
+ if(!soundEnabled)return;
+ try{
+  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+  audioContext=audioContext||new AC();
+  if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
+  const now=audioContext.currentTime;
+  const tones=type==='mate'?[[440,.00,.13],[554,.14,.14],[659,.28,.20]]:type==='capture'?[[190,0,.07],[115,.055,.10]]:type==='check'?[[480,0,.075],[360,.08,.09]]:[[310,0,.038],[230,.045,.055]];
+  for(const [freq,offset,duration] of tones){
+   const osc=audioContext.createOscillator(),gain=audioContext.createGain();
+   osc.type=type==='mate'?'sine':'triangle';osc.frequency.setValueAtTime(freq,now+offset);
+   if(type==='capture')osc.frequency.exponentialRampToValueAtTime(Math.max(60,freq*.65),now+offset+duration);
+   gain.gain.setValueAtTime(.0001,now+offset);
+   gain.gain.exponentialRampToValueAtTime(type==='mate'?.075:.045,now+offset+.008);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+offset+duration);
+   osc.connect(gain);gain.connect(audioContext.destination);osc.start(now+offset);osc.stop(now+offset+duration+.01);
+  }
+ }catch(e){/* Audio is an optional enhancement. */}
+}
+function setupBoardFrame(){
+ const board=boardRoot;if(!board||board.closest('.chess-board-frame'))return;
+ const frame=document.createElement('div');frame.className='chess-board-frame';
+ const wrap=document.createElement('div');wrap.className='chess-board-wrap';
+ const files=document.createElement('div');files.className='chess-board-files';
+ const ranks=document.createElement('div');ranks.className='chess-board-ranks';
+ frame.append(wrap);board.parentNode.insertBefore(frame,board);wrap.append(board,files,ranks);
+ const toggle=document.createElement('button');toggle.type='button';toggle.className='btn chess-sound-toggle';
+ toggle.setAttribute('aria-label','Toggle chess sound effects');
+ toggle.onclick=()=>{soundEnabled=!soundEnabled;try{AcademyStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}updateSoundToggle();if(soundEnabled)sound('move')};
+ frame.append(toggle);
+ function updateSoundToggle(){toggle.textContent=soundEnabled?'🔊 Ses: Açık':'🔇 Ses: Kapalı';toggle.setAttribute('aria-pressed',String(soundEnabled))}
+ updateSoundToggle();
+ window.ChessAcademyBoardFrame={updateCoordinates:()=>{
+  files.replaceChildren();ranks.replaceChildren();
+  const letters='abcdefgh'.split('');if(flipped)letters.reverse();
+  for(const l of letters){const n=document.createElement('span');n.textContent=l;files.append(n)}
+  const nums=flipped?[1,2,3,4,5,6,7,8]:[8,7,6,5,4,3,2,1];
+  for(const n of nums){const el=document.createElement('span');el.textContent=n;ranks.append(el)}
+ }};
+ window.ChessAcademyBoardFrame.updateCoordinates();
+}
+setupBoardFrame();
 
 const unicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 // Self-contained vector pieces with metallic / porcelain highlights. No external assets.
@@ -38,7 +83,7 @@ const words={
 const $=id=>document.getElementById(id);const w=()=>words[language]||words.en;
 function announce(message){$('boardNote').textContent=message;}
 function boardStatus(){if(game.isCheckmate())return w().mate+' '+(game.turn==='w'?w().black:w().white);if(game.isStalemate())return w().stalemate;if(game.isDraw())return w().draw;return w().move+': '+(game.turn==='w'?w().white:w().black)+(game.isCheck()?' · '+w().check:'');}
-function renderBoard(){const root=$('board');root.replaceChildren();const valid=selected?new Set(game.moves({square:selected}).map(x=>x.to)):new Set();const squares=Array.from({length:64},(_,i)=>i);if(flipped)squares.reverse();for(const i of squares){const name=window.ChessAcademyEngine.squareName(i),piece=game.at(i),btn=document.createElement('button');btn.type='button';btn.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(selected===name?' selected':'')+(valid.has(name)?' target':'');if(piece)btn.innerHTML=pieceSVG(unicode[piece],piece);if(i%8===7||Math.floor(i/8)===7){const coord=document.createElement('span');coord.className='coordinate';coord.textContent=i%8===7?String(8-Math.floor(i/8)):String.fromCharCode(97+i%8);btn.append(coord);}btn.setAttribute('aria-label',name+' '+(piece||'empty')+(valid.has(name)?' legal target':''));btn.setAttribute('aria-pressed',String(selected===name));btn.dataset.square=name;btn.onclick=()=>{if(performedDrag){performedDrag=false;return;}handleSquare(name);};root.append(btn);}const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`;}
+function renderBoard(){const root=$('board');root.replaceChildren();window.ChessAcademyBoardFrame?.updateCoordinates();const valid=selected?new Set(game.moves({square:selected}).map(x=>x.to)):new Set();const squares=Array.from({length:64},(_,i)=>i);if(flipped)squares.reverse();for(const i of squares){const name=window.ChessAcademyEngine.squareName(i),piece=game.at(i),btn=document.createElement('button');btn.type='button';btn.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(selected===name?' selected':'')+(valid.has(name)?' target':'');if(piece)btn.innerHTML=pieceSVG(unicode[piece],piece);if(lastMove&&(lastMove.from===name||lastMove.to===name))btn.classList.add('last-move');btn.setAttribute('aria-label',name+' '+(piece||'empty')+(valid.has(name)?' legal target':''));btn.setAttribute('aria-pressed',String(selected===name));btn.dataset.square=name;btn.onclick=()=>{if(performedDrag){performedDrag=false;return;}handleSquare(name);};root.append(btn);}const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`;}
 // Pointer interactions: the entire 64-cell square is a touch target, not the visible piece.
 // Tap a piece then its highlighted destination, or press and drag to the destination.
 let performedDrag=false;
@@ -69,21 +114,32 @@ boardEl.addEventListener('pointerup',event=>{
  handleSquare(to.dataset.square);
 });
 boardEl.addEventListener('pointercancel',()=>{dragOrigin=null;dragPointer=null;});
-function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
+function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};sound(game.isCheckmate()?'mate':game.isCheck()?'check':move.capture||move.enPassant?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
-function startMate(){cancelAdvance();mode='mate';challenge=0;game.load(puzzles[challenge].fen);selected=null;announce(w().puzzle);renderBoard();}
-function nextMate(){cancelAdvance();challenge=(challenge+1)%puzzles.length;game.load(puzzles[challenge].fen);selected=null;announce(w().puzzle+' '+(challenge+1)+'/'+puzzles.length);renderBoard();}
-$('resetBoard').onclick=()=>{cancelAdvance();mode='free';game.load(window.ChessAcademyEngine.START);selected=null;announce(boardStatus());renderBoard();};
-$('undoMove').onclick=()=>{if(mode!=='free')return;game.undo();selected=null;announce(boardStatus());renderBoard();};
+function startMate(){cancelAdvance();mode='mate';challenge=0;game.load(puzzles[challenge].fen);selected=null;lastMove=null;announce(w().puzzle);renderBoard();}
+function nextMate(){cancelAdvance();challenge=(challenge+1)%puzzles.length;game.load(puzzles[challenge].fen);selected=null;lastMove=null;announce(w().puzzle+' '+(challenge+1)+'/'+puzzles.length);renderBoard();}
+$('resetBoard').onclick=()=>{cancelAdvance();mode='free';game.load(window.ChessAcademyEngine.START);selected=null;lastMove=null;announce(boardStatus());renderBoard();};
+$('undoMove').onclick=()=>{if(mode!=='free')return;game.undo();selected=null;lastMove=null;announce(boardStatus());renderBoard();};
 $('flipBoard').onclick=()=>{
- const root=$('board');
- if(root.classList.contains('flip-animating'))return;
- if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){flipped=!flipped;renderBoard();return;}
- root.classList.add('flip-animating');
- root.classList.add('flip-out');
- setTimeout(()=>{flipped=!flipped;renderBoard();root.classList.remove('flip-out');root.classList.add('flip-in');requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove('flip-in')));},230);
- setTimeout(()=>root.classList.remove('flip-animating'),560);
+ const root=$('board'),frame=root.closest('.chess-board-frame');
+ if(flipBusy)return;
+ const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+ if(reduce){flipped=!flipped;renderBoard();return}
+ flipBusy=true;$('flipBoard').disabled=true;
+ const duration=620,half=duration/2;
+ frame?.classList.add('board-is-flipping');
+ root.classList.add('premium-flip-out');
+ setTimeout(()=>{
+  flipped=!flipped;renderBoard();
+  root.classList.remove('premium-flip-out');root.classList.add('premium-flip-in');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>root.classList.remove('premium-flip-in')));
+ },half);
+ setTimeout(()=>{
+  root.classList.remove('premium-flip-out','premium-flip-in');
+  frame?.classList.remove('board-is-flipping');
+  flipBusy=false;$('flipBoard').disabled=false;
+ },duration+90);
 };$('mateMode').onclick=startMate;$('nextMate').onclick=nextMate;
 const lessonsKey='academy-v04-lessons';let lessons=[];try{const v=JSON.parse(AcademyStorage.getItem(lessonsKey)||'[]');if(Array.isArray(v))lessons=v.filter(x=>Number.isInteger(x)&&x>=0&&x<6);}catch{}
 function updateLearning(){const target=$('lessonProgress'),parent=$('parentLive');if(target)target.textContent=`${w().course}: ${lessons.length}/6 · ${w().progress}: ${solved.size}/${puzzles.length}`;if(parent)parent.textContent=w().live+` · ${lessons.length}/6 · ${solved.size}/${puzzles.length}`;}
