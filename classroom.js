@@ -37,10 +37,10 @@ async function analyzePosition(){
  try{
   let result=cloudCache.get(fen);
   if(!result){
-   const response=await fetch('https://lichess.org/api/cloud-eval?'+new URLSearchParams({fen,multiPv:'3',variant:'standard'}),{headers:{Accept:'application/json'}});
+   const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),9000);let response;try{response=await fetch('https://lichess.org/api/cloud-eval?'+new URLSearchParams({fen,multiPv:'3',variant:'standard'}),{headers:{Accept:'application/json'},signal:controller.signal})}finally{clearTimeout(timeout)}
    if(serial!==requestSerial)return;
    if(response.status===404){$('suggestion-status').textContent='Bu pozisyon için Lichess bulut analizi yok. “Lichess ile analiz et” düğmesinden Stockfish çalıştırabilirsiniz.';return}
-   if(response.status===429){autoAnalysis=false;$('auto-hints').checked=false;$('suggestion-status').textContent='Lichess istek sınırına ulaşıldı. Otomatik sorgular durduruldu.';return}
+   if(response.status===429){$('suggestion-status').textContent='Lichess istek sınırına ulaşıldı. Biraz sonra yeniden deneyin.';return}
    if(!response.ok)throw Error('HTTP '+response.status);
    result=await response.json();cloudCache.set(fen,result);
   }
