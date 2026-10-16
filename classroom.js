@@ -7,12 +7,26 @@ let suggestion=null,requestSerial=0,requestTimer=null,cloudCache=new Map(),autoA
 function boardCoords(sq){const f=sq.charCodeAt(0)-97,r=Number(sq[1])-1;return {x:(flipped?7-f:f)*12.5+6.25,y:(flipped?r:7-r)*12.5+6.25}}
 function drawSuggestion(){
  const layer=$('hint-layer');layer.replaceChildren();if(!suggestion)return;
- const ns='http://www.w3.org/2000/svg',defs=document.createElementNS(ns,'defs'),marker=document.createElementNS(ns,'marker'),path=document.createElementNS(ns,'path');
- for(const [k,v] of Object.entries({id:'hint-arrow-head',markerWidth:'4',markerHeight:'4',refX:'2',refY:'2',orient:'auto'}))marker.setAttribute(k,v);
- path.setAttribute('d','M0 0 L4 2 L0 4 Z');path.setAttribute('fill','#38e8bb');marker.append(path);defs.append(marker);layer.append(defs);
- const a=boardCoords(suggestion.uci.slice(0,2)),b=boardCoords(suggestion.uci.slice(2,4));
- const svgNS='http://www.w3.org/2000/svg';
- const line=document.createElementNS(svgNS,'line');for(const [k,v] of Object.entries({x1:a.x,y1:a.y,x2:b.x,y2:b.y,stroke:'#38e8bb','stroke-width':'3.5','stroke-linecap':'round',opacity:'.72','marker-end':'url(#hint-arrow-head)'}))line.setAttribute(k,v);layer.append(line);
+ const board=$('board'),from=suggestion.uci.slice(0,2),to=suggestion.uci.slice(2,4);
+ const squares=board.querySelectorAll('.sq');let a=null,b=null;
+ for(const el of squares){if(el.dataset.square===from)a=el;if(el.dataset.square===to)b=el}
+ if(!a||!b)return;
+ // Measure actual rendered square centers, including borders, rotation and scaling.
+ const rect=layer.getBoundingClientRect(),ra=a.getBoundingClientRect(),rb=b.getBoundingClientRect();
+ if(!rect.width||!rect.height)return;
+ const x1=ra.left+ra.width/2-rect.left,y1=ra.top+ra.height/2-rect.top;
+ const x2=rb.left+rb.width/2-rect.left,y2=rb.top+rb.height/2-rect.top;
+ const dx=x2-x1,dy=y2-y1,length=Math.hypot(dx,dy);if(length<1)return;
+ const inset=Math.min(ra.width,ra.height)*.2,stop=Math.min(rb.width,rb.height)*.3;
+ const sx=x1+dx/length*inset,sy=y1+dy/length*inset,ex=x2-dx/length*stop,ey=y2-dy/length*stop;
+ const ns='http://www.w3.org/2000/svg';layer.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
+ const defs=document.createElementNS(ns,'defs'),marker=document.createElementNS(ns,'marker');
+ for(const [k,v] of Object.entries({id:'hint-arrow-head',markerWidth:'5',markerHeight:'5',refX:'3',refY:'2.5',orient:'auto',markerUnits:'userSpaceOnUse'}))marker.setAttribute(k,v);
+ const head=document.createElementNS(ns,'path');head.setAttribute('d','M0 0 L4 2.5 L0 5 Z');head.setAttribute('fill','#ffffff');head.setAttribute('fill-opacity','.72');
+ marker.append(head);defs.append(marker);layer.append(defs);
+ const line=document.createElementNS(ns,'line');
+ for(const [k,v] of Object.entries({x1:sx,y1:sy,x2:ex,y2:ey,stroke:'#ffffff','stroke-width':'2.2','stroke-linecap':'round',opacity:'.72','marker-end':'url(#hint-arrow-head)'}))line.setAttribute(k,v);
+ layer.append(line);
 }
 async function analyzePosition(){
  const serial=++requestSerial;clearTimeout(requestTimer);suggestion=null;drawSuggestion();
@@ -45,7 +59,7 @@ function fresh(){return new ChessEngine(START)}
 function replay(limit){const e=fresh();for(let i=0;i<limit;i++){const u=all[i];if(!e.move(u.slice(0,2),u.slice(2,4),u[4]||'q'))throw Error('Geçersiz kayıt: '+u)}return e}
 function persist(){try{localStorage.setItem(KEY,JSON.stringify({moves:all,note,updated:new Date().toISOString()}))}catch(e){$('status').textContent='Kaydetme başarısız: '+e.message}}
 function load(){try{const d=JSON.parse(localStorage.getItem(KEY)||'{}');if(!Array.isArray(d.moves))return;const candidate=d.moves;const e=fresh();for(const u of candidate){if(typeof u!=='string'||!/^[a-h][1-8][a-h][1-8][qrbn]?$/.test(u)||!e.move(u.slice(0,2),u.slice(2,4),u[4]||'q'))return}all=candidate;cursor=all.length;note=String(d.note||'').slice(0,5000)}catch{}}
-function render(){premium?.coordinates(flipped);const e=replay(cursor);$('board').replaceChildren();for(let r=0;r<8;r++)for(let c=0;c<8;c++){const file=flipped?7-c:c,rank=flipped?r:7-r,sq=String.fromCharCode(97+file)+(rank+1),piece=e.at(sq);const b=document.createElement('button');b.type='button';b.className='sq '+((r+c)%2?'dark':'light')+(selected===sq?' selected':'');b.title=sq+(piece?' '+piece:'');b.setAttribute('aria-label',sq+(piece?' '+piece:''));b.textContent=symbols[piece]||'';b.onclick=()=>clickSquare(sq);$('board').append(b)}drawSuggestion();
+function render(){premium?.coordinates(flipped);const e=replay(cursor);$('board').replaceChildren();for(let r=0;r<8;r++)for(let c=0;c<8;c++){const file=flipped?7-c:c,rank=flipped?r:7-r,sq=String.fromCharCode(97+file)+(rank+1),piece=e.at(sq);const b=document.createElement('button');b.type='button';b.className='sq '+((r+c)%2?'dark':'light')+(selected===sq?' selected':'');b.dataset.square=sq;b.title=sq+(piece?' '+piece:'');b.setAttribute('aria-label',sq+(piece?' '+piece:''));if(piece)b.innerHTML=window.ChessPremiumBoard.pieceSVG(symbols[piece],piece);b.onclick=()=>clickSquare(sq);$('board').append(b)}drawSuggestion();
 $('moves').replaceChildren();const start=document.createElement('button');start.className='move'+(cursor===0?' active':'');start.textContent='Başlangıç';start.onclick=()=>jump(0);$('moves').append(start);all.forEach((u,i)=>{const b=document.createElement('button');b.className='move'+(cursor===i+1?' active':'');b.textContent=(Math.floor(i/2)+1)+(i%2?'... ':'. ')+u;b.onclick=()=>jump(i+1);$('moves').append(b)});$('summary').textContent=all.length+' yarım hamle kaydedildi · '+(e.turn==='w'?'Beyaz':'Siyah')+' oynayacak';$('saved-note').textContent=note||'Henüz not eklenmedi.';$('note').value=note;if(e.isCheckmate())$('status').textContent='Şah mat';else if(e.isDraw())$('status').textContent='Beraberlik pozisyonu';else $('status').textContent=e.isCheck()?'Şah çekildi':(e.turn==='w'?'Beyaz':'Siyah')+' hamlede'}
 function jump(n){cursor=n;selected=null;render();scheduleAnalysis()}
 function clickSquare(sq){const e=replay(cursor);if(selected){const capture=!!e.at(sq);const u=e.move(selected,sq);if(u){premium?.play(e.isCheckmate()?'mate':e.isCheck()?'check':capture||u.enPassant?'capture':'move');all=all.slice(0,cursor);all.push(u.uci);cursor=all.length;selected=null;persist();render();scheduleAnalysis();return}}selected=e.at(sq)&&((e.turn==='w')===(e.at(sq)===e.at(sq).toUpperCase()))?sq:null;render()}
