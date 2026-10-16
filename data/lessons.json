@@ -1,290 +1,290 @@
 [
- {
-  "id": "L001",
-  "order": 1,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L002",
-  "order": 2,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L003",
-  "order": 3,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L004",
-  "order": 4,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L005",
-  "order": 5,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L006",
-  "order": 6,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L007",
-  "order": 7,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L008",
-  "order": 8,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L009",
-  "order": 9,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L010",
-  "order": 10,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L011",
-  "order": 11,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L012",
-  "order": 12,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L013",
-  "order": 13,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L014",
-  "order": 14,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L015",
-  "order": 15,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L016",
-  "order": 16,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L017",
-  "order": 17,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L018",
-  "order": 18,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L019",
-  "order": 19,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L020",
-  "order": 20,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L021",
-  "order": 21,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L022",
-  "order": 22,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L023",
-  "order": 23,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L024",
-  "order": 24,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L025",
-  "order": 25,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L026",
-  "order": 26,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L027",
-  "order": 27,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L028",
-  "order": 28,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L029",
-  "order": 29,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L030",
-  "order": 30,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L031",
-  "order": 31,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L032",
-  "order": 32,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L033",
-  "order": 33,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L034",
-  "order": 34,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L035",
-  "order": 35,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L036",
-  "order": 36,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L037",
-  "order": 37,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L038",
-  "order": 38,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L039",
-  "order": 39,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L040",
-  "order": 40,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L041",
-  "order": 41,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L042",
-  "order": 42,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L043",
-  "order": 43,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L044",
-  "order": 44,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L045",
-  "order": 45,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L046",
-  "order": 46,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L047",
-  "order": 47,
-  "level": null,
-  "category": null
- },
- {
-  "id": "L048",
-  "order": 48,
-  "level": null,
-  "category": null
- }
+  {
+    "id": "L001",
+    "order": 1,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L002",
+    "order": 2,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L003",
+    "order": 3,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L004",
+    "order": 4,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L005",
+    "order": 5,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L006",
+    "order": 6,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L007",
+    "order": 7,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L008",
+    "order": 8,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L009",
+    "order": 9,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L010",
+    "order": 10,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L011",
+    "order": 11,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L012",
+    "order": 12,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L013",
+    "order": 13,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L014",
+    "order": 14,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L015",
+    "order": 15,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L016",
+    "order": 16,
+    "level": "beginner",
+    "category": "basics"
+  },
+  {
+    "id": "L017",
+    "order": 17,
+    "level": "intermediate",
+    "category": "opening"
+  },
+  {
+    "id": "L018",
+    "order": 18,
+    "level": "intermediate",
+    "category": "opening"
+  },
+  {
+    "id": "L019",
+    "order": 19,
+    "level": "intermediate",
+    "category": "opening"
+  },
+  {
+    "id": "L020",
+    "order": 20,
+    "level": "intermediate",
+    "category": "opening"
+  },
+  {
+    "id": "L021",
+    "order": 21,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L022",
+    "order": 22,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L023",
+    "order": 23,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L024",
+    "order": 24,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L025",
+    "order": 25,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L026",
+    "order": 26,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L027",
+    "order": 27,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L028",
+    "order": 28,
+    "level": "intermediate",
+    "category": "tactics"
+  },
+  {
+    "id": "L029",
+    "order": 29,
+    "level": "intermediate",
+    "category": "endgame"
+  },
+  {
+    "id": "L030",
+    "order": 30,
+    "level": "intermediate",
+    "category": "endgame"
+  },
+  {
+    "id": "L031",
+    "order": 31,
+    "level": "intermediate",
+    "category": "endgame"
+  },
+  {
+    "id": "L032",
+    "order": 32,
+    "level": "intermediate",
+    "category": "endgame"
+  },
+  {
+    "id": "L033",
+    "order": 33,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L034",
+    "order": 34,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L035",
+    "order": 35,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L036",
+    "order": 36,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L037",
+    "order": 37,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L038",
+    "order": 38,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L039",
+    "order": 39,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L040",
+    "order": 40,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L041",
+    "order": 41,
+    "level": "advanced",
+    "category": "strategy"
+  },
+  {
+    "id": "L042",
+    "order": 42,
+    "level": "advanced",
+    "category": "calculation"
+  },
+  {
+    "id": "L043",
+    "order": 43,
+    "level": "advanced",
+    "category": "calculation"
+  },
+  {
+    "id": "L044",
+    "order": 44,
+    "level": "advanced",
+    "category": "calculation"
+  },
+  {
+    "id": "L045",
+    "order": 45,
+    "level": "advanced",
+    "category": "endgame"
+  },
+  {
+    "id": "L046",
+    "order": 46,
+    "level": "advanced",
+    "category": "endgame"
+  },
+  {
+    "id": "L047",
+    "order": 47,
+    "level": "advanced",
+    "category": "endgame"
+  },
+  {
+    "id": "L048",
+    "order": 48,
+    "level": "advanced",
+    "category": "calculation"
+  }
 ]
