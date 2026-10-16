@@ -17,7 +17,7 @@ for(const page of ['classroom.html','puzzles.html']){
 assert(shared.includes("letters=flipped?'hgfedcba':'abcdefgh'"));
 assert(shared.includes("numbers=flipped?'12345678':'87654321'"));
 assert(shared.includes("sound.textContent=enabled?'🔊 Ses açık':'🔇 Ses kapalı'"));
-assert(shared.includes('ca-flip-out')&&shared.includes('ca-flip-in'));
+assert(shared.includes('ca-spin')&&shared.includes("tone('flip')"));assert(shared.includes('ca-volume-panel'));assert(shared.includes('chess-academy-volume'));assert(read('classroom.js').includes('AbortController'));
 assert(css.includes('grid-template-columns:repeat(8,minmax(0,1fr))'));
 const academy=read('academy.js');
 assert(academy.includes("practiceFrame.src='board.html'"),'assignments board missing');
