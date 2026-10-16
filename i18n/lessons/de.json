@@ -1,0 +1,482 @@
+{
+ "L001": {
+  "title": "Brett und Koordinaten",
+  "body": "Auf dem Brett heißen die Linien a–h und die Reihen 1–8.",
+  "question": "Auf welcher Linie liegt e4?",
+  "correct": "e",
+  "wrong": [
+   "4",
+   "h"
+  ]
+ },
+ "L002": {
+  "title": "Helle und dunkle Felder",
+  "body": "Die Ecke unten rechts ist ein helles Feld.",
+  "question": "Welche Farbe hat h1?",
+  "correct": "Hell",
+  "wrong": [
+   "Dunkel",
+   "Rot"
+  ]
+ },
+ "L003": {
+  "title": "Erster Bauernzug",
+  "body": "Ein Bauer darf vom Grundfeld ein oder zwei Felder vorrücken.",
+  "question": "Wie viele Felder darf ein Bauer im ersten Zug vorrücken?",
+  "correct": "Eins oder zwei",
+  "wrong": [
+   "Drei",
+   "Rückwärts"
+  ]
+ },
+ "L004": {
+  "title": "Bauernschlag",
+  "body": "Bauern schlagen gegnerische Figuren auf dem Feld schräg vor ihnen.",
+  "question": "Wie schlägt ein Bauer?",
+  "correct": "Diagonal",
+  "wrong": [
+   "Gerade vorwärts",
+   "Rückwärts"
+  ]
+ },
+ "L005": {
+  "title": "Der Springer",
+  "body": "Der Springer zieht zwei Felder in eine Richtung und eins im rechten Winkel und kann über Figuren springen.",
+  "question": "Welche Figur kann über andere springen?",
+  "correct": "Springer",
+  "wrong": [
+   "Läufer",
+   "Turm"
+  ]
+ },
+ "L006": {
+  "title": "Der Läufer",
+  "body": "Der Läufer zieht diagonal und bleibt auf der Farbe seines Startfeldes.",
+  "question": "Wie zieht der Läufer?",
+  "correct": "Diagonal",
+  "wrong": [
+   "L-förmig",
+   "Nur gerade"
+  ]
+ },
+ "L007": {
+  "title": "Der Turm",
+  "body": "Der Turm zieht waagerecht und senkrecht.",
+  "question": "In welche Richtungen zieht der Turm?",
+  "correct": "Reihen und Linien",
+  "wrong": [
+   "Nur diagonal",
+   "L-förmig"
+  ]
+ },
+ "L008": {
+  "title": "Die Dame",
+  "body": "Die Dame zieht wie Turm und Läufer zusammen.",
+  "question": "Wie zieht die Dame?",
+  "correct": "Gerade und diagonal",
+  "wrong": [
+   "L-förmig",
+   "Nur ein Feld"
+  ]
+ },
+ "L009": {
+  "title": "Der König",
+  "body": "Der König zieht auf ein benachbartes Feld, das nicht bedroht ist.",
+  "question": "Wie weit zieht der König normalerweise?",
+  "correct": "Ein Feld",
+  "wrong": [
+   "Drei Felder",
+   "Beliebig weit"
+  ]
+ },
+ "L010": {
+  "title": "Schach",
+  "body": "Steht der König im Schach, muss man die Bedrohung beseitigen.",
+  "question": "Was muss man im Schach tun?",
+  "correct": "Dem Schach entgehen",
+  "wrong": [
+   "Schach ignorieren",
+   "Zug aussetzen"
+  ]
+ },
+ "L011": {
+  "title": "Schachmatt",
+  "body": "Steht der König im Schach und hat keinen legalen Ausweg, ist es Schachmatt.",
+  "question": "Was beendet eine Partie mit einem Sieger?",
+  "correct": "Schachmatt",
+  "wrong": [
+   "Patt",
+   "Unzureichendes Material"
+  ]
+ },
+ "L012": {
+  "title": "Patt",
+  "body": "Hat der Spieler am Zug keinen legalen Zug und steht nicht im Schach, ist es Patt.",
+  "question": "Was ist Patt?",
+  "correct": "Remis",
+  "wrong": [
+   "Sieg",
+   "Schachmatt"
+  ]
+ },
+ "L013": {
+  "title": "Rochade",
+  "body": "Bei der Rochade ziehen König und Turm zusammen; der König darf kein bedrohtes Feld überqueren.",
+  "question": "Welche Figuren ziehen bei der Rochade?",
+  "correct": "König und Turm",
+  "wrong": [
+   "König und Läufer",
+   "Dame und Turm"
+  ]
+ },
+ "L014": {
+  "title": "En passant",
+  "body": "En passant ist das Recht, einen Bauern zu schlagen, der gerade zwei Felder vorgerückt ist – nur im unmittelbar folgenden Zug.",
+  "question": "Wann ist en passant möglich?",
+  "correct": "Sofort im nächsten Zug",
+  "wrong": [
+   "In jedem späteren Zug",
+   "Nach der Rochade"
+  ]
+ },
+ "L015": {
+  "title": "Umwandlung",
+  "body": "Ein Bauer auf der letzten Reihe wird in Dame, Turm, Läufer oder Springer umgewandelt.",
+  "question": "Welche Umwandlung ist erlaubt?",
+  "correct": "Springer",
+  "wrong": [
+   "König",
+   "Bauer"
+  ]
+ },
+ "L016": {
+  "title": "Figurenwerte",
+  "body": "Ungefähre Werte: Bauer 1, Springer/Läufer 3, Turm 5, Dame 9.",
+  "question": "Welche Figur ist meist fünf wert?",
+  "correct": "Turm",
+  "wrong": [
+   "Läufer",
+   "Bauer"
+  ]
+ },
+ "L017": {
+  "title": "Zentrumskontrolle",
+  "body": "Die Felder e4, d4, e5 und d5 sind in der Eröffnung wichtig.",
+  "question": "Welches Feld liegt im Zentrum?",
+  "correct": "e4",
+  "wrong": [
+   "a1",
+   "h8"
+  ]
+ },
+ "L018": {
+  "title": "Figurenentwicklung",
+  "body": "Bringe Springer und Läufer auf aktive Felder.",
+  "question": "Was ist gute Eröffnungspraxis?",
+  "correct": "Figuren entwickeln",
+  "wrong": [
+   "Dame mehrfach ziehen",
+   "Königssicherheit ignorieren"
+  ]
+ },
+ "L019": {
+  "title": "Königssicherheit",
+  "body": "Zum Schutz des Königs rochiert man meist rechtzeitig.",
+  "question": "Was hilft der Königssicherheit?",
+  "correct": "Rochade",
+  "wrong": [
+   "König im Zentrum lassen",
+   "Bauern verlieren"
+  ]
+ },
+ "L020": {
+  "title": "Tempo",
+  "body": "Mit einem Zug, der eine Antwort erzwingt, kannst du Zeit gewinnen.",
+  "question": "Was ist ein Tempo im Schach?",
+  "correct": "Nützlich genutzter Zug",
+  "wrong": [
+   "Brettfarbe",
+   "Figurengewicht"
+  ]
+ },
+ "L021": {
+  "title": "Gabel",
+  "body": "Eine Figur greift gleichzeitig zwei oder mehr Ziele an.",
+  "question": "Was ist eine Gabel?",
+  "correct": "Zwei Ziele angreifen",
+  "wrong": [
+   "Lang rochieren",
+   "Remis anbieten"
+  ]
+ },
+ "L022": {
+  "title": "Fesselung",
+  "body": "Zieht eine gefesselte Figur, gerät die wertvollere dahinter in Gefahr.",
+  "question": "Was ist eine Fesselung?",
+  "correct": "Eingeschränkte Beweglichkeit",
+  "wrong": [
+   "Bauernumwandlung",
+   "Patt"
+  ]
+ },
+ "L023": {
+  "title": "Spieß",
+  "body": "Weicht die wertvolle Figur aus, kann die dahinter verloren gehen.",
+  "question": "Was ist ein Spieß?",
+  "correct": "Angriff durch wertvolle Figur",
+  "wrong": [
+   "Bauernvorstoß",
+   "Remisangebot"
+  ]
+ },
+ "L024": {
+  "title": "Doppelschach",
+  "body": "Zwei Figuren geben gleichzeitig Schach.",
+  "question": "Wie viele Figuren greifen beim Doppelschach an?",
+  "correct": "Zwei",
+  "wrong": [
+   "Eine",
+   "Null"
+  ]
+ },
+ "L025": {
+  "title": "Abzugsangriff",
+  "body": "Zieht die vordere Figur weg, wird der Angriff der dahinterstehenden frei.",
+  "question": "Was erzeugt einen Abzugsangriff?",
+  "correct": "Eine Blockade wegziehen",
+  "wrong": [
+   "Einen Bauern umwandeln",
+   "Rochieren"
+  ]
+ },
+ "L026": {
+  "title": "Ungedeckte Figur",
+  "body": "Eine ungeschützte Figur bietet eine taktische Chance.",
+  "question": "Was ist eine ungedeckte Figur?",
+  "correct": "Ungeschützte Figur",
+  "wrong": [
+   "Umgewandelte Dame",
+   "Rochierter Turm"
+  ]
+ },
+ "L027": {
+  "title": "Grundreihe",
+  "body": "Hat der König keine Fluchtfelder, droht ein Grundreihenmatt.",
+  "question": "Was ist eine Grundreihenschwäche?",
+  "correct": "Kein Fluchtfeld für den König",
+  "wrong": [
+   "Zusätzlicher Läufer",
+   "Freibauer"
+  ]
+ },
+ "L028": {
+  "title": "Mattnetz",
+  "body": "Mehrere Figuren decken die Fluchtfelder des Königs ab.",
+  "question": "Was ist ein Mattnetz?",
+  "correct": "Fluchtfelder abdecken",
+  "wrong": [
+   "Damen tauschen",
+   "Zufällig ziehen"
+  ]
+ },
+ "L029": {
+  "title": "Matt mit Dame und König",
+  "body": "Die Dame engt den König ein; unterstütze sie mit deinem König.",
+  "question": "Was hilft beim Damenmatt?",
+  "correct": "Königsunterstützung",
+  "wrong": [
+   "Dame abgeben",
+   "Opposition meiden"
+  ]
+ },
+ "L030": {
+  "title": "Matt mit Turm und König",
+  "body": "Engt mit dem Turm den gegnerischen König ein und führe deinen König heran.",
+  "question": "Was hilft beim Turmmatt?",
+  "correct": "Königskoordination",
+  "wrong": [
+   "Turm opfern",
+   "Opposition ignorieren"
+  ]
+ },
+ "L031": {
+  "title": "Opposition",
+  "body": "Stehen die Könige sich gegenüber, kann das Zugrecht entscheidend sein.",
+  "question": "Wo ist Opposition wichtig?",
+  "correct": "Bauernendspiele",
+  "wrong": [
+   "Nur Eröffnungsfallen",
+   "Rochade"
+  ]
+ },
+ "L032": {
+  "title": "Freibauer",
+  "body": "Ein Bauer, dem kein gegnerischer Bauer den Weg versperren kann.",
+  "question": "Was ist ein Freibauer?",
+  "correct": "Kein gegnerischer Bauer davor",
+  "wrong": [
+   "Bauer auf der a-Linie",
+   "Bauer auf der ersten Reihe"
+  ]
+ },
+ "L033": {
+  "title": "Bauernkette",
+  "body": "Bauern decken sich gegenseitig diagonal.",
+  "question": "Wie schützen Bauern Bauern?",
+  "correct": "Diagonal",
+  "wrong": [
+   "Gerade nach vorn",
+   "Rückwärtszüge"
+  ]
+ },
+ "L034": {
+  "title": "Isolierter Bauer",
+  "body": "Auf den Nachbarlinien steht kein eigener Bauer.",
+  "question": "Was ist ein isolierter Bauer?",
+  "correct": "Kein eigener Bauer auf Nachbarlinien",
+  "wrong": [
+   "Zwei Bauern übereinander",
+   "Freibauer"
+  ]
+ },
+ "L035": {
+  "title": "Doppelbauern",
+  "body": "Zwei gleichfarbige Bauern stehen auf derselben Linie.",
+  "question": "Was sind Doppelbauern?",
+  "correct": "Zwei auf einer Linie",
+  "wrong": [
+   "Zwei Damen",
+   "Zwei Türme"
+  ]
+ },
+ "L036": {
+  "title": "Offene Linie",
+  "body": "Eine Linie ohne jeden Bauern.",
+  "question": "Was ist eine offene Linie?",
+  "correct": "Keine Bauern",
+  "wrong": [
+   "Nur Läufer",
+   "Nur Könige"
+  ]
+ },
+ "L037": {
+  "title": "Halboffene Linie",
+  "body": "Eine Linie, auf der ein Spieler keinen Bauern hat.",
+  "question": "Was ist eine halboffene Linie?",
+  "correct": "Kein eigener Bauer",
+  "wrong": [
+   "Keine Figuren",
+   "Keine Könige"
+  ]
+ },
+ "L038": {
+  "title": "Aktiver Turm",
+  "body": "Türme sind auf offenen Linien und auf der siebten Reihe wirksam.",
+  "question": "Wo sind Türme oft aktiv?",
+  "correct": "Offene Linien",
+  "wrong": [
+   "Hinter eigenen Bauern",
+   "Ewig in den Ecken"
+  ]
+ },
+ "L039": {
+  "title": "Läuferpaar",
+  "body": "Zwei Läufer können in offenen Stellungen stark sein.",
+  "question": "Wo ist das Läuferpaar oft stark?",
+  "correct": "Offene Stellungen",
+  "wrong": [
+   "Geschlossene Stellungen",
+   "Ohne Diagonalen"
+  ]
+ },
+ "L040": {
+  "title": "Guter und schlechter Läufer",
+  "body": "Ein Läufer, der von der eigenen Bauernkette blockiert wird, verliert an Wirkung.",
+  "question": "Was blockiert einen schlechten Läufer?",
+  "correct": "Eigene Bauern",
+  "wrong": [
+   "Offene Diagonalen",
+   "Gegnerischer König"
+  ]
+ },
+ "L041": {
+  "title": "Springer-Vorposten",
+  "body": "Ein Springer auf einem vorgeschobenen Feld, das Bauern nicht vertreiben können, ist stark.",
+  "question": "Was macht einen Vorposten aus?",
+  "correct": "Schwer durch Bauern zu vertreiben",
+  "wrong": [
+   "Brettecke",
+   "Ausgangsfeld"
+  ]
+ },
+ "L042": {
+  "title": "Berechnung",
+  "body": "Prüfe Kandidatenzüge und erzwungene Antworten der Reihe nach.",
+  "question": "Was kommt bei der Berechnung zuerst?",
+  "correct": "Kandidatenzüge",
+  "wrong": [
+   "Zufälliger Zug",
+   "Uhr drücken"
+  ]
+ },
+ "L043": {
+  "title": "Abtausch",
+  "body": "Bewerte vor einem Abtausch die entstehende Stellung und die Figurenwerte.",
+  "question": "Was zählt beim Abtausch?",
+  "correct": "Die entstehende Stellung",
+  "wrong": [
+   "Nur die Figurenfarbe",
+   "Nur die Zugnummer"
+  ]
+ },
+ "L044": {
+  "title": "Planen",
+  "body": "Entwickle einen kurzen Plan aus den Stärken und Schwächen der Stellung.",
+  "question": "Was leitet einen Plan?",
+  "correct": "Stellungsmerkmale",
+  "wrong": [
+   "Zufälliges Raten",
+   "Nur Material"
+  ]
+ },
+ "L045": {
+  "title": "Aktiver König",
+  "body": "Im Endspiel ist der König eine aktive Kampffigur.",
+  "question": "Was soll der König im Endspiel tun?",
+  "correct": "Aktiv werden",
+  "wrong": [
+   "Sich ewig verstecken",
+   "Nie ziehen"
+  ]
+ },
+ "L046": {
+  "title": "Zugzwang",
+  "body": "Der Zugzwang kann die Stellung des Spielers verschlechtern.",
+  "question": "Was ist Zugzwang?",
+  "correct": "Ziehen müssen und sich verschlechtern",
+  "wrong": [
+   "Matt in einem Zug",
+   "Rochade"
+  ]
+ },
+ "L047": {
+  "title": "Remisarten",
+  "body": "Patt, unzureichendes Material, Stellungswiederholung und Zugzahl können zum Remis führen.",
+  "question": "Was kann ein Remis sein?",
+  "correct": "Patt",
+  "wrong": [
+   "Schachmatt",
+   "Aufgabe"
+  ]
+ },
+ "L048": {
+  "title": "Analysegewohnheit",
+  "body": "Untersuche nach der Partie deine kritischen Züge und verpassten Chancen.",
+  "question": "Was verbessert das Lernen?",
+  "correct": "Fehler analysieren",
+  "wrong": [
+   "Nur Siege",
+   "Niederlagen ignorieren"
+  ]
+ }
+}

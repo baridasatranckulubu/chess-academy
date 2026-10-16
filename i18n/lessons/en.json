@@ -1,0 +1,482 @@
+{
+ "L001": {
+  "title": "Board & coordinates",
+  "question": "What is the file in e4?",
+  "correct": "e",
+  "wrong": [
+   "4",
+   "h"
+  ],
+  "body": "On the board, columns are named a-h and rows are numbered 1-8."
+ },
+ "L002": {
+  "title": "Light and dark squares",
+  "question": "What color is h1?",
+  "correct": "Light",
+  "wrong": [
+   "Dark",
+   "Red"
+  ],
+  "body": "The bottom-right corner of the board is a light square."
+ },
+ "L003": {
+  "title": "Pawn first move",
+  "question": "How many squares may a pawn advance on its first move?",
+  "correct": "One or two",
+  "wrong": [
+   "Three",
+   "Backward"
+  ],
+  "body": "A pawn may advance one or two squares from its starting square."
+ },
+ "L004": {
+  "title": "Pawn captures",
+  "question": "How does a pawn capture?",
+  "correct": "Diagonally",
+  "wrong": [
+   "Straight forward",
+   "Backward"
+  ],
+  "body": "A pawn captures an enemy piece on the square diagonally ahead."
+ },
+ "L005": {
+  "title": "Knight movement",
+  "question": "Which piece can jump over pieces?",
+  "correct": "Knight",
+  "wrong": [
+   "Bishop",
+   "Rook"
+  ],
+  "body": "A knight moves two squares in one direction and one square at a right angle, and can jump over pieces."
+ },
+ "L006": {
+  "title": "Bishop movement",
+  "question": "How does a bishop move?",
+  "correct": "Diagonally",
+  "wrong": [
+   "In an L shape",
+   "Straight only"
+  ],
+  "body": "A bishop moves diagonally and stays on the color of its starting square."
+ },
+ "L007": {
+  "title": "Rook movement",
+  "question": "Which directions can a rook move?",
+  "correct": "Ranks and files",
+  "wrong": [
+   "Diagonals only",
+   "L shape"
+  ],
+  "body": "A rook moves horizontally and vertically."
+ },
+ "L008": {
+  "title": "Queen movement",
+  "question": "How does a queen move?",
+  "correct": "Straight and diagonal",
+  "wrong": [
+   "L shape",
+   "One square only"
+  ],
+  "body": "The queen moves like a rook and a bishop combined."
+ },
+ "L009": {
+  "title": "King movement",
+  "question": "How far does a king move normally?",
+  "correct": "One square",
+  "wrong": [
+   "Three squares",
+   "Any distance"
+  ],
+  "body": "The king moves to any adjacent square that is not under attack."
+ },
+ "L010": {
+  "title": "Check",
+  "question": "What must you do in check?",
+  "correct": "Escape check",
+  "wrong": [
+   "Ignore check",
+   "Skip turn"
+  ],
+  "body": "If your king is attacked, you must remove the threat."
+ },
+ "L011": {
+  "title": "Checkmate",
+  "question": "What ends a game with a winner?",
+  "correct": "Checkmate",
+  "wrong": [
+   "Stalemate",
+   "Insufficient material"
+  ],
+  "body": "If the king is attacked and has no legal escape, it is checkmate."
+ },
+ "L012": {
+  "title": "Stalemate",
+  "question": "What is stalemate?",
+  "correct": "Draw",
+  "wrong": [
+   "Win",
+   "Checkmate"
+  ],
+  "body": "If the player to move has no legal move and is not in check, it is stalemate."
+ },
+ "L013": {
+  "title": "Castling rules",
+  "question": "Which pieces move in castling?",
+  "correct": "King and rook",
+  "wrong": [
+   "King and bishop",
+   "Queen and rook"
+  ],
+  "body": "In castling the king and rook move together; the king may not pass through an attacked square."
+ },
+ "L014": {
+  "title": "En passant",
+  "question": "When is en passant available?",
+  "correct": "Immediately next move",
+  "wrong": [
+   "Any later move",
+   "After castling"
+  ],
+  "body": "En passant is a special right to capture a pawn that has just advanced two squares, available only on the very next move."
+ },
+ "L015": {
+  "title": "Promotion",
+  "question": "Which is a legal promotion?",
+  "correct": "Knight",
+  "wrong": [
+   "King",
+   "Pawn"
+  ],
+  "body": "A pawn reaching the last rank can be promoted to a queen, rook, bishop or knight."
+ },
+ "L016": {
+  "title": "Piece values",
+  "question": "Which piece is usually worth five?",
+  "correct": "Rook",
+  "wrong": [
+   "Bishop",
+   "Pawn"
+  ],
+  "body": "Approximate values: pawn 1, knight/bishop 3, rook 5, queen 9."
+ },
+ "L017": {
+  "title": "Center control",
+  "question": "Which square is central?",
+  "correct": "e4",
+  "wrong": [
+   "a1",
+   "h8"
+  ],
+  "body": "The squares e4, d4, e5 and d5 are important in the opening."
+ },
+ "L018": {
+  "title": "Development",
+  "question": "Which is good opening practice?",
+  "correct": "Develop pieces",
+  "wrong": [
+   "Move queen repeatedly",
+   "Ignore king safety"
+  ],
+  "body": "Bring your knights and bishops to active squares."
+ },
+ "L019": {
+  "title": "King safety",
+  "question": "What helps king safety?",
+  "correct": "Castling",
+  "wrong": [
+   "Leaving king in center",
+   "Losing pawns"
+  ],
+  "body": "To keep the king safe, usually castle in good time."
+ },
+ "L020": {
+  "title": "Tempo",
+  "question": "What is tempo in chess?",
+  "correct": "Useful move time",
+  "wrong": [
+   "Board color",
+   "Piece weight"
+  ],
+  "body": "With a move that forces a reply, you can gain time."
+ },
+ "L021": {
+  "title": "Fork",
+  "question": "What is a fork?",
+  "correct": "Attack two targets",
+  "wrong": [
+   "Castle long",
+   "Offer draw"
+  ],
+  "body": "One piece attacks two or more targets at once."
+ },
+ "L022": {
+  "title": "Pin",
+  "question": "What is a pin?",
+  "correct": "Restricted movement",
+  "wrong": [
+   "Pawn promotion",
+   "Stalemate"
+  ],
+  "body": "If a pinned piece moves, a more valuable piece behind it is endangered."
+ },
+ "L023": {
+  "title": "Skewer",
+  "question": "What is a skewer?",
+  "correct": "Attack through valuable piece",
+  "wrong": [
+   "Pawn advance",
+   "Draw offer"
+  ],
+  "body": "When the valuable piece moves away, the piece behind it may be lost."
+ },
+ "L024": {
+  "title": "Double check",
+  "question": "How many pieces attack in double check?",
+  "correct": "Two",
+  "wrong": [
+   "One",
+   "Zero"
+  ],
+  "body": "Two pieces give check at the same time."
+ },
+ "L025": {
+  "title": "Discovered attack",
+  "question": "What creates a discovered attack?",
+  "correct": "Moving a blocker",
+  "wrong": [
+   "Promoting a pawn",
+   "Castling"
+  ],
+  "body": "When the front piece moves, the attack of the piece behind it is revealed."
+ },
+ "L026": {
+  "title": "Hanging piece",
+  "question": "What is a hanging piece?",
+  "correct": "Undefended piece",
+  "wrong": [
+   "Promoted queen",
+   "Castled rook"
+  ],
+  "body": "An unprotected piece creates a tactical opportunity."
+ },
+ "L027": {
+  "title": "Back rank",
+  "question": "What is a back-rank weakness?",
+  "correct": "No king escape square",
+  "wrong": [
+   "Extra bishop",
+   "Passed pawn"
+  ],
+  "body": "If the king has no escape squares, a back-rank mating threat can arise."
+ },
+ "L028": {
+  "title": "Mating net",
+  "question": "What is a mating net?",
+  "correct": "Cover escape squares",
+  "wrong": [
+   "Exchange queens",
+   "Move randomly"
+  ],
+  "body": "Several pieces cover the king's escape squares."
+ },
+ "L029": {
+  "title": "Queen and king mate",
+  "question": "What helps queen mate?",
+  "correct": "King support",
+  "wrong": [
+   "Give away queen",
+   "Avoid opposition"
+  ],
+  "body": "The queen restricts the king's space; support her with your own king."
+ },
+ "L030": {
+  "title": "Rook and king mate",
+  "question": "What helps rook mate?",
+  "correct": "King coordination",
+  "wrong": [
+   "Sacrifice rook",
+   "Ignore opposition"
+  ],
+  "body": "Use the rook to restrict the enemy king and bring your own king closer."
+ },
+ "L031": {
+  "title": "Opposition",
+  "question": "Where is opposition important?",
+  "correct": "King and pawn endings",
+  "wrong": [
+   "Opening traps only",
+   "Castling"
+  ],
+  "body": "When the kings face each other, whose turn it is can be critical."
+ },
+ "L032": {
+  "title": "Passed pawn",
+  "question": "What is a passed pawn?",
+  "correct": "No opposing pawn ahead",
+  "wrong": [
+   "Pawn on a-file",
+   "Pawn on first rank"
+  ],
+  "body": "A pawn with no opposing pawn in front that could stop it."
+ },
+ "L033": {
+  "title": "Pawn chain",
+  "question": "How do pawns protect pawns?",
+  "correct": "Diagonally",
+  "wrong": [
+   "Straight ahead",
+   "Backward moves"
+  ],
+  "body": "Pawns protect each other diagonally."
+ },
+ "L034": {
+  "title": "Isolated pawn",
+  "question": "What is an isolated pawn?",
+  "correct": "No friendly adjacent-file pawn",
+  "wrong": [
+   "Two pawns stacked",
+   "Passed pawn"
+  ],
+  "body": "There are no friendly pawns on the adjacent files."
+ },
+ "L035": {
+  "title": "Doubled pawns",
+  "question": "What are doubled pawns?",
+  "correct": "Two on one file",
+  "wrong": [
+   "Two queens",
+   "Two rooks"
+  ],
+  "body": "Two pawns of the same color stand on the same file."
+ },
+ "L036": {
+  "title": "Open file",
+  "question": "What is an open file?",
+  "correct": "No pawns",
+  "wrong": [
+   "Only bishops",
+   "Only kings"
+  ],
+  "body": "A file with no pawns on it."
+ },
+ "L037": {
+  "title": "Semi-open file",
+  "question": "What is a semi-open file?",
+  "correct": "No friendly pawn",
+  "wrong": [
+   "No pieces",
+   "No kings"
+  ],
+  "body": "A file with no pawn of one player."
+ },
+ "L038": {
+  "title": "Active rook",
+  "question": "Where are rooks often active?",
+  "correct": "Open files",
+  "wrong": [
+   "Behind own pawns",
+   "Corners forever"
+  ],
+  "body": "Rooks can be effective on open files and on the seventh rank."
+ },
+ "L039": {
+  "title": "Bishop pair",
+  "question": "Where is bishop pair often strong?",
+  "correct": "Open positions",
+  "wrong": [
+   "Blocked positions",
+   "Without diagonals"
+  ],
+  "body": "Two bishops can be strong in open positions."
+ },
+ "L040": {
+  "title": "Good and bad bishop",
+  "question": "What blocks a bad bishop?",
+  "correct": "Own pawns",
+  "wrong": [
+   "Open diagonals",
+   "Enemy king"
+  ],
+  "body": "A bishop blocked by its own pawn chain may lose effectiveness."
+ },
+ "L041": {
+  "title": "Knight outpost",
+  "question": "What makes an outpost?",
+  "correct": "Hard to chase by pawns",
+  "wrong": [
+   "Board corner",
+   "Starting square"
+  ],
+  "body": "A knight on an advanced square that pawns cannot chase away is strong."
+ },
+ "L042": {
+  "title": "Calculation",
+  "question": "What comes first in calculation?",
+  "correct": "Candidate moves",
+  "wrong": [
+   "Random move",
+   "Clock pressing"
+  ],
+  "body": "Examine candidate moves and forced replies in order."
+ },
+ "L043": {
+  "title": "Exchanges",
+  "question": "What matters in exchanges?",
+  "correct": "Resulting position",
+  "wrong": [
+   "Piece color only",
+   "Move number only"
+  ],
+  "body": "Before an exchange, evaluate the resulting position and piece values."
+ },
+ "L044": {
+  "title": "Planning",
+  "question": "What guides a plan?",
+  "correct": "Position features",
+  "wrong": [
+   "Random guessing",
+   "Only material"
+  ],
+  "body": "Form a short plan based on the strengths and weaknesses of the position."
+ },
+ "L045": {
+  "title": "Active king",
+  "question": "What should king do in endgame?",
+  "correct": "Become active",
+  "wrong": [
+   "Hide forever",
+   "Never move"
+  ],
+  "body": "In the endgame the king is an active fighting piece."
+ },
+ "L046": {
+  "title": "Zugzwang",
+  "question": "What is zugzwang?",
+  "correct": "Must move and worsen",
+  "wrong": [
+   "Mate in one",
+   "Castling"
+  ],
+  "body": "Having to move can worsen a player's position."
+ },
+ "L047": {
+  "title": "Draw conditions",
+  "question": "Which can be a draw?",
+  "correct": "Stalemate",
+  "wrong": [
+   "Checkmate",
+   "Resignation"
+  ],
+  "body": "Stalemate, insufficient material, repetition and move-count rules can lead to a draw."
+ },
+ "L048": {
+  "title": "Review habit",
+  "question": "What improves learning?",
+  "correct": "Review mistakes",
+  "wrong": [
+   "Only wins",
+   "Ignore losses"
+  ],
+  "body": "After a game, examine your critical moves and missed chances."
+ }
+}

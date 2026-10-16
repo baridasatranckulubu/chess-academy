@@ -1,0 +1,16 @@
+{
+  "source": "Lichess Open Database (CC0)",
+  "source_url": "https://database.lichess.org/#puzzles",
+  "count": 4,
+  "scanned": 4,
+  "shards": [
+    "part-0000.json"
+  ],
+  "schema": [
+    "id",
+    "fen_before_opponent_move",
+    "uci_moves",
+    "rating",
+    "themes"
+  ]
+}

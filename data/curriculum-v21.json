@@ -1,0 +1,2529 @@
+{
+  "version": "0.21",
+  "language": "tr",
+  "type": "curriculum_outlines",
+  "count": 120,
+  "disclaimer": "Bu kayıtlar tam ders değil; doğrulanması ve interaktif örneklerle tamamlanması gereken özgün ders taslaklarıdır.",
+  "lessons": [
+    {
+      "id": "C01-01",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Tahta koordinatları",
+      "durationMinutes": 15,
+      "objective": "Öğrenci tahta koordinatları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-02",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Taşların değeri",
+      "durationMinutes": 15,
+      "objective": "Öğrenci taşların değeri konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-03",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Şahın hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şahın hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-04",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Vezirin hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci vezirin hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-05",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Kalenin hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci kalenin hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-06",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Filin hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci filin hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-07",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Atın hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci atın hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-08",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Piyonun hareketi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci piyonun hareketi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-09",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Şah çekme",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şah çekme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-10",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Şah mat",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şah mat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-11",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Pat ve beraberlik",
+      "durationMinutes": 15,
+      "objective": "Öğrenci pat ve beraberlik konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-12",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Rok kuralları",
+      "durationMinutes": 15,
+      "objective": "Öğrenci rok kuralları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-13",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Geçerken alma",
+      "durationMinutes": 15,
+      "objective": "Öğrenci geçerken alma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-14",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Piyon terfisi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci piyon terfisi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C01-15",
+      "track": "Temeller",
+      "level": "Başlangıç",
+      "title": "Merkez kontrolü",
+      "durationMinutes": 15,
+      "objective": "Öğrenci merkez kontrolü konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-01",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Çatal",
+      "durationMinutes": 15,
+      "objective": "Öğrenci çatal konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-02",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Açmaz",
+      "durationMinutes": 15,
+      "objective": "Öğrenci açmaz konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-03",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Şiş",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şiş konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-04",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Çifte şah",
+      "durationMinutes": 15,
+      "objective": "Öğrenci çifte şah konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-05",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Açılan saldırı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci açılan saldırı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-06",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Açılan şah",
+      "durationMinutes": 15,
+      "objective": "Öğrenci açılan şah konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-07",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Savunmasız taş",
+      "durationMinutes": 15,
+      "objective": "Öğrenci savunmasız taş konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-08",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Aşırı yüklenme",
+      "durationMinutes": 15,
+      "objective": "Öğrenci aşırı yüklenme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-09",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Savunucuyu kaldırma",
+      "durationMinutes": 15,
+      "objective": "Öğrenci savunucuyu kaldırma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-10",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Arka sıra matı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci arka sıra matı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-11",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Merdiven matı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci merdiven matı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-12",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Boğmaca matı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci boğmaca matı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-13",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Bir hamlede mat",
+      "durationMinutes": 15,
+      "objective": "Öğrenci bir hamlede mat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-14",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "İki hamlede mat",
+      "durationMinutes": 15,
+      "objective": "Öğrenci i̇ki hamlede mat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C02-15",
+      "track": "Taktik I",
+      "level": "Başlangıç",
+      "title": "Taktik hesaplama",
+      "durationMinutes": 15,
+      "objective": "Öğrenci taktik hesaplama konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-01",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Gelişim ve tempo",
+      "durationMinutes": 15,
+      "objective": "Öğrenci gelişim ve tempo konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-02",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Merkez piyonları",
+      "durationMinutes": 15,
+      "objective": "Öğrenci merkez piyonları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-03",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Şah güvenliği",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şah güvenliği konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-04",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Erken vezir çıkışı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci erken vezir çıkışı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-05",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Açılış tuzaklarını anlama",
+      "durationMinutes": 15,
+      "objective": "Öğrenci açılış tuzaklarını anlama konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-06",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "İtalyan açılışı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci i̇talyan açılışı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-07",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "İspanyol açılışı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci i̇spanyol açılışı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-08",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Dört at açılışı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci dört at açılışı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-09",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "İskoç açılışı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci i̇skoç açılışı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-10",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Vezir gambiti",
+      "durationMinutes": 15,
+      "objective": "Öğrenci vezir gambiti konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-11",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Londra sistemi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci londra sistemi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-12",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Sicilya savunması",
+      "durationMinutes": 15,
+      "objective": "Öğrenci sicilya savunması konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-13",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Fransız savunması",
+      "durationMinutes": 15,
+      "objective": "Öğrenci fransız savunması konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-14",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Caro-Kann savunması",
+      "durationMinutes": 15,
+      "objective": "Öğrenci caro-kann savunması konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C03-15",
+      "track": "Açılış İlkeleri",
+      "level": "Başlangıç",
+      "title": "Açılıştan orta oyuna",
+      "durationMinutes": 15,
+      "objective": "Öğrenci açılıştan orta oyuna konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-01",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Vezirle mat",
+      "durationMinutes": 15,
+      "objective": "Öğrenci vezirle mat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-02",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Kaleyle mat",
+      "durationMinutes": 15,
+      "objective": "Öğrenci kaleyle mat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-03",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Muhalefet",
+      "durationMinutes": 15,
+      "objective": "Öğrenci muhalefet konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-04",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Kare kuralı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci kare kuralı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-05",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Geçer piyon",
+      "durationMinutes": 15,
+      "objective": "Öğrenci geçer piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-06",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Anahtar kareler",
+      "durationMinutes": 15,
+      "objective": "Öğrenci anahtar kareler konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-07",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Şah aktivitesi",
+      "durationMinutes": 15,
+      "objective": "Öğrenci şah aktivitesi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-08",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Piyon yarışları",
+      "durationMinutes": 15,
+      "objective": "Öğrenci piyon yarışları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-09",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Kale ve piyon",
+      "durationMinutes": 15,
+      "objective": "Öğrenci kale ve piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-10",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Lucena fikri",
+      "durationMinutes": 15,
+      "objective": "Öğrenci lucena fikri konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-11",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Philidor fikri",
+      "durationMinutes": 15,
+      "objective": "Öğrenci philidor fikri konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-12",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Kale gerisinden savunma",
+      "durationMinutes": 15,
+      "objective": "Öğrenci kale gerisinden savunma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-13",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Uzak geçer piyon",
+      "durationMinutes": 15,
+      "objective": "Öğrenci uzak geçer piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-14",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Zugzwang",
+      "durationMinutes": 15,
+      "objective": "Öğrenci zugzwang konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C04-15",
+      "track": "Oyun Sonları I",
+      "level": "Başlangıç",
+      "title": "Basit oyun sonu planı",
+      "durationMinutes": 15,
+      "objective": "Öğrenci basit oyun sonu planı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-01",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Ara hamle",
+      "durationMinutes": 25,
+      "objective": "Öğrenci ara hamle konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-02",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Saptırma",
+      "durationMinutes": 25,
+      "objective": "Öğrenci saptırma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-03",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Çekme",
+      "durationMinutes": 25,
+      "objective": "Öğrenci çekme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-04",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Hat açma",
+      "durationMinutes": 25,
+      "objective": "Öğrenci hat açma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-05",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Hat kapatma",
+      "durationMinutes": 25,
+      "objective": "Öğrenci hat kapatma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-06",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Temizleme fedası",
+      "durationMinutes": 25,
+      "objective": "Öğrenci temizleme fedası konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-07",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Yem hamlesi",
+      "durationMinutes": 25,
+      "objective": "Öğrenci yem hamlesi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-08",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Kalite fedası",
+      "durationMinutes": 25,
+      "objective": "Öğrenci kalite fedası konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-09",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Yunan hediyesi teması",
+      "durationMinutes": 25,
+      "objective": "Öğrenci yunan hediyesi teması konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-10",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Kombinasyon ağacı",
+      "durationMinutes": 25,
+      "objective": "Öğrenci kombinasyon ağacı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-11",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Aday hamle seçimi",
+      "durationMinutes": 25,
+      "objective": "Öğrenci aday hamle seçimi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-12",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Zorlayıcı hamleler",
+      "durationMinutes": 25,
+      "objective": "Öğrenci zorlayıcı hamleler konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-13",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Hesaplama disiplini",
+      "durationMinutes": 25,
+      "objective": "Öğrenci hesaplama disiplini konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-14",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Taktik savunma",
+      "durationMinutes": 25,
+      "objective": "Öğrenci taktik savunma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C05-15",
+      "track": "Taktik II",
+      "level": "Orta",
+      "title": "Yanlış kombinasyonu çürütme",
+      "durationMinutes": 25,
+      "objective": "Öğrenci yanlış kombinasyonu çürütme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-01",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Piyon yapısı",
+      "durationMinutes": 25,
+      "objective": "Öğrenci piyon yapısı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-02",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "İzole piyon",
+      "durationMinutes": 25,
+      "objective": "Öğrenci i̇zole piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-03",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Geri piyon",
+      "durationMinutes": 25,
+      "objective": "Öğrenci geri piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-04",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Çift piyon",
+      "durationMinutes": 25,
+      "objective": "Öğrenci çift piyon konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-05",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Zayıf kareler",
+      "durationMinutes": 25,
+      "objective": "Öğrenci zayıf kareler konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-06",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "İyi fil kötü fil",
+      "durationMinutes": 25,
+      "objective": "Öğrenci i̇yi fil kötü fil konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-07",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "At karakolu",
+      "durationMinutes": 25,
+      "objective": "Öğrenci at karakolu konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-08",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Açık hat",
+      "durationMinutes": 25,
+      "objective": "Öğrenci açık hat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-09",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Yarı açık hat",
+      "durationMinutes": 25,
+      "objective": "Öğrenci yarı açık hat konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-10",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Yedinci yatay",
+      "durationMinutes": 25,
+      "objective": "Öğrenci yedinci yatay konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-11",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Alan üstünlüğü",
+      "durationMinutes": 25,
+      "objective": "Öğrenci alan üstünlüğü konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-12",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Taş koordinasyonu",
+      "durationMinutes": 25,
+      "objective": "Öğrenci taş koordinasyonu konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-13",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Azınlık saldırısı",
+      "durationMinutes": 25,
+      "objective": "Öğrenci azınlık saldırısı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-14",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Kanat oyunları",
+      "durationMinutes": 25,
+      "objective": "Öğrenci kanat oyunları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C06-15",
+      "track": "Strateji",
+      "level": "Orta",
+      "title": "Plan oluşturma",
+      "durationMinutes": 25,
+      "objective": "Öğrenci plan oluşturma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-01",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Kale oyun sonu etkinliği",
+      "durationMinutes": 35,
+      "objective": "Öğrenci kale oyun sonu etkinliği konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-02",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Aktif savunma",
+      "durationMinutes": 35,
+      "objective": "Öğrenci aktif savunma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-03",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Kesme tekniği",
+      "durationMinutes": 35,
+      "objective": "Öğrenci kesme tekniği konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-04",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Fil ve yanlış kale piyonu",
+      "durationMinutes": 35,
+      "objective": "Öğrenci fil ve yanlış kale piyonu konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-05",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Aynı renk filler",
+      "durationMinutes": 35,
+      "objective": "Öğrenci aynı renk filler konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-06",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Zıt renk filler",
+      "durationMinutes": 35,
+      "objective": "Öğrenci zıt renk filler konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-07",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "At oyun sonu",
+      "durationMinutes": 35,
+      "objective": "Öğrenci at oyun sonu konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-08",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Vezir oyun sonu şah çekleri",
+      "durationMinutes": 35,
+      "objective": "Öğrenci vezir oyun sonu şah çekleri konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-09",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Geçer piyon abluka",
+      "durationMinutes": 35,
+      "objective": "Öğrenci geçer piyon abluka konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-10",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Birden fazla piyon zayıflığı",
+      "durationMinutes": 35,
+      "objective": "Öğrenci birden fazla piyon zayıflığı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-11",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Kale karşısında piyonlar",
+      "durationMinutes": 35,
+      "objective": "Öğrenci kale karşısında piyonlar konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-12",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Teorik kale pozisyonları",
+      "durationMinutes": 35,
+      "objective": "Öğrenci teorik kale pozisyonları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-13",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Karmaşık piyon oyun sonu",
+      "durationMinutes": 35,
+      "objective": "Öğrenci karmaşık piyon oyun sonu konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-14",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Hesaplama ve tempo",
+      "durationMinutes": 35,
+      "objective": "Öğrenci hesaplama ve tempo konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C07-15",
+      "track": "İleri Oyun Sonları",
+      "level": "İleri",
+      "title": "Pratik oyun sonu yönetimi",
+      "durationMinutes": 35,
+      "objective": "Öğrenci pratik oyun sonu yönetimi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-01",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Pozisyon değerlendirme",
+      "durationMinutes": 35,
+      "objective": "Öğrenci pozisyon değerlendirme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-02",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Aday hamle ağacı",
+      "durationMinutes": 35,
+      "objective": "Öğrenci aday hamle ağacı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-03",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Profilaksi",
+      "durationMinutes": 35,
+      "objective": "Öğrenci profilaksi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-04",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Dinamik denge",
+      "durationMinutes": 35,
+      "objective": "Öğrenci dinamik denge konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-05",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Statik avantaj",
+      "durationMinutes": 35,
+      "objective": "Öğrenci statik avantaj konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-06",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Değişim kararı",
+      "durationMinutes": 35,
+      "objective": "Öğrenci değişim kararı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-07",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Kalıcı zayıflıklar",
+      "durationMinutes": 35,
+      "objective": "Öğrenci kalıcı zayıflıklar konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-08",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Fedanın telafisi",
+      "durationMinutes": 35,
+      "objective": "Öğrenci fedanın telafisi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-09",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Rakibin planını okuma",
+      "durationMinutes": 35,
+      "objective": "Öğrenci rakibin planını okuma konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-10",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Savunma kaynakları",
+      "durationMinutes": 35,
+      "objective": "Öğrenci savunma kaynakları konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-11",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Zaman yönetimi",
+      "durationMinutes": 35,
+      "objective": "Öğrenci zaman yönetimi konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-12",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Açılış repertuvarı",
+      "durationMinutes": 35,
+      "objective": "Öğrenci açılış repertuvarı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-13",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Kendi maçını analiz etme",
+      "durationMinutes": 35,
+      "objective": "Öğrenci kendi maçını analiz etme konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-14",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Motor analizi yorumlama",
+      "durationMinutes": 35,
+      "objective": "Öğrenci motor analizi yorumlama konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    },
+    {
+      "id": "C08-15",
+      "track": "Ustalık Çalışmaları",
+      "level": "İleri",
+      "title": "Turnuva hazırlığı",
+      "durationMinutes": 35,
+      "objective": "Öğrenci turnuva hazırlığı konusunun temel mantığını açıklayabilir, örnek pozisyonda ilgili fikri tespit eder ve kararını gerekçelendirir.",
+      "activities": [
+        "Kavramı örnek tahtada göster",
+        "İki örnek pozisyonda doğru planı tartış",
+        "En az üç etkileşimli alıştırma çöz",
+        "Yanlış hamle için alternatif varyantı incele"
+      ],
+      "assessment": {
+        "questionCountTarget": 5,
+        "passingAccuracy": 80
+      },
+      "status": "outline",
+      "locale": "tr",
+      "sourcePolicy": "Özgün öğretim taslağı; telifli ders veya kitap metni kopyalanmadı."
+    }
+  ]
+}

@@ -1,0 +1,482 @@
+{
+ "L001": {
+  "title": "Taxta və koordinatlar",
+  "body": "Taxtada şaquli xətlər a–h, üfüqi cərgələr isə 1–8 ilə adlandırılır.",
+  "question": "e4 xanası hansı şaquli xətdədir?",
+  "correct": "e",
+  "wrong": [
+   "4",
+   "h"
+  ]
+ },
+ "L002": {
+  "title": "Açıq və tünd xanalar",
+  "body": "Taxtanın sağ aşağı küncü açıq rəngli xanadır.",
+  "question": "h1 xanası hansı rəngdədir?",
+  "correct": "Açıq",
+  "wrong": [
+   "Tünd",
+   "Qırmızı"
+  ]
+ },
+ "L003": {
+  "title": "Piyadanın ilk gedişi",
+  "body": "Piyada başlanğıc xanasından bir və ya iki xana irəli gedə bilər.",
+  "question": "Piyada ilk gedişdə neçə xana irəliləyə bilər?",
+  "correct": "Bir və ya iki",
+  "wrong": [
+   "Üç",
+   "Geriyə"
+  ]
+ },
+ "L004": {
+  "title": "Piyadanın fiqur tutması",
+  "body": "Piyada qarşısındakı çarpaz xanada olan rəqib fiquru tutur.",
+  "question": "Piyada necə tutur?",
+  "correct": "Çarpaz",
+  "wrong": [
+   "Düz irəli",
+   "Geriyə"
+  ]
+ },
+ "L005": {
+  "title": "Atın gedişi",
+  "body": "At bir istiqamətdə iki xana, düz bucaq altında bir xana gedir və fiqurların üstündən tullana bilər.",
+  "question": "Hansı fiqur digərlərinin üstündən tullana bilər?",
+  "correct": "At",
+  "wrong": [
+   "Fil",
+   "Top"
+  ]
+ },
+ "L006": {
+  "title": "Filin gedişi",
+  "body": "Fil çarpaz gedir və başlanğıc xanasının rənginə sadiq qalır.",
+  "question": "Fil necə gedir?",
+  "correct": "Çarpaz",
+  "wrong": [
+   "L şəklində",
+   "Yalnız düz"
+  ]
+ },
+ "L007": {
+  "title": "Topun gedişi",
+  "body": "Top üfüqi və şaquli istiqamətdə gedir.",
+  "question": "Top hansı istiqamətlərdə gedir?",
+  "correct": "Cərgə və şaquli xətlər boyu",
+  "wrong": [
+   "Yalnız çarpaz",
+   "L şəklində"
+  ]
+ },
+ "L008": {
+  "title": "Vəzirin gedişi",
+  "body": "Vəzir həm top, həm də fil kimi gedir.",
+  "question": "Vəzir necə gedir?",
+  "correct": "Düz və çarpaz",
+  "wrong": [
+   "L şəklində",
+   "Yalnız bir xana"
+  ]
+ },
+ "L009": {
+  "title": "Şahın gedişi",
+  "body": "Şah hücum altında olmayan qonşu xanalardan birinə gedir.",
+  "question": "Şah adətən neçə xana gedir?",
+  "correct": "Bir xana",
+  "wrong": [
+   "Üç xana",
+   "İstənilən məsafə"
+  ]
+ },
+ "L010": {
+  "title": "Şah elanı",
+  "body": "Şaha hücum olarsa, oyunçu təhlükəni aradan qaldırmalıdır.",
+  "question": "Şah elan olunanda nə etməlisən?",
+  "correct": "Şahdan qurtulmalı",
+  "wrong": [
+   "Nəzərə almamalı",
+   "Gedişi buraxmalı"
+  ]
+ },
+ "L011": {
+  "title": "Mat",
+  "body": "Şaha hücum olunur və qanuni çıxış yolu yoxdursa, mat olur.",
+  "question": "Hansı oyunu qalibiyyətlə bitirir?",
+  "correct": "Mat",
+  "wrong": [
+   "Pat",
+   "Kifayət qədər material olmaması"
+  ]
+ },
+ "L012": {
+  "title": "Pat",
+  "body": "Gedişi gələn oyunçunun qanuni gedişi yoxdursa və şahı hücum altında deyilsə, pat olur.",
+  "question": "Pat nədir?",
+  "correct": "Heç-heçə",
+  "wrong": [
+   "Qələbə",
+   "Mat"
+  ]
+ },
+ "L013": {
+  "title": "Rokirovka",
+  "body": "Rokirovkada şah və top birlikdə hərəkət edir; şah hücum altındakı xanadan keçə bilməz.",
+  "question": "Rokirovkada hansı fiqurlar hərəkət edir?",
+  "correct": "Şah və top",
+  "wrong": [
+   "Şah və fil",
+   "Vəzir və top"
+  ]
+ },
+ "L014": {
+  "title": "Keçərkən tutma",
+  "body": "Keçərkən tutma iki xana irəli gedən piyadanı yalnız dərhal növbəti gedişdə tutmaq hüququdur.",
+  "question": "Keçərkən tutma nə vaxt mümkündür?",
+  "correct": "Dərhal növbəti gedişdə",
+  "wrong": [
+   "Sonrakı istənilən gedişdə",
+   "Rokirovkadan sonra"
+  ]
+ },
+ "L015": {
+  "title": "Piyadanın çevrilməsi",
+  "body": "Son cərgəyə çatan piyada vəzirə, topa, fil və ya ata çevrilə bilər.",
+  "question": "Hansı çevrilmə qanunidir?",
+  "correct": "At",
+  "wrong": [
+   "Şah",
+   "Piyada"
+  ]
+ },
+ "L016": {
+  "title": "Fiqurların dəyəri",
+  "body": "Təxmini dəyərlər: piyada 1, at/fil 3, top 5, vəzir 9.",
+  "question": "Hansı fiqur adətən beş dəyərindədir?",
+  "correct": "Top",
+  "wrong": [
+   "Fil",
+   "Piyada"
+  ]
+ },
+ "L017": {
+  "title": "Mərkəzə nəzarət",
+  "body": "e4, d4, e5 və d5 xanaları debütdə vacibdir.",
+  "question": "Hansı xana mərkəzidir?",
+  "correct": "e4",
+  "wrong": [
+   "a1",
+   "h8"
+  ]
+ },
+ "L018": {
+  "title": "Fiqurların çıxarılması",
+  "body": "At və filləri aktiv xanalara çıxar.",
+  "question": "Hansı yaxşı debüt vərdişidir?",
+  "correct": "Fiqurları çıxarmaq",
+  "wrong": [
+   "Vəziri dəfələrlə oynamaq",
+   "Şahın təhlükəsizliyini nəzərə almamaq"
+  ]
+ },
+ "L019": {
+  "title": "Şahın təhlükəsizliyi",
+  "body": "Şahı qorumaq üçün adətən vaxtında rokirovka et.",
+  "question": "Şahın təhlükəsizliyinə nə kömək edir?",
+  "correct": "Rokirovka",
+  "wrong": [
+   "Şahı mərkəzdə saxlamaq",
+   "Piyada itirmək"
+  ]
+ },
+ "L020": {
+  "title": "Tempo",
+  "body": "Rəqibi cavab verməyə məcbur edən gedişlə vaxt qazana bilərsən.",
+  "question": "Şahmatda tempo nədir?",
+  "correct": "Gedişdən faydalı istifadə",
+  "wrong": [
+   "Taxtanın rəngi",
+   "Fiqurun çəkisi"
+  ]
+ },
+ "L021": {
+  "title": "Çəngəl",
+  "body": "Bir fiqur eyni anda iki və ya daha çox hədəfə hücum edir.",
+  "question": "Çəngəl nədir?",
+  "correct": "İki hədəfə hücum",
+  "wrong": [
+   "Uzun rokirovka",
+   "Heç-heçə təklifi"
+  ]
+ },
+ "L022": {
+  "title": "Bağlanma",
+  "body": "Bağlanmış fiqur gedərsə, arxasındakı daha qiymətli fiqur təhlükəyə düşür.",
+  "question": "Bağlanma nədir?",
+  "correct": "Hərəkəti məhdudlaşdırılmış fiqur",
+  "wrong": [
+   "Piyadanın çevrilməsi",
+   "Pat"
+  ]
+ },
+ "L023": {
+  "title": "Şiş",
+  "body": "Qiymətli fiqur çəkiləndə arxasındakı fiqur itirilə bilər.",
+  "question": "Şiş nədir?",
+  "correct": "Qiymətli fiqur vasitəsilə hücum",
+  "wrong": [
+   "Piyada irəliləməsi",
+   "Heç-heçə təklifi"
+  ]
+ },
+ "L024": {
+  "title": "İkiqat şah",
+  "body": "İki fiqur eyni anda şah elan edir.",
+  "question": "İkiqat şahda neçə fiqur hücum edir?",
+  "correct": "İki",
+  "wrong": [
+   "Bir",
+   "Sıfır"
+  ]
+ },
+ "L025": {
+  "title": "Açılan hücum",
+  "body": "Qabaqdakı fiqur gedəndə arxasındakı fiqurun hücumu açılır.",
+  "question": "Açılan hücumu nə yaradır?",
+  "correct": "Mane olan fiquru oynamaq",
+  "wrong": [
+   "Piyadanı çevirmək",
+   "Rokirovka"
+  ]
+ },
+ "L026": {
+  "title": "Müdafiəsiz fiqur",
+  "body": "Qorunmayan fiqur taktiki fürsət yaradır.",
+  "question": "Müdafiəsiz fiqur nədir?",
+  "correct": "Qorunmayan fiqur",
+  "wrong": [
+   "Çevrilmiş vəzir",
+   "Rokirovka etmiş top"
+  ]
+ },
+ "L027": {
+  "title": "Son cərgə",
+  "body": "Şahın qaçış xanaları yoxdursa, son cərgədə mat təhlükəsi yaranır.",
+  "question": "Son cərgə zəifliyi nədir?",
+  "correct": "Şahın qaçış xanası yoxdur",
+  "wrong": [
+   "Əlavə fil",
+   "Keçid piyadası"
+  ]
+ },
+ "L028": {
+  "title": "Mat toru",
+  "body": "Bir neçə fiqur şahın qaçış xanalarını bağlayır.",
+  "question": "Mat toru nədir?",
+  "correct": "Qaçış xanalarını bağlamaq",
+  "wrong": [
+   "Vəzirləri dəyişmək",
+   "Təsadüfi oynamaq"
+  ]
+ },
+ "L029": {
+  "title": "Vəzir və şahla mat",
+  "body": "Vəzir şahın sahəsini daraldır; öz şahınla ona dəstək ver.",
+  "question": "Vəzirlə mata nə kömək edir?",
+  "correct": "Şahın dəstəyi",
+  "wrong": [
+   "Vəziri vermək",
+   "Müxalifətdən qaçmaq"
+  ]
+ },
+ "L030": {
+  "title": "Top və şahla mat",
+  "body": "Topla rəqib şahın sahəsini daralt, öz şahını yaxınlaşdır.",
+  "question": "Topla mata nə kömək edir?",
+  "correct": "Şahla əlaqə",
+  "wrong": [
+   "Topu qurban vermək",
+   "Müxalifətə fikir verməmək"
+  ]
+ },
+ "L031": {
+  "title": "Müxalifət",
+  "body": "Şahlar üz-üzə gələndə gediş növbəsi həlledici ola bilər.",
+  "question": "Müxalifət harada vacibdir?",
+  "correct": "Şah və piyada endşpilində",
+  "wrong": [
+   "Yalnız debüt tələlərində",
+   "Rokirovkada"
+  ]
+ },
+ "L032": {
+  "title": "Keçid piyadası",
+  "body": "Qarşısında onu dayandıra biləcək rəqib piyadası olmayan piyadadır.",
+  "question": "Keçid piyadası nədir?",
+  "correct": "Qarşıda rəqib piyadası yoxdur",
+  "wrong": [
+   "a xəttindəki piyada",
+   "Birinci cərgədəki piyada"
+  ]
+ },
+ "L033": {
+  "title": "Piyada zənciri",
+  "body": "Piyadalar bir-birini çarpaz qoruyur.",
+  "question": "Piyadalar piyadaları necə qoruyur?",
+  "correct": "Çarpaz",
+  "wrong": [
+   "Düz irəli",
+   "Geri gedişlərlə"
+  ]
+ },
+ "L034": {
+  "title": "Təcrid olunmuş piyada",
+  "body": "Qonşu şaquli xətlərdə eyni rəngli piyada yoxdur.",
+  "question": "Təcrid olunmuş piyada nədir?",
+  "correct": "Qonşu xətlərdə öz piyadası yoxdur",
+  "wrong": [
+   "Üst-üstə iki piyada",
+   "Keçid piyadası"
+  ]
+ },
+ "L035": {
+  "title": "İkiqat piyadalar",
+  "body": "Eyni şaquli xətdə eyni rəngli iki piyada durur.",
+  "question": "İkiqat piyadalar nədir?",
+  "correct": "Bir xətdə iki piyada",
+  "wrong": [
+   "İki vəzir",
+   "İki top"
+  ]
+ },
+ "L036": {
+  "title": "Açıq şaquli xətt",
+  "body": "Üzərində heç bir piyada olmayan şaquli xətdir.",
+  "question": "Açıq şaquli xətt nədir?",
+  "correct": "Piyadasız xətt",
+  "wrong": [
+   "Yalnız fillər",
+   "Yalnız şahlar"
+  ]
+ },
+ "L037": {
+  "title": "Yarımaçıq şaquli xətt",
+  "body": "Bir oyunçunun piyadasının olmadığı şaquli xətdir.",
+  "question": "Yarımaçıq xətt nədir?",
+  "correct": "Öz piyadası olmayan xətt",
+  "wrong": [
+   "Fiqursuz xətt",
+   "Şahsız xətt"
+  ]
+ },
+ "L038": {
+  "title": "Aktiv top",
+  "body": "Toplar açıq xətlərdə və yeddinci cərgədə təsirli ola bilər.",
+  "question": "Toplar adətən harada aktivdir?",
+  "correct": "Açıq xətlərdə",
+  "wrong": [
+   "Öz piyadalarının arxasında",
+   "Həmişə künclərdə"
+  ]
+ },
+ "L039": {
+  "title": "Fil cütü",
+  "body": "İki fil açıq mövqelərdə güclü ola bilər.",
+  "question": "Fil cütü harada çox vaxt güclüdür?",
+  "correct": "Açıq mövqelərdə",
+  "wrong": [
+   "Bağlı mövqelərdə",
+   "Diaqonalsız"
+  ]
+ },
+ "L040": {
+  "title": "Yaxşı və pis fil",
+  "body": "Öz piyada zənciri ilə bloklanan filin təsiri azala bilər.",
+  "question": "Pis fili nə bloklayır?",
+  "correct": "Öz piyadaları",
+  "wrong": [
+   "Açıq diaqonallar",
+   "Rəqib şahı"
+  ]
+ },
+ "L041": {
+  "title": "Atın dayaq məntəqəsi",
+  "body": "Piyadaların qova bilmədiyi irəli xanadakı at güclüdür.",
+  "question": "Dayaq məntəqəsini nə yaradır?",
+  "correct": "Piyadalarla qovulması çətindir",
+  "wrong": [
+   "Taxtanın küncü",
+   "Başlanğıc xana"
+  ]
+ },
+ "L042": {
+  "title": "Hesablama",
+  "body": "Namizəd gedişləri və məcburi cavabları ardıcıl yoxla.",
+  "question": "Hesablamada nə birinci gəlir?",
+  "correct": "Namizəd gedişlər",
+  "wrong": [
+   "Təsadüfi gediş",
+   "Saata basmaq"
+  ]
+ },
+ "L043": {
+  "title": "Mübadilə",
+  "body": "Mübadilədən əvvəl yaranacaq mövqeni və fiqur dəyərlərini qiymətləndir.",
+  "question": "Mübadilələrdə nə vacibdir?",
+  "correct": "Yaranan mövqe",
+  "wrong": [
+   "Yalnız fiqurun rəngi",
+   "Yalnız gediş nömrəsi"
+  ]
+ },
+ "L044": {
+  "title": "Plan qurma",
+  "body": "Mövqenin güclü və zəif tərəflərinə görə qısa plan qur.",
+  "question": "Planı nə istiqamətləndirir?",
+  "correct": "Mövqenin xüsusiyyətləri",
+  "wrong": [
+   "Təsadüfi təxmin",
+   "Yalnız material"
+  ]
+ },
+ "L045": {
+  "title": "Endşpildə şah",
+  "body": "Endşpildə şah aktiv döyüşçü fiqurdur.",
+  "question": "Şah endşpildə nə etməlidir?",
+  "correct": "Aktiv olmalı",
+  "wrong": [
+   "Həmişə gizlənməli",
+   "Heç vaxt getməməli"
+  ]
+ },
+ "L046": {
+  "title": "Zugzwang",
+  "body": "Gediş etmək məcburiyyəti oyunçunun mövqeyini pisləşdirə bilər.",
+  "question": "Zugzwang nədir?",
+  "correct": "Gediş etməli və vəziyyət pisləşir",
+  "wrong": [
+   "Bir gedişdə mat",
+   "Rokirovka"
+  ]
+ },
+ "L047": {
+  "title": "Heç-heçə növləri",
+  "body": "Pat, kifayət qədər material olmaması, təkrar və gediş sayı heç-heçəyə səbəb ola bilər.",
+  "question": "Hansı heç-heçə ola bilər?",
+  "correct": "Pat",
+  "wrong": [
+   "Mat",
+   "Təslim olmaq"
+  ]
+ },
+ "L048": {
+  "title": "Təhlil vərdişi",
+  "body": "Oyundan sonra həlledici gedişləri və qaçırılan imkanları araşdır.",
+  "question": "Öyrənməni nə yaxşılaşdırır?",
+  "correct": "Səhvləri araşdırmaq",
+  "wrong": [
+   "Yalnız qələbələr",
+   "Məğlubiyyətlərə fikir verməmək"
+  ]
+ }
+}

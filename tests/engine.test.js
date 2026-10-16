@@ -1,0 +1,14 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {ChessEngine,START}=require('../engine.js');
+const test=(name,fn)=>{fn();console.log('PASS',name)};
+test('start position FEN, legal move counts and perft',()=>{const g=new ChessEngine();assert.equal(g.fen(),START);assert.equal(g.moves().length,20);assert.equal(g.perft(2),400);assert.equal(g.perft(3),8902);assert.equal(g.perft(4),197281);});
+test('turn, pawn capture and blocked pawn',()=>{const g=new ChessEngine();assert.equal(g.move('e7','e5'),null);assert.ok(g.move('e2','e4'));assert.equal(g.move('d2','d4'),null);assert.ok(g.move('d7','d5'));assert.ok(g.move('e4','d5'));});
+test('castling on both sides and undo',()=>{const g=new ChessEngine('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1');const initial=g.fen();assert.ok(g.moves({square:'e1'}).some(m=>m.to==='g1'));assert.ok(g.moves({square:'e1'}).some(m=>m.to==='c1'));assert.ok(g.move('e1','g1'));assert.equal(g.at('f1'),'R');assert.equal(g.at('h1'),null);g.undo();assert.equal(g.fen(),initial);});
+test('cannot castle through check',()=>{const g=new ChessEngine('r3k2r/8/8/8/8/5r2/8/R3K2R w KQkq - 0 1');assert.equal(g.moves({square:'e1'}).some(m=>m.to==='g1'),false);});
+test('en passant removes pawn and undo restores',()=>{const g=new ChessEngine('4k3/3p4/8/4P3/8/8/8/4K3 b - - 0 1');const fen=g.fen();assert.ok(g.move('d7','d5'));assert.equal(g.fen().split(' ')[3],'d6');assert.ok(g.move('e5','d6'));assert.equal(g.at('d5'),null);assert.equal(g.at('d6'),'P');g.undo();g.undo();assert.equal(g.fen(),fen);});
+test('promotion choices',()=>{for(const [type,piece] of [['q','Q'],['n','N'],['r','R'],['b','B']]){const g=new ChessEngine('7k/P7/8/8/8/8/8/4K3 w - - 0 1');assert.ok(g.move('a7','a8',type));assert.equal(g.at('a8'),piece);}});
+test('checkmate scholar and stalemate',()=>{const g=new ChessEngine('r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4');assert.ok(g.move('h5','f7'));assert.equal(g.isCheckmate(),true);assert.equal(g.isGameOver(),true);const p=new ChessEngine('7k/5Q2/6K1/8/8/8/8/8 b - - 0 1');assert.equal(p.isStalemate(),true);assert.equal(p.isDraw(),true);});
+test('repetition and undo',()=>{const g=new ChessEngine();for(let i=0;i<2;i++){for(const [a,b] of [['g1','f3'],['g8','f6'],['f3','g1'],['f6','g8']])assert.ok(g.move(a,b));}assert.equal(g.isDraw(),true);g.undo();assert.equal(g.isDraw(),false);});
+test('50-move rule and insufficient material',()=>{assert.equal(new ChessEngine('4k3/8/8/8/8/8/8/4K3 w - - 0 1').isDraw(),true);assert.equal(new ChessEngine('4k3/8/8/8/8/8/8/R3K3 w - - 100 1').isDraw(),true);});
+test('puzzle positions are checkmate in one',()=>{for(const [fen,from,to] of [['7k/8/5KQ1/8/8/8/8/8 w - - 0 1','g6','g7'],['k7/8/1QK5/8/8/8/8/8 w - - 0 1','b6','b7'],['r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4','h5','f7'],['8/8/8/8/8/5kq1/8/7K b - - 0 1','g3','g2']]){const g=new ChessEngine(fen);assert.ok(g.move(from,to));assert.equal(g.isCheckmate(),true);}});

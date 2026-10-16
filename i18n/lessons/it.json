@@ -1,0 +1,482 @@
+{
+ "L001": {
+  "title": "Scacchiera e coordinate",
+  "body": "Sulla scacchiera le colonne si chiamano a-h e le traverse 1-8.",
+  "question": "In quale colonna si trova e4?",
+  "correct": "e",
+  "wrong": [
+   "4",
+   "h"
+  ]
+ },
+ "L002": {
+  "title": "Case chiare e scure",
+  "body": "L'angolo in basso a destra della scacchiera è una casa chiara.",
+  "question": "Di che colore è h1?",
+  "correct": "Chiara",
+  "wrong": [
+   "Scura",
+   "Rossa"
+  ]
+ },
+ "L003": {
+  "title": "Prima mossa del pedone",
+  "body": "Un pedone può avanzare di una o due case dalla casa di partenza.",
+  "question": "Di quante case può avanzare un pedone alla prima mossa?",
+  "correct": "Una o due",
+  "wrong": [
+   "Tre",
+   "Indietro"
+  ]
+ },
+ "L004": {
+  "title": "Presa del pedone",
+  "body": "I pedoni catturano un pezzo avversario sulla casa diagonale davanti a loro.",
+  "question": "Come cattura un pedone?",
+  "correct": "In diagonale",
+  "wrong": [
+   "Dritto in avanti",
+   "All'indietro"
+  ]
+ },
+ "L005": {
+  "title": "Il cavallo",
+  "body": "Il cavallo si muove di due case in una direzione e una ad angolo retto, e può saltare i pezzi.",
+  "question": "Quale pezzo può saltare gli altri?",
+  "correct": "Cavallo",
+  "wrong": [
+   "Alfiere",
+   "Torre"
+  ]
+ },
+ "L006": {
+  "title": "L'alfiere",
+  "body": "L'alfiere si muove in diagonale e resta sul colore della sua casa di partenza.",
+  "question": "Come si muove l'alfiere?",
+  "correct": "In diagonale",
+  "wrong": [
+   "A forma di L",
+   "Solo dritto"
+  ]
+ },
+ "L007": {
+  "title": "La torre",
+  "body": "La torre si muove in orizzontale e in verticale.",
+  "question": "In quali direzioni si muove la torre?",
+  "correct": "Traverse e colonne",
+  "wrong": [
+   "Solo in diagonale",
+   "A forma di L"
+  ]
+ },
+ "L008": {
+  "title": "La donna",
+  "body": "La donna si muove come torre e alfiere insieme.",
+  "question": "Come si muove la donna?",
+  "correct": "Dritto e in diagonale",
+  "wrong": [
+   "A forma di L",
+   "Solo di una casa"
+  ]
+ },
+ "L009": {
+  "title": "Il re",
+  "body": "Il re si sposta su una casa adiacente non minacciata.",
+  "question": "Di quanto si muove normalmente il re?",
+  "correct": "Una casa",
+  "wrong": [
+   "Tre case",
+   "Qualsiasi distanza"
+  ]
+ },
+ "L010": {
+  "title": "Scacco",
+  "body": "Se il re è sotto scacco, bisogna eliminare la minaccia.",
+  "question": "Cosa si deve fare sotto scacco?",
+  "correct": "Uscire dallo scacco",
+  "wrong": [
+   "Ignorare lo scacco",
+   "Saltare il turno"
+  ]
+ },
+ "L011": {
+  "title": "Scacco matto",
+  "body": "Se il re è sotto scacco e non ha vie di fuga legali, è scacco matto.",
+  "question": "Cosa termina la partita con un vincitore?",
+  "correct": "Scacco matto",
+  "wrong": [
+   "Stallo",
+   "Materiale insufficiente"
+  ]
+ },
+ "L012": {
+  "title": "Stallo",
+  "body": "Se il giocatore di turno non ha mosse legali e non è sotto scacco, è stallo.",
+  "question": "Cos'è lo stallo?",
+  "correct": "Patta",
+  "wrong": [
+   "Vittoria",
+   "Scacco matto"
+  ]
+ },
+ "L013": {
+  "title": "Arrocco",
+  "body": "Nell'arrocco re e torre si muovono insieme; il re non può attraversare una casa attaccata.",
+  "question": "Quali pezzi si muovono nell'arrocco?",
+  "correct": "Re e torre",
+  "wrong": [
+   "Re e alfiere",
+   "Donna e torre"
+  ]
+ },
+ "L014": {
+  "title": "Presa en passant",
+  "body": "L'en passant è il diritto di catturare un pedone appena avanzato di due case, solo alla mossa immediatamente successiva.",
+  "question": "Quando è possibile l'en passant?",
+  "correct": "Subito alla mossa successiva",
+  "wrong": [
+   "A qualsiasi mossa successiva",
+   "Dopo l'arrocco"
+  ]
+ },
+ "L015": {
+  "title": "Promozione",
+  "body": "Un pedone che raggiunge l'ultima traversa può promuovere a donna, torre, alfiere o cavallo.",
+  "question": "Quale promozione è legale?",
+  "correct": "Cavallo",
+  "wrong": [
+   "Re",
+   "Pedone"
+  ]
+ },
+ "L016": {
+  "title": "Valore dei pezzi",
+  "body": "Valori approssimativi: pedone 1, cavallo/alfiere 3, torre 5, donna 9.",
+  "question": "Quale pezzo vale di solito cinque?",
+  "correct": "Torre",
+  "wrong": [
+   "Alfiere",
+   "Pedone"
+  ]
+ },
+ "L017": {
+  "title": "Controllo del centro",
+  "body": "Le case e4, d4, e5 e d5 sono importanti in apertura.",
+  "question": "Quale casa è centrale?",
+  "correct": "e4",
+  "wrong": [
+   "a1",
+   "h8"
+  ]
+ },
+ "L018": {
+  "title": "Sviluppo",
+  "body": "Porta cavalli e alfieri su case attive.",
+  "question": "Qual è una buona pratica in apertura?",
+  "correct": "Sviluppare i pezzi",
+  "wrong": [
+   "Muovere più volte la donna",
+   "Ignorare la sicurezza del re"
+  ]
+ },
+ "L019": {
+  "title": "Sicurezza del re",
+  "body": "Per proteggere il re di solito si arrocca in tempo.",
+  "question": "Cosa aiuta la sicurezza del re?",
+  "correct": "L'arrocco",
+  "wrong": [
+   "Lasciare il re al centro",
+   "Perdere pedoni"
+  ]
+ },
+ "L020": {
+  "title": "Tempo",
+  "body": "Con una mossa che costringe a rispondere puoi guadagnare tempo.",
+  "question": "Cos'è il tempo negli scacchi?",
+  "correct": "Uso utile della mossa",
+  "wrong": [
+   "Colore della scacchiera",
+   "Peso del pezzo"
+  ]
+ },
+ "L021": {
+  "title": "Forchetta",
+  "body": "Un pezzo attacca contemporaneamente due o più bersagli.",
+  "question": "Cos'è una forchetta?",
+  "correct": "Attaccare due bersagli",
+  "wrong": [
+   "Arroccare lungo",
+   "Offrire la patta"
+  ]
+ },
+ "L022": {
+  "title": "Inchiodatura",
+  "body": "Se un pezzo inchiodato si muove, il pezzo più prezioso dietro di lui è in pericolo.",
+  "question": "Cos'è un'inchiodatura?",
+  "correct": "Movimento limitato",
+  "wrong": [
+   "Promozione del pedone",
+   "Stallo"
+  ]
+ },
+ "L023": {
+  "title": "Infilata",
+  "body": "Quando il pezzo prezioso si sposta, quello dietro può andare perso.",
+  "question": "Cos'è un'infilata?",
+  "correct": "Attacco attraverso un pezzo prezioso",
+  "wrong": [
+   "Avanzata di pedone",
+   "Offerta di patta"
+  ]
+ },
+ "L024": {
+  "title": "Scacco doppio",
+  "body": "Due pezzi danno scacco contemporaneamente.",
+  "question": "Quanti pezzi attaccano nello scacco doppio?",
+  "correct": "Due",
+  "wrong": [
+   "Uno",
+   "Zero"
+  ]
+ },
+ "L025": {
+  "title": "Attacco di scoperta",
+  "body": "Quando il pezzo davanti si muove, si scopre l'attacco del pezzo dietro.",
+  "question": "Cosa crea un attacco di scoperta?",
+  "correct": "Muovere un pezzo che blocca",
+  "wrong": [
+   "Promuovere un pedone",
+   "Arroccare"
+  ]
+ },
+ "L026": {
+  "title": "Pezzo indifeso",
+  "body": "Un pezzo non protetto offre un'opportunità tattica.",
+  "question": "Cos'è un pezzo indifeso?",
+  "correct": "Pezzo non protetto",
+  "wrong": [
+   "Donna promossa",
+   "Torre arroccata"
+  ]
+ },
+ "L027": {
+  "title": "Ultima traversa",
+  "body": "Se il re non ha case di fuga, può nascere una minaccia di matto sull'ultima traversa.",
+  "question": "Cos'è una debolezza dell'ultima traversa?",
+  "correct": "Nessuna casa di fuga per il re",
+  "wrong": [
+   "Alfiere in più",
+   "Pedone passato"
+  ]
+ },
+ "L028": {
+  "title": "Rete di matto",
+  "body": "Più pezzi coprono le case di fuga del re.",
+  "question": "Cos'è una rete di matto?",
+  "correct": "Coprire le case di fuga",
+  "wrong": [
+   "Scambiare le donne",
+   "Muovere a caso"
+  ]
+ },
+ "L029": {
+  "title": "Matto di donna e re",
+  "body": "La donna riduce lo spazio del re; sostienila con il tuo re.",
+  "question": "Cosa aiuta il matto di donna?",
+  "correct": "Il sostegno del re",
+  "wrong": [
+   "Regalare la donna",
+   "Evitare l'opposizione"
+  ]
+ },
+ "L030": {
+  "title": "Matto di torre e re",
+  "body": "Riduci lo spazio del re avversario con la torre e avvicina il tuo re.",
+  "question": "Cosa aiuta il matto di torre?",
+  "correct": "Coordinazione del re",
+  "wrong": [
+   "Sacrificare la torre",
+   "Ignorare l'opposizione"
+  ]
+ },
+ "L031": {
+  "title": "Opposizione",
+  "body": "Quando i re si fronteggiano, a chi tocca muovere può essere decisivo.",
+  "question": "Dove è importante l'opposizione?",
+  "correct": "Finali di re e pedoni",
+  "wrong": [
+   "Solo trappole d'apertura",
+   "Arrocco"
+  ]
+ },
+ "L032": {
+  "title": "Pedone passato",
+  "body": "È un pedone che nessun pedone avversario davanti a sé può fermare.",
+  "question": "Cos'è un pedone passato?",
+  "correct": "Nessun pedone avversario davanti",
+  "wrong": [
+   "Pedone in colonna a",
+   "Pedone in prima traversa"
+  ]
+ },
+ "L033": {
+  "title": "Catena di pedoni",
+  "body": "I pedoni si proteggono a vicenda in diagonale.",
+  "question": "Come si proteggono i pedoni?",
+  "correct": "In diagonale",
+  "wrong": [
+   "Dritto avanti",
+   "Mosse indietro"
+  ]
+ },
+ "L034": {
+  "title": "Pedone isolato",
+  "body": "Sulle colonne adiacenti non ci sono pedoni dello stesso colore.",
+  "question": "Cos'è un pedone isolato?",
+  "correct": "Nessun pedone amico nelle colonne adiacenti",
+  "wrong": [
+   "Due pedoni sovrapposti",
+   "Pedone passato"
+  ]
+ },
+ "L035": {
+  "title": "Pedoni doppiati",
+  "body": "Due pedoni dello stesso colore si trovano sulla stessa colonna.",
+  "question": "Cosa sono i pedoni doppiati?",
+  "correct": "Due su una colonna",
+  "wrong": [
+   "Due donne",
+   "Due torri"
+  ]
+ },
+ "L036": {
+  "title": "Colonna aperta",
+  "body": "Una colonna senza alcun pedone.",
+  "question": "Cos'è una colonna aperta?",
+  "correct": "Nessun pedone",
+  "wrong": [
+   "Solo alfieri",
+   "Solo re"
+  ]
+ },
+ "L037": {
+  "title": "Colonna semiaperta",
+  "body": "Una colonna in cui un giocatore non ha pedoni.",
+  "question": "Cos'è una colonna semiaperta?",
+  "correct": "Nessun pedone amico",
+  "wrong": [
+   "Nessun pezzo",
+   "Nessun re"
+  ]
+ },
+ "L038": {
+  "title": "Torre attiva",
+  "body": "Le torri sono efficaci sulle colonne aperte e sulla settima traversa.",
+  "question": "Dove sono spesso attive le torri?",
+  "correct": "Colonne aperte",
+  "wrong": [
+   "Dietro i propri pedoni",
+   "Negli angoli per sempre"
+  ]
+ },
+ "L039": {
+  "title": "Coppia degli alfieri",
+  "body": "Due alfieri possono essere forti nelle posizioni aperte.",
+  "question": "Dove è spesso forte la coppia degli alfieri?",
+  "correct": "Posizioni aperte",
+  "wrong": [
+   "Posizioni chiuse",
+   "Senza diagonali"
+  ]
+ },
+ "L040": {
+  "title": "Alfiere buono e cattivo",
+  "body": "Un alfiere bloccato dalla propria catena di pedoni perde efficacia.",
+  "question": "Cosa blocca un alfiere cattivo?",
+  "correct": "I propri pedoni",
+  "wrong": [
+   "Diagonali aperte",
+   "Il re avversario"
+  ]
+ },
+ "L041": {
+  "title": "Avamposto del cavallo",
+  "body": "Un cavallo su una casa avanzata che i pedoni non possono scacciare è forte.",
+  "question": "Cosa rende un avamposto?",
+  "correct": "Difficile da scacciare con i pedoni",
+  "wrong": [
+   "Angolo della scacchiera",
+   "Casa di partenza"
+  ]
+ },
+ "L042": {
+  "title": "Calcolo",
+  "body": "Esamina in ordine le mosse candidate e le risposte forzate.",
+  "question": "Cosa viene prima nel calcolo?",
+  "correct": "Mosse candidate",
+  "wrong": [
+   "Mossa a caso",
+   "Premere l'orologio"
+  ]
+ },
+ "L043": {
+  "title": "Cambi",
+  "body": "Prima di un cambio, valuta la posizione risultante e il valore dei pezzi.",
+  "question": "Cosa conta nei cambi?",
+  "correct": "La posizione risultante",
+  "wrong": [
+   "Solo il colore del pezzo",
+   "Solo il numero di mossa"
+  ]
+ },
+ "L044": {
+  "title": "Pianificazione",
+  "body": "Costruisci un piano breve in base ai punti forti e deboli della posizione.",
+  "question": "Cosa guida un piano?",
+  "correct": "Caratteristiche della posizione",
+  "wrong": [
+   "Indovinare a caso",
+   "Solo il materiale"
+  ]
+ },
+ "L045": {
+  "title": "Re attivo",
+  "body": "Nel finale il re è un pezzo combattivo e attivo.",
+  "question": "Cosa deve fare il re nel finale?",
+  "correct": "Diventare attivo",
+  "wrong": [
+   "Nascondersi per sempre",
+   "Non muoversi mai"
+  ]
+ },
+ "L046": {
+  "title": "Zugzwang",
+  "body": "Dover muovere può peggiorare la posizione del giocatore.",
+  "question": "Cos'è lo zugzwang?",
+  "correct": "Dover muovere e peggiorare",
+  "wrong": [
+   "Matto in uno",
+   "Arrocco"
+  ]
+ },
+ "L047": {
+  "title": "Tipi di patta",
+  "body": "Stallo, materiale insufficiente, ripetizione e numero di mosse possono portare alla patta.",
+  "question": "Quale può essere una patta?",
+  "correct": "Stallo",
+  "wrong": [
+   "Scacco matto",
+   "Abbandono"
+  ]
+ },
+ "L048": {
+  "title": "Abitudine all'analisi",
+  "body": "Dopo la partita esamina le mosse critiche e le occasioni mancate.",
+  "question": "Cosa migliora l'apprendimento?",
+  "correct": "Rivedere gli errori",
+  "wrong": [
+   "Solo le vittorie",
+   "Ignorare le sconfitte"
+  ]
+ }
+}

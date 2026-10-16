@@ -1,0 +1,482 @@
+{
+ "L001": {
+  "title": "Tahta ve koordinatlar",
+  "body": "Tahtada sütunlar a-h, yataylar 1-8 olarak adlandırılır.",
+  "question": "e4 karesi hangi sütundadır?",
+  "correct": "e",
+  "wrong": [
+   "4",
+   "h"
+  ]
+ },
+ "L002": {
+  "title": "Beyaz ve siyah kareler",
+  "body": "Tahtanın sağ alt köşesi açık renktir.",
+  "question": "h1 karesi hangi renktir?",
+  "correct": "Açık",
+  "wrong": [
+   "Koyu",
+   "Kırmızı"
+  ]
+ },
+ "L003": {
+  "title": "Piyonun ilk hamlesi",
+  "body": "Piyon başlangıç karesinden bir veya iki kare ileri gidebilir.",
+  "question": "Piyon ilk hamlesinde kaç kare ilerleyebilir?",
+  "correct": "Bir veya iki",
+  "wrong": [
+   "Üç",
+   "Geriye"
+  ]
+ },
+ "L004": {
+  "title": "Piyonun taş alması",
+  "body": "Piyonlar çapraz öndeki karedeki rakip taşı alır.",
+  "question": "Piyon nasıl taş alır?",
+  "correct": "Çapraz",
+  "wrong": [
+   "Düz ileri",
+   "Geriye"
+  ]
+ },
+ "L005": {
+  "title": "Atın hareketi",
+  "body": "At iki kare bir yöne, bir kare dik yöne gider ve taşların üzerinden atlayabilir.",
+  "question": "Hangi taş diğer taşların üzerinden atlayabilir?",
+  "correct": "At",
+  "wrong": [
+   "Fil",
+   "Kale"
+  ]
+ },
+ "L006": {
+  "title": "Filin hareketi",
+  "body": "Fil çapraz hareket eder ve başladığı kare renginde kalır.",
+  "question": "Fil nasıl hareket eder?",
+  "correct": "Çapraz",
+  "wrong": [
+   "L şeklinde",
+   "Yalnızca düz"
+  ]
+ },
+ "L007": {
+  "title": "Kalenin hareketi",
+  "body": "Kale yatay ve dikey hareket eder.",
+  "question": "Kale hangi yönlerde hareket eder?",
+  "correct": "Yatay ve dikey",
+  "wrong": [
+   "Yalnızca çapraz",
+   "L şeklinde"
+  ]
+ },
+ "L008": {
+  "title": "Vezirin hareketi",
+  "body": "Vezir hem kale hem fil gibi hareket eder.",
+  "question": "Vezir nasıl hareket eder?",
+  "correct": "Düz ve çapraz",
+  "wrong": [
+   "L şeklinde",
+   "Yalnızca bir kare"
+  ]
+ },
+ "L009": {
+  "title": "Şahın hareketi",
+  "body": "Şah tehdit edilmeyen komşu karelerden birine hareket eder.",
+  "question": "Şah normalde kaç kare gider?",
+  "correct": "Bir kare",
+  "wrong": [
+   "Üç kare",
+   "İstediği kadar"
+  ]
+ },
+ "L010": {
+  "title": "Şah çekme",
+  "body": "Şah tehdit altındaysa oyuncu tehdidi ortadan kaldırmalıdır.",
+  "question": "Şah çekilince ne yapmalısın?",
+  "correct": "Şahtan kurtulmalı",
+  "wrong": [
+   "Görmezden gelmeli",
+   "Sırayı geçmeli"
+  ]
+ },
+ "L011": {
+  "title": "Şah mat",
+  "body": "Şah tehdit altındaysa ve yasal kaçış yoksa mat olur.",
+  "question": "Hangisi oyunu galibiyetle bitirir?",
+  "correct": "Şah mat",
+  "wrong": [
+   "Pat",
+   "Yetersiz materyal"
+  ]
+ },
+ "L012": {
+  "title": "Pat",
+  "body": "Sırası gelen oyuncunun yasal hamlesi yoksa ve şahı tehdit altında değilse pat olur.",
+  "question": "Pat nedir?",
+  "correct": "Beraberlik",
+  "wrong": [
+   "Galibiyet",
+   "Şah mat"
+  ]
+ },
+ "L013": {
+  "title": "Rok kuralları",
+  "body": "Rokta şah ve kale birlikte hareket eder; şah saldırı altındaki kareden geçemez.",
+  "question": "Rokta hangi taşlar hareket eder?",
+  "correct": "Şah ve kale",
+  "wrong": [
+   "Şah ve fil",
+   "Vezir ve kale"
+  ]
+ },
+ "L014": {
+  "title": "Geçerken alma",
+  "body": "Piyonun iki kare ilerlemesine karşı özel bir sonraki hamle alma hakkıdır.",
+  "question": "Geçerken alma ne zaman yapılabilir?",
+  "correct": "Hemen sonraki hamlede",
+  "wrong": [
+   "Sonraki herhangi bir hamlede",
+   "Roktan sonra"
+  ]
+ },
+ "L015": {
+  "title": "Terfi",
+  "body": "Son yataya ulaşan piyon vezir, kale, fil veya ata terfi edebilir.",
+  "question": "Hangisi geçerli bir terfidir?",
+  "correct": "At",
+  "wrong": [
+   "Şah",
+   "Piyon"
+  ]
+ },
+ "L016": {
+  "title": "Taş değerleri",
+  "body": "Piyon 1, at/fil 3, kale 5, vezir 9 yaklaşık değerdedir.",
+  "question": "Genellikle hangi taş beş değerindedir?",
+  "correct": "Kale",
+  "wrong": [
+   "Fil",
+   "Piyon"
+  ]
+ },
+ "L017": {
+  "title": "Merkez kontrolü",
+  "body": "e4, d4, e5 ve d5 kareleri açılışta önemlidir.",
+  "question": "Hangi kare merkez karesidir?",
+  "correct": "e4",
+  "wrong": [
+   "a1",
+   "h8"
+  ]
+ },
+ "L018": {
+  "title": "Taş geliştirme",
+  "body": "Atları ve filleri aktif karelere çıkar.",
+  "question": "Hangisi iyi bir açılış alışkanlığıdır?",
+  "correct": "Taşları geliştirmek",
+  "wrong": [
+   "Veziri tekrar tekrar oynamak",
+   "Şah güvenliğini görmezden gelmek"
+  ]
+ },
+ "L019": {
+  "title": "Şah güvenliği",
+  "body": "Şahı korumak için genellikle zamanında rok yap.",
+  "question": "Şah güvenliğine ne yardımcı olur?",
+  "correct": "Rok",
+  "wrong": [
+   "Şahı merkezde bırakmak",
+   "Piyon kaybetmek"
+  ]
+ },
+ "L020": {
+  "title": "Tempo",
+  "body": "Bir hamleyle rakibe zorunlu yanıt verdirerek zaman kazanabilirsin.",
+  "question": "Satrançta tempo nedir?",
+  "correct": "Hamle zamanının yararlı kullanımı",
+  "wrong": [
+   "Tahta rengi",
+   "Taş ağırlığı"
+  ]
+ },
+ "L021": {
+  "title": "Çatal",
+  "body": "Bir taş aynı anda iki veya daha fazla hedefe saldırır.",
+  "question": "Çatal nedir?",
+  "correct": "İki hedefe birden saldırmak",
+  "wrong": [
+   "Uzun rok yapmak",
+   "Beraberlik teklif etmek"
+  ]
+ },
+ "L022": {
+  "title": "Açmaz",
+  "body": "Bir taş hareket ederse arkasındaki değerli taş tehlikeye girer.",
+  "question": "Açmaz nedir?",
+  "correct": "Hareketi kısıtlanmış taş",
+  "wrong": [
+   "Piyon terfisi",
+   "Pat"
+  ]
+ },
+ "L023": {
+  "title": "Şiş",
+  "body": "Değerli taş kaçınca arkasındaki taş kaybedilebilir.",
+  "question": "Şiş nedir?",
+  "correct": "Değerli taş üzerinden saldırı",
+  "wrong": [
+   "Piyon ilerletmek",
+   "Beraberlik teklifi"
+  ]
+ },
+ "L024": {
+  "title": "Çifte şah",
+  "body": "İki taş aynı anda şah çeker.",
+  "question": "Çifte şahta kaç taş saldırır?",
+  "correct": "İki",
+  "wrong": [
+   "Bir",
+   "Sıfır"
+  ]
+ },
+ "L025": {
+  "title": "Açılan saldırı",
+  "body": "Öndeki taş hareket edince arkasındaki taşın saldırısı açılır.",
+  "question": "Açılan saldırıyı ne oluşturur?",
+  "correct": "Engel olan taşı oynamak",
+  "wrong": [
+   "Piyonu terfi ettirmek",
+   "Rok yapmak"
+  ]
+ },
+ "L026": {
+  "title": "Savunmasız taş",
+  "body": "Korunmayan taş taktik fırsatı oluşturur.",
+  "question": "Savunmasız taş nedir?",
+  "correct": "Korunmayan taş",
+  "wrong": [
+   "Terfi etmiş vezir",
+   "Rok yapmış kale"
+  ]
+ },
+ "L027": {
+  "title": "Son yatay",
+  "body": "Şahın kaçış kareleri yoksa son yatayda mat tehdidi doğabilir.",
+  "question": "Son yatay zayıflığı nedir?",
+  "correct": "Şahın kaçış karesinin olmaması",
+  "wrong": [
+   "Fazladan fil",
+   "Geçer piyon"
+  ]
+ },
+ "L028": {
+  "title": "Mat ağı",
+  "body": "Birden fazla taş şahın kaçış karelerini kapatır.",
+  "question": "Mat ağı nedir?",
+  "correct": "Kaçış karelerini kapatmak",
+  "wrong": [
+   "Vezirleri değiştirmek",
+   "Rastgele oynamak"
+  ]
+ },
+ "L029": {
+  "title": "Vezir ve şah matı",
+  "body": "Vezir şahın alanını daraltır; kendi şahınla destekle.",
+  "question": "Vezir matına ne yardımcı olur?",
+  "correct": "Şahın desteği",
+  "wrong": [
+   "Veziri vermek",
+   "Muhalefetten kaçınmak"
+  ]
+ },
+ "L030": {
+  "title": "Kale ve şah matı",
+  "body": "Kale ile rakip şahın alanını daralt, kendi şahını yaklaştır.",
+  "question": "Kale matına ne yardımcı olur?",
+  "correct": "Şahla koordinasyon",
+  "wrong": [
+   "Kaleyi feda etmek",
+   "Muhalefeti görmezden gelmek"
+  ]
+ },
+ "L031": {
+  "title": "Muhalefet",
+  "body": "Şahlar karşı karşıya geldiğinde hamle sırası kritik olabilir.",
+  "question": "Muhalefet nerede önemlidir?",
+  "correct": "Şah ve piyon oyunsonlarında",
+  "wrong": [
+   "Yalnızca açılış tuzaklarında",
+   "Rokta"
+  ]
+ },
+ "L032": {
+  "title": "Geçer piyon",
+  "body": "Önünde onu durdurabilecek rakip piyon bulunmayan piyondur.",
+  "question": "Geçer piyon nedir?",
+  "correct": "Önünde rakip piyon olmayan piyon",
+  "wrong": [
+   "a sütunundaki piyon",
+   "Birinci yataydaki piyon"
+  ]
+ },
+ "L033": {
+  "title": "Piyon zinciri",
+  "body": "Piyonlar birbirini çaprazdan korur.",
+  "question": "Piyonlar piyonları nasıl korur?",
+  "correct": "Çapraz",
+  "wrong": [
+   "Düz ileri",
+   "Geri hamlelerle"
+  ]
+ },
+ "L034": {
+  "title": "İzole piyon",
+  "body": "Komşu sütunlarda aynı renk piyon bulunmaz.",
+  "question": "İzole piyon nedir?",
+  "correct": "Komşu sütunda kendi piyonu olmayan",
+  "wrong": [
+   "Üst üste iki piyon",
+   "Geçer piyon"
+  ]
+ },
+ "L035": {
+  "title": "Çift piyon",
+  "body": "Aynı sütunda iki aynı renk piyon vardır.",
+  "question": "Çift piyon nedir?",
+  "correct": "Aynı sütunda iki piyon",
+  "wrong": [
+   "İki vezir",
+   "İki kale"
+  ]
+ },
+ "L036": {
+  "title": "Açık hat",
+  "body": "Üzerinde hiç piyon olmayan sütundur.",
+  "question": "Açık hat nedir?",
+  "correct": "Hiç piyonu olmayan sütun",
+  "wrong": [
+   "Yalnızca filler olan",
+   "Yalnızca şahlar olan"
+  ]
+ },
+ "L037": {
+  "title": "Yarı açık hat",
+  "body": "Bir oyuncunun piyonunun bulunmadığı sütundur.",
+  "question": "Yarı açık hat nedir?",
+  "correct": "Kendi piyonunun olmadığı sütun",
+  "wrong": [
+   "Hiç taşın olmadığı sütun",
+   "Hiç şahın olmadığı sütun"
+  ]
+ },
+ "L038": {
+  "title": "Aktif kale",
+  "body": "Kale açık hatlarda ve yedinci yatayda etkin olabilir.",
+  "question": "Kaleler genellikle nerede etkindir?",
+  "correct": "Açık hatlarda",
+  "wrong": [
+   "Kendi piyonlarının arkasında",
+   "Sonsuza dek köşelerde"
+  ]
+ },
+ "L039": {
+  "title": "Fil çifti",
+  "body": "İki fil açık pozisyonlarda güçlü olabilir.",
+  "question": "Fil çifti nerede genellikle güçlüdür?",
+  "correct": "Açık pozisyonlarda",
+  "wrong": [
+   "Kilitli pozisyonlarda",
+   "Çaprazsız durumlarda"
+  ]
+ },
+ "L040": {
+  "title": "İyi ve kötü fil",
+  "body": "Kendi piyon zinciriyle engellenen filin etkinliği azalabilir.",
+  "question": "Kötü fili ne engeller?",
+  "correct": "Kendi piyonları",
+  "wrong": [
+   "Açık çaprazlar",
+   "Rakip şah"
+  ]
+ },
+ "L041": {
+  "title": "At için karakol",
+  "body": "Piyonla kovulamayan ileri karedeki at güçlüdür.",
+  "question": "Karakolu ne oluşturur?",
+  "correct": "Piyonla kovulması zor olması",
+  "wrong": [
+   "Tahta köşesi",
+   "Başlangıç karesi"
+  ]
+ },
+ "L042": {
+  "title": "Hesaplama",
+  "body": "Aday hamleleri ve zorunlu yanıtları sırayla incele.",
+  "question": "Hesaplamada ilk adım nedir?",
+  "correct": "Aday hamleler",
+  "wrong": [
+   "Rastgele hamle",
+   "Saate basmak"
+  ]
+ },
+ "L043": {
+  "title": "Taş değişimi",
+  "body": "Değişim öncesi kalan pozisyonu ve taş değerlerini değerlendir.",
+  "question": "Değişimlerde ne önemlidir?",
+  "correct": "Ortaya çıkan pozisyon",
+  "wrong": [
+   "Yalnızca taş rengi",
+   "Yalnızca hamle numarası"
+  ]
+ },
+ "L044": {
+  "title": "Plan kurma",
+  "body": "Konumun güçlü ve zayıf yanlarına göre kısa plan oluştur.",
+  "question": "Planı ne yönlendirir?",
+  "correct": "Konumun özellikleri",
+  "wrong": [
+   "Rastgele tahmin",
+   "Yalnızca materyal"
+  ]
+ },
+ "L045": {
+  "title": "Oyunsonunda şah",
+  "body": "Oyunsonunda şah aktif bir savaş taşıdır.",
+  "question": "Oyunsonunda şah ne yapmalı?",
+  "correct": "Aktif olmalı",
+  "wrong": [
+   "Sonsuza dek saklanmalı",
+   "Hiç hareket etmemeli"
+  ]
+ },
+ "L046": {
+  "title": "Zugzwang",
+  "body": "Hamle sırası oyuncunun konumunu kötüleştirebilir.",
+  "question": "Zugzwang nedir?",
+  "correct": "Oynamak zorunda olup konumu kötüleştirmek",
+  "wrong": [
+   "Bir hamlede mat",
+   "Rok"
+  ]
+ },
+ "L047": {
+  "title": "Beraberlik türleri",
+  "body": "Pat, yetersiz materyal, tekrar ve hamle sayısı gibi durumlar beraberlik doğurabilir.",
+  "question": "Hangisi beraberlik olabilir?",
+  "correct": "Pat",
+  "wrong": [
+   "Şah mat",
+   "Terk"
+  ]
+ },
+ "L048": {
+  "title": "Analiz alışkanlığı",
+  "body": "Oyun sonrası kritik hamlelerini ve kaçan fırsatları incele.",
+  "question": "Öğrenmeyi ne geliştirir?",
+  "correct": "Hataları incelemek",
+  "wrong": [
+   "Yalnızca galibiyetler",
+   "Yenilgileri görmezden gelmek"
+  ]
+ }
+}
