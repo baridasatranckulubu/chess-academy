@@ -8,3 +8,13 @@
 @media(prefers-reduced-motion:reduce){.ca-grid .board.ca-spin,.ca-grid .board-wrap.ca-spin{animation:none!important}}
 
 .ca-volume{position:relative;display:inline-flex}.ca-volume-panel{position:absolute;z-index:30;bottom:100%;right:0;display:flex;gap:4px;padding:8px;background:#241b16;border:1px solid #c19a65;border-radius:9px}.ca-volume-panel[hidden]{display:none!important}.ca-volume-panel button[aria-pressed='true']{background:#c19a65!important;color:#111!important}.ca-grid .ca-piece-svg{width:100%;height:100%;filter:drop-shadow(0 1px 1px #0005);transform:translateY(5%)}.ca-grid .sq{filter:none!important}
+
+/* Chess Academy unified precision board: square alignment and touch drag */
+.ca-grid>.board{grid-template-columns:repeat(8,minmax(0,1fr))!important;grid-template-rows:repeat(8,minmax(0,1fr))!important;aspect-ratio:1!important;align-content:stretch;justify-content:stretch;contain:layout}
+.ca-grid .board>.sq{box-sizing:border-box!important;aspect-ratio:auto!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;margin:0!important;border:0!important;border-radius:0!important;position:relative;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+.ca-grid .board>.sq .piece{display:flex;width:100%;height:100%;align-items:center;justify-content:center;pointer-events:none}
+.ca-grid .board>.sq .ca-piece-svg{display:block;width:90%;height:90%;max-width:100%;max-height:100%;filter:drop-shadow(0 3px 2px #0008);pointer-events:none}
+.ca-grid .board>.sq.drag-source .piece{opacity:.28}
+.ca-grid .board>.sq.drag-target{box-shadow:inset 0 0 0 4px #f4d184;z-index:1}
+.ca-drag-ghost{position:fixed;z-index:2147483640;width:clamp(45px,8vw,80px);height:clamp(45px,8vw,80px);transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 9px 9px #0009)}
+.ca-drag-ghost svg{width:100%;height:100%}
