@@ -26,6 +26,8 @@ jobs:
           python-version: '3.12'
       - name: İlk adım XP ve seviye kontrolleri
         run: node tests/beginner_release.test.js
+      - name: Lichess tematik ödev regresyonu
+        run: node tests/assignments_themes.test.js
       - name: Satranç motoru
         run: node tests/engine.test.js
       - name: Tahta SVG ve 360 derece dönüş doğrulaması
