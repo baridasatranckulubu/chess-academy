@@ -180,38 +180,64 @@ const note=t=>$('status').textContent=t;
 function initBoardResize(){
  const layout=$('arenaLayout'),frame=$('resizableBoardFrame'),column=$('boardColumn');
  if(!layout||!frame||!column)return;
- const storageKey='ca-lichess-board-width-v1';
- const desktop=()=>window.matchMedia('(min-width:950px)').matches;
- const defaultFraction=()=>window.matchMedia('(max-width:1200px)').matches?.44:.45;
- const minWidth=()=>Math.min(320,Math.max(220,layout.clientWidth*.35));
- const maxWidth=()=>desktop()?Math.max(minWidth(),layout.clientWidth-300):layout.clientWidth;
- const apply=(width,remember=true)=>{
-  const next=Math.round(Math.max(minWidth(),Math.min(maxWidth(),width)));
-  if(desktop()){layout.style.setProperty('--board-column-width',next+'px');layout.classList.add('board-custom-size');frame.classList.remove('board-custom-size');frame.style.removeProperty('--board-mobile-width')}
-  else{frame.style.setProperty('--board-mobile-width',next+'px');frame.classList.add('board-custom-size');layout.classList.remove('board-custom-size');layout.style.removeProperty('--board-column-width')}
-  if(remember){try{localStorage.setItem(storageKey,JSON.stringify({width:next,viewport:innerWidth}))}catch{}}
-  return next;
+ const key='ca-lichess-board-width-v2';
+ const desktop=()=>matchMedia('(min-width:950px)').matches;
+ const defaultWidth=()=>frame.getBoundingClientRect().width;
+ const minWidth=()=>Math.min(300,Math.max(180,layout.clientWidth*.28));
+ const maxWidth=()=>desktop()?Math.max(minWidth(),layout.clientWidth-270):layout.clientWidth;
+ let custom=false, width=defaultWidth();
+ const controls=document.createElement('div');controls.className='board-size-controls';
+ const label=document.createElement('label');label.textContent='↔ Tahta boyutu ';
+ const slider=document.createElement('input');slider.type='range';slider.min='180';slider.step='1';slider.setAttribute('aria-label','Tahta genişliği');
+ slider.style.cssText='flex:1;min-width:70px;max-width:260px;accent-color:#f2d093;touch-action:pan-x';
+ const sizeText=document.createElement('span');sizeText.style.minWidth='50px';
+ const button=(caption,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=caption;b.addEventListener('click',fn);return b};
+ const apply=(requested,remember=true)=>{
+  width=Math.round(Math.max(minWidth(),Math.min(maxWidth(),requested)));
+  custom=true;
+  if(desktop()){
+   layout.style.setProperty('grid-template-columns',width+'px minmax(0,1fr)','important');
+   frame.style.removeProperty('width');frame.style.removeProperty('max-width');
+  }else{
+   layout.style.removeProperty('grid-template-columns');
+   frame.style.setProperty('width',width+'px','important');
+   frame.style.setProperty('max-width','100%','important');
+  }
+  slider.max=String(Math.ceil(maxWidth()));slider.min=String(Math.floor(minWidth()));slider.value=String(width);
+  sizeText.textContent=width+' px';
+  if(remember){try{localStorage.setItem(key,JSON.stringify({width,viewport:innerWidth}))}catch{}}
  };
- const reset=()=>{layout.classList.remove('board-custom-size');frame.classList.remove('board-custom-size');layout.style.removeProperty('--board-column-width');frame.style.removeProperty('--board-mobile-width');try{localStorage.removeItem(storageKey)}catch{}};
- try{const saved=JSON.parse(localStorage.getItem(storageKey)||'null');if(saved&&Number.isFinite(saved.width)&&Number.isFinite(saved.viewport)){apply(saved.width*innerWidth/saved.viewport,false)}}catch{}
+ const reset=()=>{
+  custom=false;layout.style.removeProperty('grid-template-columns');
+  frame.style.removeProperty('width');frame.style.removeProperty('max-width');
+  try{localStorage.removeItem(key)}catch{}
+  width=defaultWidth();slider.min=String(Math.floor(minWidth()));slider.max=String(Math.ceil(maxWidth()));slider.value=String(Math.round(width));sizeText.textContent='Varsayılan';
+ };
+ slider.addEventListener('input',()=>apply(Number(slider.value)));
+ const minus=button('−',()=>apply((custom?width:defaultWidth())-30));
+ const plus=button('+',()=>apply((custom?width:defaultWidth())+30));
+ const original=button('⟲ Orijinal',reset);
+ controls.append(label,minus,slider,plus,sizeText,original);column.append(controls);
  for(const corner of ['tl','tr','bl','br']){
-  const handle=document.createElement('button');handle.type='button';handle.className='board-resize-handle';handle.dataset.corner=corner;handle.textContent='⤢';handle.setAttribute('aria-label','Satranç tahtası boyutunu köşeden değiştir');handle.title='Sürükle: tahtayı büyüt veya küçült';
+  const handle=document.createElement('button');handle.type='button';handle.className='board-resize-handle';handle.dataset.corner=corner;handle.textContent='⤢';handle.title='Tahta boyutunu değiştirmek için sürükle';
+  handle.setAttribute('aria-label','Tahtayı '+corner+' köşesinden boyutlandır');
   handle.addEventListener('pointerdown',e=>{
-   if(e.button!==0&&e.pointerType==='mouse')return;
-   e.preventDefault();const startX=e.clientX,startY=e.clientY,startWidth=frame.getBoundingClientRect().width;
-   const signX=corner.includes('r')?1:-1,signY=corner.includes('b')?1:-1;
-   handle.setPointerCapture(e.pointerId);
-   const move=ev=>{if(ev.pointerId!==e.pointerId)return;const dx=(ev.clientX-startX)*signX,dy=(ev.clientY-startY)*signY;apply(startWidth+(Math.abs(dx)>Math.abs(dy)?dx:dy))};
-   const stop=ev=>{if(ev.pointerId!==e.pointerId)return;handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',stop);handle.removeEventListener('pointercancel',stop)};
-   handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',stop);handle.addEventListener('pointercancel',stop);
+   if(e.pointerType==='mouse'&&e.button!==0)return;
+   e.preventDefault();e.stopPropagation();
+   const originX=e.clientX,originY=e.clientY,initial=frame.getBoundingClientRect().width;
+   const signX=corner.endsWith('r')?1:-1,signY=corner.startsWith('b')?1:-1;
+   const move=ev=>{
+    if(ev.pointerId!==e.pointerId)return;
+    const dx=(ev.clientX-originX)*signX,dy=(ev.clientY-originY)*signY;
+    apply(initial+(Math.abs(dx)>Math.abs(dy)?dx:dy));
+   };
+   const stop=ev=>{if(ev.pointerId!==e.pointerId)return;window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',stop);window.removeEventListener('pointercancel',stop)};
+   window.addEventListener('pointermove',move);window.addEventListener('pointerup',stop);window.addEventListener('pointercancel',stop);
   });
   frame.append(handle);
  }
- const controls=document.createElement('div');controls.className='board-size-controls';
- const label=document.createElement('span');label.textContent='↔ Tahta boyutu: köşelerden sürükle';
- const btn=document.createElement('button');btn.type='button';btn.textContent='⟲ Orijinal boyut';btn.addEventListener('click',reset);
- controls.append(label,btn);column.append(controls);
- window.addEventListener('resize',()=>{if(!layout.classList.contains('board-custom-size')&&!frame.classList.contains('board-custom-size'))return;const current=desktop()?parseFloat(layout.style.getPropertyValue('--board-column-width')):parseFloat(frame.style.getPropertyValue('--board-mobile-width'));if(Number.isFinite(current))apply(current,false)});
+ try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved&&Number.isFinite(saved.width)&&Number.isFinite(saved.viewport))apply(saved.width*innerWidth/saved.viewport,false);else reset()}catch{reset()}
+ window.addEventListener('resize',()=>{if(custom)apply(width,false);else reset()});
 }
 initBoardResize();
 
