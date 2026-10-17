@@ -137,7 +137,7 @@ boardEl.addEventListener('pointerdown',event=>{
  dragStartX=event.clientX;dragStartY=event.clientY;
  lastPointerX=event.clientX;lastPointerY=event.clientY;
  draggingPiece=false;
- try{boardEl.setPointerCapture(event.pointerId)}catch{}
+ // Capture only once a real drag starts; taps must keep normal hit testing.
 });
 boardEl.addEventListener('pointermove',event=>{
  if(dragPointer!==event.pointerId||!dragOrigin)return;
@@ -145,6 +145,7 @@ boardEl.addEventListener('pointermove',event=>{
  positionCarry(event.clientX,event.clientY);
  if(!draggingPiece&&distance>=9){
   draggingPiece=true;selected=dragOrigin;renderBoard();
+  try{boardEl.setPointerCapture(event.pointerId)}catch{}
  }
 });
 boardEl.addEventListener('pointerup',event=>{
@@ -152,8 +153,10 @@ boardEl.addEventListener('pointerup',event=>{
  const from=dragOrigin,wasDragging=draggingPiece;
  try{boardEl.releasePointerCapture(event.pointerId)}catch{}
  if(!wasDragging){
-  // No drag: let the square's ordinary click handler highlight legal moves.
-  finishDrag();return;
+  // Explicit tap handling: pointer capture or touch browsers may suppress click.
+  finishDrag();
+  performedDrag=true;setTimeout(()=>{performedDrag=false},220);
+  handleSquare(from);return;
  }
  positionCarry(event.clientX,event.clientY);
  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.sq');
