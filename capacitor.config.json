@@ -1,0 +1,12 @@
+{
+  "appId": "com.chessacademy.hskgsuygar32",
+  "appName": "Chess Academy",
+  "webDir": "android-web",
+  "server": {
+    "url": "https://chess-academy.hskgsuygar32.workers.dev/academy",
+    "cleartext": false
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}
