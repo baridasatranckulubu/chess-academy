@@ -49,37 +49,9 @@ const words={
 const $=id=>document.getElementById(id);const w=()=>words[language]||words.en;
 function announce(message){$('boardNote').textContent=message;}
 function boardStatus(){if(game.isCheckmate())return w().mate+' '+(game.turn==='w'?w().black:w().white);if(game.isStalemate())return w().stalemate;if(game.isDraw())return w().draw;return w().move+': '+(game.turn==='w'?w().white:w().black)+(game.isCheck()?' · '+w().check:'');}
-function renderBoard(){const root=$('board');root.replaceChildren();window.ChessAcademyBoardFrame?.updateCoordinates();const valid=selected?new Set(game.moves({square:selected}).map(x=>x.to)):new Set();const squares=Array.from({length:64},(_,i)=>i);if(flipped)squares.reverse();for(const i of squares){const name=window.ChessAcademyEngine.squareName(i),piece=game.at(i),btn=document.createElement('button');btn.type='button';btn.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(selected===name?' selected':'')+(valid.has(name)?' target':'');if(piece)btn.innerHTML=pieceSVG(unicode[piece],piece);if(lastMove&&(lastMove.from===name||lastMove.to===name))btn.classList.add('last-move');btn.setAttribute('aria-label',name+' '+(piece||'empty')+(valid.has(name)?' legal target':''));btn.setAttribute('aria-pressed',String(selected===name));btn.dataset.square=name;btn.onclick=()=>{if(performedDrag){performedDrag=false;return;}handleSquare(name);};root.append(btn);}const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`;}
-// Pointer interactions: the entire 64-cell square is a touch target, not the visible piece.
-// Tap a piece then its highlighted destination, or press and drag to the destination.
-let performedDrag=false;
-let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
-const boardEl=$('board');
-boardEl.style.touchAction='none';
-boardEl.addEventListener('pointerdown',event=>{
- const sq=event.target.closest('.sq');
- if(!sq||!boardEl.contains(sq))return;
- if(event.pointerType==='mouse'&&event.button!==0)return;
- dragOrigin=sq.dataset.square;dragPointer=event.pointerId;
- dragStartX=event.clientX;dragStartY=event.clientY;
-});
-boardEl.addEventListener('pointerup',event=>{
- if(dragPointer!==event.pointerId||!dragOrigin)return;
- const from=dragOrigin;dragOrigin=null;dragPointer=null;
- const moved=Math.hypot(event.clientX-dragStartX,event.clientY-dragStartY);
- if(moved<12)return; // ordinary click / tap handled by click event
- const hit=document.elementFromPoint(event.clientX,event.clientY);
- const to=hit&&hit.closest('.sq');
- if(!to||!boardEl.contains(to)||to.dataset.square===from)return;
- // Suppress click synthesized after a drag, but not the next genuine tap.
- performedDrag=true;
- setTimeout(()=>{performedDrag=false},120);
- const p=game.at(from);
- if(!p||((p===p.toUpperCase()?'w':'b')!==game.turn))return;
- selected=from;
- handleSquare(to.dataset.square);
-});
-boardEl.addEventListener('pointercancel',()=>{dragOrigin=null;dragPointer=null;});
+const sharedBoard=window.ChessAcademySharedBoard;
+const dragControl=sharedBoard.bindDrag($('board'),{canDrag:sq=>{const p=game.at(sq);return !!p&&(p===p.toUpperCase()?'w':'b')===game.turn&&!game.isGameOver()},onDrop:(from,to)=>{selected=from;handleSquare(to)}});
+function renderBoard(){window.ChessAcademyBoardFrame?.updateCoordinates();sharedBoard.renderBoard({root:$('board'),game,flipped,selected,lastMove,onSquare:sq=>{if(!dragControl.consumeClick())handleSquare(sq)}});const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`}
 function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const wasCapture=!!game.at(square)||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena'){window.parent.postMessage({type:'chess-academy-board-move',turn:game.turn},location.origin)}sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
