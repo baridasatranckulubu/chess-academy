@@ -90,3 +90,5 @@
 
 /* Copyable homepage move log and external Lichess analysis */
 .home-history-panel{margin:12px 0 16px;padding:14px;border:1px solid #a58b63;border-radius:14px;background:#152630;color:#f6e5c9}.home-history-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}.home-history-head>div{display:flex;gap:8px;flex-wrap:wrap}.home-history-head .btn{font-size:12px;padding:8px 11px;cursor:pointer}.home-history-head .btn:disabled{opacity:.5;cursor:not-allowed}.home-history-panel textarea{display:block;box-sizing:border-box;width:100%;min-height:84px;resize:vertical;background:#0a1820;color:#f5e8d0;border:1px solid #62717a;border-radius:9px;padding:10px;font:13px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}
+
+.home-color-picker{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:8px 0 14px;color:#ead7b5;font-size:13px;font-weight:700}.home-color-btn{border:1px solid #6c8290;background:#1b3341;color:#f1e7d7;border-radius:10px;padding:9px 17px;cursor:pointer;font-weight:700}.home-color-btn.selected{border-color:#eac17d;background:#5c482f;box-shadow:0 0 0 2px #eac17d55}
