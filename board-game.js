@@ -151,7 +151,8 @@ boardEl.addEventListener('pointerup',event=>{
  if(!wasDragging)return; // click-to-pick stays active
  performedDrag=true;setTimeout(()=>{performedDrag=false},180);
  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.sq');
- if(from&&carryFrom===from&&target&&boardEl.contains(target))tryDrop(from,target.dataset.square);
+ if(from&&carryFrom===from&&target&&boardEl.contains(target)&&target.dataset.square===from)cancelCarry();
+ else if(from&&carryFrom===from&&target&&boardEl.contains(target))tryDrop(from,target.dataset.square);
  else cancelCarry();
 });
 boardEl.addEventListener('pointercancel',cancelCarry);
