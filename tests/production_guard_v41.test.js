@@ -1,0 +1,13 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..');
+const read=p=>fs.readFileSync(path.join(root,p),'utf8');
+const schema=read('supabase-schema.sql');
+assert(schema.includes('alter table public.profiles enable row level security'));
+assert(schema.includes('auth.uid()=id'));
+const auth=read('auth.js');
+assert(auth.includes('profileApi(login.access_token,login.user.id)'));
+const preserved=['beginner.html','beginner.js','federation.html','premium-board.css','premium-board.js','shared-chess-board.js'];
+const count=preserved.filter(p=>fs.existsSync(path.join(root,p))).length;
+if(count)assert.equal(count,preserved.length,'GitHub-only learning and board features were partially lost');
+console.log('PASS v0.41 role read boundary and board preservation '+count+'/'+preserved.length);
