@@ -36,6 +36,10 @@ jobs:
         run: node tests/board_premium.test.js
       - name: Mat pozisyonları
         run: node tests/puzzles.test.js
+      - name: Taktik merkezi veri ve öğrenci regresyonu
+        run: node tests/tactics_release.test.js
+      - name: Demo XP ve seviye yalıtımı
+        run: node tests/demo_progress.test.js
       - name: Ders çevirileri
         run: node tools/check-i18n.js --strict
       - name: Müfredat doğrulaması (v0.22+)
