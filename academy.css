@@ -101,3 +101,12 @@
 .home-color-btn.selected{background:#705533!important;border-color:#eac17d!important;color:#fff2d8!important;box-shadow:0 0 0 2px #d9ae6d55!important}
 .home-color-btn:active{transform:scale(.97)}.home-color-btn:focus-visible{outline:3px solid #f0ca81;outline-offset:3px}
 .color-disc{display:inline-grid;place-items:center;width:23px;height:23px;border-radius:50%;font-size:22px;line-height:1}.white-disc{background:#f2e7d4;color:#413327}.black-disc{background:#101820;color:#e4cfa7}
+
+/* Entry screen: remove artificial vertical overflow until new sections are added. */
+body:has(#entry:not([hidden])){min-height:100dvh;overflow-x:hidden}
+body:has(#entry:not([hidden])) .entry{min-height:0;height:auto;max-height:none;align-content:center;padding-block:clamp(16px,3vh,32px);gap:clamp(18px,4vw,54px)}
+body:has(#entry:not([hidden])) .entry-art{height:clamp(230px, min(44vw, 49dvh), 430px)}
+body:has(#entry:not([hidden])) .entry h1{margin:clamp(10px,2vh,18px) 0}
+body:has(#entry:not([hidden])) .entry-actions{margin:clamp(12px,2vh,22px) 0}
+@media(min-width:851px){body:has(#entry:not([hidden])) .entry{min-height:calc(100dvh - 76px);padding-block:clamp(12px,2.5vh,28px)}body:has(#entry:not([hidden])) .entry-art{height:min(430px,calc(100dvh - 145px))}}
+@media(max-width:850px){body:has(#entry:not([hidden])) .entry{padding-block:18px;gap:20px}body:has(#entry:not([hidden])) .entry-art{height:clamp(160px,27dvh,230px)}}
