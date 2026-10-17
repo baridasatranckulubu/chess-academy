@@ -58,7 +58,7 @@ setupBoardFrame();
 window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='chess-academy-select-side')return;const side=event.data.side;if(side!=='w'&&side!=='b')return;flipped=side==='b';selected=null;renderBoard()});
 
 // Real Stockfish UCI opponent. The engine runs off the UI thread.
-let computerSide=null,stockfishWorker=null,stockfishReady=false,stockfishThinking=false,stockfishGeneration=0;
+let computerSide=null,stockfishWorker=null,stockfishReady=false,stockfishThinking=false,stockfishGeneration=0,stockfishLevel=10,stockfishMoveMs=650,stockfishAnalysis=false,stockfishScore=null,stockfishDepth=0,stockfishBestLine='';
 const stockfishUrl='https://cdn.jsdelivr.net/npm/stockfish@19.0.0/bin/stockfish-19-asm.js';
 function computerNotice(message){
  if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena')
@@ -69,9 +69,9 @@ function stopComputer(){
  if(stockfishWorker){stockfishWorker.terminate();stockfishWorker=null;}
  stockfishReady=false;
 }
-function startComputer(side){
+function startComputer(side,level=10,moveMs=650,analysis=false){
  stopComputer();cancelAdvance();mode='free';
- computerSide=side==='b'?'b':'w';flipped=computerSide==='b';
+ computerSide=side==='b'?'b':'w';stockfishLevel=Math.max(1,Math.min(20,Number(level)||10));stockfishMoveMs=Math.max(100,Math.min(10000,Number(moveMs)||650));stockfishAnalysis=!!analysis;stockfishScore=null;stockfishDepth=0;stockfishBestLine='';flipped=computerSide==='b';
  game.load(window.ChessAcademyEngine.START);selected=null;lastMove=null;renderBoard();
  try{
   const source='importScripts('+JSON.stringify(stockfishUrl)+');';
@@ -81,7 +81,15 @@ function startComputer(side){
   stockfishWorker.onmessage=event=>{
    if(generation!==stockfishGeneration||!computerSide)return;
    const line=String(event.data||'');
-   if(line.includes('uciok')){stockfishWorker.postMessage('isready');}
+   if(line.startsWith('info ')&&stockfishThinking&&stockfishAnalysis){
+    const d=line.match(/\\bdepth (\\d+)/),cp=line.match(/\\bscore cp (-?\\d+)/),mate=line.match(/\\bscore mate (-?\\d+)/),pv=line.match(/\\bpv (.+)$/);
+    if(d)stockfishDepth=Number(d[1]);
+    if(cp)stockfishScore=(Number(cp[1])/100)*(game.turn==='w'?1:-1);
+    if(mate)stockfishScore='M'+(Number(mate[1])*(game.turn==='w'?1:-1));
+    if(pv)stockfishBestLine=pv[1].split(' ').slice(0,8).join(' ');
+    computerAnalysisNotice();
+   }
+   if(line.includes('uciok')){stockfishWorker.postMessage('setoption name UCI_LimitStrength value false');stockfishWorker.postMessage('setoption name Skill Level value '+stockfishLevel);stockfishWorker.postMessage('isready');}
    if(line.includes('readyok')){stockfishReady=true;computerNotice('Stockfish hazır. '+(computerSide==='w'?'Beyaz':'Siyah')+' taşlarla oynuyorsun.');queueComputerMove();}
    const match=line.match(/(?:^|\\n)bestmove\\s+([a-h][1-8])([a-h][1-8])([qrbn])?/);
    if(match&&stockfishThinking){
@@ -105,8 +113,12 @@ function queueComputerMove(){
  if(!computerSide||!stockfishReady||stockfishThinking||game.turn===computerSide||game.isGameOver())return;
  stockfishThinking=true;
  stockfishWorker.postMessage('position fen '+game.fen());
- stockfishWorker.postMessage('go movetime 650');
+ stockfishWorker.postMessage('go movetime '+stockfishMoveMs);
  computerNotice('Stockfish düşünüyor...');
+}
+function computerAnalysisNotice(){
+ if(!stockfishAnalysis||window.parent===window)return;
+ window.parent.postMessage({type:'chess-academy-computer-analysis',depth:stockfishDepth,score:stockfishScore,pv:stockfishBestLine},location.origin);
 }
 function postBoardMove(){
  if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena')
@@ -114,7 +126,7 @@ function postBoardMove(){
 }
 window.addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==window.parent)return;
- if(event.data?.type==='chess-academy-computer-start')startComputer(event.data.side);
+ if(event.data?.type==='chess-academy-computer-start')startComputer(event.data.side,event.data.level,event.data.moveMs,event.data.analysis);
  if(event.data?.type==='chess-academy-computer-stop'){stopComputer();computerNotice('Bilgisayar oyunu kapatıldı.');}
 });
 const unicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
