@@ -27,6 +27,19 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Generate native Android project
         run: npx cap add android
+      - name: Set modern Android target and legacy-compatible minimum
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('android/variables.gradle')
+          s=p.read_text()
+          import re
+          s,n=re.subn(r'minSdkVersion\s*=\s*\d+', 'minSdkVersion = 23', s)
+          if n != 1:
+              raise SystemExit('Could not configure minSdkVersion')
+          p.write_text(s)
+          print('Android minimum API 23, universal APK for supported CPU architectures')
+          PY
       - name: Sync Capacitor
         run: npx cap sync android
       - name: Build debug APK
