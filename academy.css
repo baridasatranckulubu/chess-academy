@@ -83,3 +83,7 @@
 .arena-clock-side.white-clock{background:#f3f0e9;color:#171b20;border:2px solid #d6d1c6}
 .arena-clock-side.running{outline:3px solid #d6aa55;outline-offset:2px;box-shadow:0 0 20px #e5b76b4d}
 .arena-match-status{margin-top:12px!important}
+
+/* Neutral clock faces; piece icons alone identify sides. */
+.arena-clock-side.black-clock,.arena-clock-side.white-clock{background:#203341;color:#e7eff0;border:1px solid #4a6370}
+.arena-clock-side.running{background:#2c4853;color:#fff;outline:2px solid #d6aa55}
