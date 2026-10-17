@@ -16,7 +16,7 @@ function setupBoardFrame(){
  frame.append(wrap);board.parentNode.insertBefore(frame,board);wrap.append(board,files,ranks);
  const toggle=document.createElement('button');toggle.type='button';toggle.className='btn chess-sound-toggle';
  toggle.setAttribute('aria-label','Toggle chess sound effects');
- toggle.onclick=()=>{soundEnabled=!soundEnabled;window.ChessAcademySharedBoard.setSoundEnabled(soundEnabled)updateSoundToggle();if(soundEnabled)sound('move')};
+ toggle.onclick=()=>{soundEnabled=!soundEnabled;window.ChessAcademySharedBoard.setSoundEnabled(soundEnabled);updateSoundToggle();if(soundEnabled)sound('move')};
  frame.append(toggle);const controls=document.getElementById('flipBoard')?.parentElement;if(controls)controls.append(toggle);
  function updateSoundToggle(){toggle.textContent=soundEnabled?'🔊 Ses açık':'🔇 Ses kapalı';toggle.setAttribute('aria-pressed',String(soundEnabled))}
  updateSoundToggle();
