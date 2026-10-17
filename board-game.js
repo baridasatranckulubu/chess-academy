@@ -126,6 +126,15 @@ function tryDrop(from,to){
  selected=from;handleSquare(to);return true;
 }
 document.addEventListener('pointermove',event=>{if(selected&&dragPointer===null&&event.pointerType!=='touch')positionCarry(event.clientX,event.clientY)},{passive:true});
+// Once a piece has been picked up with a tap, a second tap manually drops it.
+boardEl.addEventListener('click',event=>{
+ if(!carryFrom||!selected||performedDrag)return;
+ const sq=event.target.closest('.sq');if(!sq)return;
+ if(sq.dataset.square===carryFrom){cancelCarry();return;}
+ if(game.moves({square:carryFrom}).some(m=>m.to===sq.dataset.square)){
+  const from=carryFrom;carryFrom=null;tryDrop(from,sq.dataset.square);
+ }else cancelCarry();
+},true);
 boardEl.addEventListener('pointerdown',event=>{
  const sq=event.target.closest('.sq');if(!sq||!boardEl.contains(sq))return;
  if(event.pointerType==='mouse'&&event.button!==0)return;
@@ -149,8 +158,9 @@ boardEl.addEventListener('pointerup',event=>{
  positionCarry(event.clientX,event.clientY);
  try{boardEl.releasePointerCapture(event.pointerId)}catch{}
  if(!wasDragging){
-  // Releasing a picked-up piece on its original square must put it back.
-  if(from&&carryFrom===from){cancelCarry();performedDrag=true;setTimeout(()=>{performedDrag=false},180);}
+  // Manual click/tap pickup: leave the piece in hand until the user drops it.
+  // Prevent the browser's synthesized click from immediately cancelling pickup.
+  if(from&&carryFrom===from){performedDrag=true;setTimeout(()=>{performedDrag=false},250);}
   return;
  }
  performedDrag=true;setTimeout(()=>{performedDrag=false},180);
@@ -159,7 +169,11 @@ boardEl.addEventListener('pointerup',event=>{
  else if(from&&carryFrom===from&&target&&boardEl.contains(target))tryDrop(from,target.dataset.square);
  else cancelCarry();
 });
-boardEl.addEventListener('pointercancel',cancelCarry);
+boardEl.addEventListener('pointercancel',event=>{
+ // Touch browsers can cancel a pointer while the user is still moving.
+ // Keep the picked-up piece selected instead of returning it automatically.
+ if(event.pointerId===dragPointer){dragPointer=null;dragOrigin=null;draggingPiece=false;}
+});
 document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected)cancelCarry()});
 function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);selected=null;renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const wasCapture=!!game.at(square)||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena'){window.parent.postMessage({type:'chess-academy-board-move',turn:game.turn},location.origin)}sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
