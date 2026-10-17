@@ -64,3 +64,14 @@
 .arena-footnote{font-size:12px;margin:12px 0 0!important}
 @media(max-width:1120px){.home-arena{grid-template-columns:1fr;max-width:850px}.home-board-frame{height:780px}}
 @media(max-width:620px){.home-board-card,.home-match-panel{padding:10px;border-radius:12px}.home-board-frame{height:620px}.home-time-btn{font-size:16px;padding:12px 3px}.arena-board-top{font-size:12px}.arena-hero p{font-size:13px}}
+
+/* Scroll-free home board and integrated chess clock */
+.home-board-frame{overflow:hidden;scrollbar-width:none;display:block;min-height:0;height:min(70vw,780px)}
+.home-board-frame::-webkit-scrollbar{display:none}
+.arena-chess-clock{margin:20px 0;padding:14px;border:1px solid #577180;border-radius:16px;background:#0b1821;display:grid;gap:9px}
+.arena-clock-side{font-size:clamp(23px,2.5vw,35px);font-weight:850;letter-spacing:.06em;font-variant-numeric:tabular-nums;text-align:center;padding:15px 10px;border-radius:10px;background:#203341;color:#dce6e8;border:1px solid #3b5261}
+.arena-clock-side.running{background:#e3c18a;color:#1d292f;border-color:#f5dfb3;box-shadow:0 0 0 2px #e3c18a40}
+.arena-clock-actions{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.arena-clock-actions .btn{padding:8px 11px;min-height:37px;font-size:12px}
+@media(max-width:1120px){.home-board-frame{height:min(90vw,760px)}}
+@media(max-width:620px){.home-board-frame{height:min(110vw,580px)}}
