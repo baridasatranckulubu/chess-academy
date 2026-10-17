@@ -6,32 +6,7 @@ const game=new ChessEngine();let selected=null,flipped=false,mode='free',challen
 const boardRoot=document.getElementById('board');
 let soundEnabled=true,audioContext=null,lastMove=null,flipBusy=false;
 try{soundEnabled=AcademyStorage.getItem('chess-academy-sound')!=='off'}catch{}
-function sound(type){
- if(!soundEnabled)return;
- try{
-  const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-  audioContext=audioContext||new AC();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
-  const ctx=audioContext,t=ctx.currentTime,rate=ctx.sampleRate;
-  // Short filtered wood-on-wood transient, not a musical beep.
-  const strike=(delay,body,brightness,volume)=>{
-   const duration=.115,len=Math.ceil(rate*duration),buffer=ctx.createBuffer(1,len,rate),data=buffer.getChannelData(0);
-   let low=0;for(let i=0;i<len;i++){const sec=i/rate,env=Math.exp(-sec*48);low=low*.72+(Math.random()*2-1)*.28;data[i]=low*env}
-   const src=ctx.createBufferSource();src.buffer=buffer;
-   const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=brightness;
-   const gain=ctx.createGain();gain.gain.value=volume;
-   src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);
-   src.start(t+delay);src.stop(t+delay+duration);
-   const osc=ctx.createOscillator(),og=ctx.createGain();osc.type='sine';osc.frequency.value=body;
-   og.gain.setValueAtTime(.0001,t+delay);og.gain.exponentialRampToValueAtTime(volume*.25,t+delay+.003);
-   og.gain.exponentialRampToValueAtTime(.0001,t+delay+.075);
-   osc.connect(og);og.connect(ctx.destination);osc.start(t+delay);osc.stop(t+delay+.08);
-  };
-  if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,165,2100,.29);strike(.055,115,1100,.21)}
-  else if(type==='mate'){strike(0,175,1800,.28);strike(.11,140,1400,.25);strike(.25,105,1050,.28)}
-  else if(type==='check'){strike(0,195,2300,.23);strike(.085,170,1700,.15)}
-  else{strike(0,240,2600,.20);strike(.052,175,1600,.13)}
- }catch(e){/* Sound is optional. */}
-}
+const sound=type=>window.ChessAcademySharedBoard.sound(type);
 function setupBoardFrame(){
  const board=boardRoot;if(!board||board.closest('.chess-board-frame'))return;
  const frame=document.createElement('div');frame.className='chess-board-frame';
@@ -41,7 +16,7 @@ function setupBoardFrame(){
  frame.append(wrap);board.parentNode.insertBefore(frame,board);wrap.append(board,files,ranks);
  const toggle=document.createElement('button');toggle.type='button';toggle.className='btn chess-sound-toggle';
  toggle.setAttribute('aria-label','Toggle chess sound effects');
- toggle.onclick=()=>{soundEnabled=!soundEnabled;try{AcademyStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}updateSoundToggle();if(soundEnabled)sound('move')};
+ toggle.onclick=()=>{soundEnabled=!soundEnabled;window.ChessAcademySharedBoard.setSoundEnabled(soundEnabled)updateSoundToggle();if(soundEnabled)sound('move')};
  frame.append(toggle);const controls=document.getElementById('flipBoard')?.parentElement;if(controls)controls.append(toggle);
  function updateSoundToggle(){toggle.textContent=soundEnabled?'🔊 Ses açık':'🔇 Ses kapalı';toggle.setAttribute('aria-pressed',String(soundEnabled))}
  updateSoundToggle();
@@ -58,24 +33,8 @@ setupBoardFrame();
 
 const unicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 // Self-contained vector pieces with metallic / porcelain highlights. No external assets.
-function pieceSVG(symbol,piece){
- const white=piece===piece.toUpperCase();
- const fill=white?'url(#ivory)':'url(#obsidian)';
- const stroke=white?'#705844':'#d1ae79';
- const shadow=white?'#bda88d':'#0c1118';
- const id=white?'i':'o';
- return `<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
- <defs>
-  <linearGradient id="${id}v05" x1="0" y1="0" x2="1" y2="1">
-   ${white?'<stop offset="0" stop-color="#fffdf3"/><stop offset=".28" stop-color="#e9e1d2"/><stop offset=".57" stop-color="#c8b6a0"/><stop offset=".77" stop-color="#fff6e4"/><stop offset="1" stop-color="#9c8772"/>':'<stop offset="0" stop-color="#7d8187"/><stop offset=".25" stop-color="#323b44"/><stop offset=".52" stop-color="#0f1822"/><stop offset=".73" stop-color="#56606a"/><stop offset="1" stop-color="#090f16"/>'}
-  </linearGradient>
- </defs>
- <ellipse cx="51" cy="84" rx="30" ry="7" fill="#130c09" opacity=".27"/>
- <text x="50" y="48" fill="${shadow}" stroke="${shadow}" stroke-width="3" paint-order="stroke" opacity=".7">${symbol}</text>
- <text x="49" y="45" fill="url(#${id}v05)" stroke="${stroke}" stroke-width="1.25" paint-order="stroke">${symbol}</text>
- <path d="M29 79 Q50 87 71 79" fill="none" stroke="${white?'#fff9e9':'#adb5bb'}" stroke-width="1.3" opacity=".48"/>
- </svg>`;
-}
+const pieceSVG=(symbol,piece)=>window.ChessAcademySharedBoard.pieceSVG(symbol,piece);
+
 const puzzles=[{"fen":"7k/8/5KQ1/8/8/8/8/8 w - - 0 1","answer":"g6g7","theme":"Mate in one"},{"fen":"k7/8/1QK5/8/8/8/8/8 w - - 0 1","answer":"b6b7","theme":"Queen support"},{"fen":"r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4","answer":"h5f7","theme":"Scholar’s mate"},{"fen":"8/8/8/8/8/5kq1/8/7K b - - 0 1","answer":"g3g2","theme":"Black to move"},{"fen":"8/8/8/8/Q7/K7/8/k7 w - - 0 1","answer":"a4d1","theme":"Queen mate"},{"fen":"8/8/8/Q7/8/K7/8/k7 w - - 0 1","answer":"a5e1","theme":"Queen mate"},{"fen":"8/8/Q7/8/8/K7/8/k7 w - - 0 1","answer":"a6f1","theme":"Queen mate"},{"fen":"8/Q7/8/8/8/K7/8/k7 w - - 0 1","answer":"a7g1","theme":"Queen mate"},{"fen":"Q7/8/8/8/8/K7/8/k7 w - - 0 1","answer":"a8h1","theme":"Queen mate"},{"fen":"1Q6/8/8/8/8/K7/8/k7 w - - 0 1","answer":"b8b2","theme":"Queen mate"},{"fen":"8/2Q5/8/8/8/K7/8/k7 w - - 0 1","answer":"c7c1","theme":"Queen mate"},{"fen":"2Q5/8/8/8/8/K7/8/k7 w - - 0 1","answer":"c8c1","theme":"Queen mate"},{"fen":"8/8/3Q4/8/8/K7/8/k7 w - - 0 1","answer":"d6d1","theme":"Queen mate"},{"fen":"8/3Q4/8/8/8/K7/8/k7 w - - 0 1","answer":"d7d1","theme":"Queen mate"},{"fen":"3Q4/8/8/8/8/K7/8/k7 w - - 0 1","answer":"d8d1","theme":"Queen mate"},{"fen":"8/4Q3/8/8/8/K7/8/k7 w - - 0 1","answer":"e7e1","theme":"Queen mate"},{"fen":"4Q3/8/8/8/8/K7/8/k7 w - - 0 1","answer":"e8e1","theme":"Queen mate"},{"fen":"8/8/8/5Q2/8/K7/8/k7 w - - 0 1","answer":"f5f1","theme":"Queen mate"},{"fen":"5Q2/8/8/8/8/K7/8/k7 w - - 0 1","answer":"f8f1","theme":"Queen mate"},{"fen":"8/8/6Q1/8/8/K7/8/k7 w - - 0 1","answer":"g6g1","theme":"Queen mate"},{"fen":"8/7Q/8/8/8/K7/8/k7 w - - 0 1","answer":"h7h1","theme":"Queen mate"},{"fen":"8/8/8/8/Q7/K7/8/1k6 w - - 0 1","answer":"a4d1","theme":"Queen mate"},{"fen":"8/8/8/8/8/K1Q5/8/1k6 w - - 0 1","answer":"c3b2","theme":"Queen mate"},{"fen":"8/8/8/3Q4/8/K7/8/1k6 w - - 0 1","answer":"d5d1","theme":"Queen mate"},{"fen":"8/8/3Q4/8/8/K7/8/1k6 w - - 0 1","answer":"d6d1","theme":"Queen mate"},{"fen":"8/3Q4/8/8/8/K7/8/1k6 w - - 0 1","answer":"d7d1","theme":"Queen mate"},{"fen":"3Q4/8/8/8/8/K7/8/1k6 w - - 0 1","answer":"d8d1","theme":"Queen mate"},{"fen":"8/8/8/4Q3/8/K7/8/1k6 w - - 0 1","answer":"e5b2","theme":"Queen mate"}];
 // Puzzle catalogue must exist before persisted progress is filtered.
 try{const raw=JSON.parse(AcademyStorage.getItem('academy-v04-mates')||'[]');if(Array.isArray(raw))solved=new Set(raw.filter(x=>Number.isInteger(x)&&x>=0&&x<puzzles.length));}catch{}
