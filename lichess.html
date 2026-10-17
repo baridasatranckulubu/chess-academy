@@ -37,6 +37,20 @@
 #board.board{max-width:none;box-shadow:none;border:7px solid #35251d}
 #board .sq.target{box-shadow:inset 0 0 0 5px #eab54e}
 #board .sq.selected{outline:0}
+
+/* Lichess board stability: exactly 8x8 cells, no implicit row growth */
+.layout{grid-template-columns:minmax(0,620px) minmax(300px,1fr);align-items:start}
+.chess-board-frame{width:100%!important;max-width:620px!important;margin:0!important;padding:14px!important;border-radius:20px!important;background:linear-gradient(145deg,#60412c,#211711 42%,#65432b 85%)!important}
+.chess-board-wrap{display:grid!important;grid-template-columns:24px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 24px!important;width:100%!important;padding:0!important;gap:0!important;min-width:0}
+#board.board{grid-column:2!important;grid-row:1!important;display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;grid-template-rows:repeat(8,minmax(0,1fr))!important;width:100%!important;max-width:none!important;min-width:0!important;height:auto!important;aspect-ratio:1!important;overflow:hidden!important;border:5px solid #2a1c16!important;border-radius:6px!important;padding:0!important;gap:0!important;box-shadow:0 0 0 1px #c5a575,0 8px 18px #0008!important}
+#board.board .sq{display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important;width:100%!important;height:100%!important;min-width:0!important;min-height:0!important;aspect-ratio:1!important;overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;border-radius:0!important}
+#board.board .sq.light{background:#f0ddbd!important}
+#board.board .sq.dark{background:#977153!important}
+#board.board .piece-3d{width:88%!important;height:88%!important;max-width:100%!important;max-height:100%!important;filter:drop-shadow(0 3px 2px #17110ba6)!important;pointer-events:none!important}
+#board.board .piece-3d text{font-size:80px!important}
+.chess-board-frame .chess-board-ranks{grid-column:1!important;grid-row:1!important;display:grid!important;grid-template-rows:repeat(8,minmax(0,1fr))!important;position:static!important;height:100%!important;width:24px!important}
+.chess-board-frame .chess-board-files{grid-column:2!important;grid-row:2!important;display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;position:static!important;width:100%!important;height:24px!important}
+@media(max-width:740px){.layout{grid-template-columns:minmax(0,1fr)}.chess-board-frame{padding:9px!important}.chess-board-wrap{grid-template-columns:18px minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr) 19px!important}.chess-board-frame .chess-board-ranks{width:18px!important}.chess-board-frame .chess-board-files{height:19px!important}}
 </style></head><body><main><p><a href="academy">← Chess Academy</a></p><h1>♟ Lichess · Canlı Rakip Arenası</h1><p class="warn"><strong>Adil oyun:</strong> Lichess maçlarında Stockfish, hamle önerisi, değerlendirme, analiz veya başka bir dış yardım kesinlikle kullanılmaz. Bu sayfa Stockfish'ten tamamen ayrıdır.</p><section><div class="row"><button id="login">🔐 Lichess ile bağlan</button><button id="logout" hidden>Bağlantıyı kes</button><strong id="account">Bağlı değil</strong></div><p id="status" role="status">Lichess hesabını bağlayarak gerçek oyuncularla oynayabilirsin.</p><small>Giriş: Lichess OAuth2 PKCE. Şifreler Chess Academy'ye verilmez. Yetki yalnızca bu tarayıcı oturumunda tutulur.</small></section>
 <div class="layout"><div><div class="chess-board-frame"><div class="chess-board-wrap"><div class="chess-board-ranks" id="boardRanks"></div><div id="board" class="board" aria-label="Canlı satranç tahtası"></div><div class="chess-board-files" id="boardFiles"></div></div></div><p id="moves"></p></div><div><section><h3>👤 Lichess profilim</h3><div id="profile">Giriş yaptıktan sonra profilin görünecek.</div><p><a id="profileLink" href="#" target="_blank" rel="noopener" hidden>Profilimi Lichess üzerinde aç ↗</a></p></section><section><h3>🌍 Rakip bul</h3><div class="row"><label>Süre <select id="clock"><option value="10+0">10+0 Rapid</option><option value="15+10">15+10 Rapid</option><option value="30+0">30+0 Classical</option></select></label><label>Oyun <select id="rated"><option value="false">Dostluk</option><option value="true">Puanlı</option></select></label></div><p><button id="seek">🌍 Eşleşme ara</button><button id="cancelSeek">Aramayı durdur</button></p><small>Board API ile rastgele eşleşmeler Rapid ve daha uzun süre kontrolleriyle sınırlıdır.</small></section><section><h3>⚔️ Kullanıcıya meydan oku</h3><div class="row"><input id="opponent" placeholder="Lichess kullanıcı adı" autocomplete="off"><button id="challenge">Davet gönder</button></div><p id="challengeInfo"></p></section><section><h3>🎮 Canlı maç</h3><div class="row"><button id="resign">🏳️ Pes et</button><button id="draw">½ Beraberlik teklif et</button><button id="takeback">↩ Geri alma iste</button><button id="abort">⏹ Maçı iptal et</button><a id="gameLink" href="#" target="_blank" rel="noopener" hidden>Lichess'te aç ↗</a></div><p id="gameInfo">Henüz aktif maç yok.</p><p><strong id="clockInfo"></strong></p><div class="row"><button id="exportPgn">📥 Maçı PGN indir</button><button id="refreshGames">🔄 Aktif maçlar</button></div><div id="activeGames"></div><h4>💬 Lichess oyuncu sohbeti</h4><div id="chatMessages" style="max-height:150px;overflow:auto;padding:8px;background:#101b2c;border-radius:8px" aria-live="polite"></div><div class="row"><input id="chatInput" maxlength="250" placeholder="Mesaj yaz"><button id="sendChat">Gönder</button></div></section><section><h3>🧩 Günün Lichess bulmacası</h3><div id="dailyPuzzle">Bulmaca yükleniyor...</div><p><a href="https://lichess.org/training/daily" target="_blank" rel="noopener">Bulmacayı Lichess üzerinde çöz ↗</a></p><small>Canlı maçlarda motor veya bulmaca yardımı kullanma.</small></section><section><h3>📩 Davetler</h3><div id="invitations">Bağlandığında davetler burada görünecek.</div></section></div></div>
 </main><script src="engine.js"></script><script>
@@ -44,18 +58,18 @@
 function pieceSVG(symbol,piece){
  const white=piece===piece.toUpperCase();
  const fill=white?'url(#ivory)':'url(#obsidian)';
- const stroke=white?'#705844':'#d1ae79';
- const shadow=white?'#bda88d':'#0c1118';
+ const stroke=white?'#67503b':'#d5bd91';
+ const shadow=white?'#463727':'#070b10';
  const id=white?'i':'o';
  return `<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
  <defs>
   <linearGradient id="${id}v05" x1="0" y1="0" x2="1" y2="1">
-   ${white?'<stop offset="0" stop-color="#fffdf3"/><stop offset=".28" stop-color="#e9e1d2"/><stop offset=".57" stop-color="#c8b6a0"/><stop offset=".77" stop-color="#fff6e4"/><stop offset="1" stop-color="#9c8772"/>':'<stop offset="0" stop-color="#7d8187"/><stop offset=".25" stop-color="#323b44"/><stop offset=".52" stop-color="#0f1822"/><stop offset=".73" stop-color="#56606a"/><stop offset="1" stop-color="#090f16"/>'}
+   ${white?'<stop offset="0" stop-color="#fffefa"/><stop offset=".28" stop-color="#fff5df"/><stop offset=".57" stop-color="#f2e4cc"/><stop offset=".77" stop-color="#fffdf4"/><stop offset="1" stop-color="#e0c7a2"/>':'<stop offset="0" stop-color="#7d8187"/><stop offset=".25" stop-color="#323b44"/><stop offset=".52" stop-color="#0f1822"/><stop offset=".73" stop-color="#56606a"/><stop offset="1" stop-color="#090f16"/>'}
   </linearGradient>
  </defs>
  <ellipse cx="51" cy="84" rx="30" ry="7" fill="#130c09" opacity=".27"/>
- <text x="50" y="48" fill="${shadow}" stroke="${shadow}" stroke-width="3" paint-order="stroke" opacity=".7">${symbol}</text>
- <text x="49" y="45" fill="url(#${id}v05)" stroke="${stroke}" stroke-width="1.25" paint-order="stroke">${symbol}</text>
+ <text x="50" y="48" fill="${shadow}" stroke="${shadow}" stroke-width="3.5" paint-order="stroke" opacity=".85">${symbol}</text>
+ <text x="49" y="45" fill="url(#${id}v05)" stroke="${stroke}" stroke-width="2.8" paint-order="stroke">${symbol}</text>
  <path d="M29 79 Q50 87 71 79" fill="none" stroke="${white?'#fff9e9':'#adb5bb'}" stroke-width="1.3" opacity=".48"/>
  </svg>`;
 }
