@@ -148,7 +148,11 @@ boardEl.addEventListener('pointerup',event=>{
  dragOrigin=null;dragPointer=null;draggingPiece=false;
  positionCarry(event.clientX,event.clientY);
  try{boardEl.releasePointerCapture(event.pointerId)}catch{}
- if(!wasDragging)return; // click-to-pick stays active
+ if(!wasDragging){
+  // Releasing a picked-up piece on its original square must put it back.
+  if(from&&carryFrom===from){cancelCarry();performedDrag=true;setTimeout(()=>{performedDrag=false},180);}
+  return;
+ }
  performedDrag=true;setTimeout(()=>{performedDrag=false},180);
  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.sq');
  if(from&&carryFrom===from&&target&&boardEl.contains(target)&&target.dataset.square===from)cancelCarry();
