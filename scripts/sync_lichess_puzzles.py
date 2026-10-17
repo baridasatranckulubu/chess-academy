@@ -5,8 +5,8 @@ import zstandard as zstd
 from collections import defaultdict
 from pathlib import Path
 URL="https://database.lichess.org/lichess_db_puzzle.csv.zst"
-THEMES={"mateIn1","mateIn2","fork","discoveredAttack","advantage","sacrifice"}
-LIMIT=int(os.environ.get("CHESS_PUZZLES_PER_THEME","500"))
+THEMES={"mateIn1","mateIn2","mateIn3","mateIn4","mateIn5","fork","discoveredAttack","advantage","sacrifice","pin","endgame","middlegame","opening","skewer","hangingPiece","trappedPiece","deflection","attraction","interference","quietMove","backRankMate","doubleCheck","exposedKing","crushing","equality","rookEndgame","pawnEndgame","bishopEndgame","knightEndgame","queenEndgame","promotion","underPromotion","zugzwang","clearance","intermezzo","xRayAttack"}
+LIMIT=int(os.environ.get("CHESS_PUZZLES_PER_THEME","2000"))
 ROOT=Path(__file__).resolve().parents[1]/"puzzle-data"
 ROOT.mkdir(exist_ok=True)
 buckets=defaultdict(list)
