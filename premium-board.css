@@ -18,3 +18,10 @@
 .ca-grid .board>.sq.drag-target{box-shadow:inset 0 0 0 4px #f4d184;z-index:1}
 .ca-drag-ghost{position:fixed;z-index:2147483640;width:clamp(45px,8vw,80px);height:clamp(45px,8vw,80px);transform:translate(-50%,-50%);pointer-events:none;filter:drop-shadow(0 9px 9px #0009)}
 .ca-drag-ghost svg{width:100%;height:100%}
+
+/* Unified board geometry: eliminate inherited aspect ratios and glyph offsets */
+.ca-grid>.board{width:100%!important;height:auto!important;aspect-ratio:1/1!important;display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;grid-template-rows:repeat(8,minmax(0,1fr))!important;gap:0!important;padding:0!important}
+.ca-grid>.board>.sq{display:flex!important;align-items:center!important;justify-content:center!important;position:relative!important;min-width:0!important;min-height:0!important;width:100%!important;height:100%!important;aspect-ratio:auto!important;line-height:1!important;overflow:hidden!important;box-shadow:none}
+.ca-grid>.board>.sq .piece{position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;transform:none!important;filter:none!important}
+.ca-grid>.board>.sq .ca-piece-svg{position:static!important;display:block!important;width:88%!important;height:88%!important;margin:0!important;transform:none!important;overflow:visible!important;filter:drop-shadow(0 2px 1px #0005)!important}
+.ca-grid>.board>.sq .ca-piece-svg text{dominant-baseline:auto}
