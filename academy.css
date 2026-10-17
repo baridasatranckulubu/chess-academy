@@ -33,3 +33,34 @@
 .academy-topnav .nav-category-items{position:absolute;top:100%;left:0;min-width:210px;padding:9px;border:1px solid #3b5562;border-radius:12px;background:#132632;box-shadow:0 16px 38px #0009}
 .academy-topnav .nav-category-items .navitem{display:block;width:100%;text-align:left}
 @media(max-width:760px){.academy-topnav{position:relative;gap:8px}.academy-topnav #sidebar{order:3;flex-basis:100%;gap:2px}.academy-topnav .nav-category>summary{padding:9px}.academy-topnav .nav-category-items{z-index:80}.workspace{padding:20px 12px}}
+
+/* Chess-first arena: spacious board, centered match controls, responsive layout */
+.workspace:has(.home-view){max-width:1760px;padding:24px clamp(14px,2.4vw,42px)}
+.home-view{width:100%}
+.arena-hero{margin:0 0 18px;text-align:center}
+.arena-hero h2{font-size:clamp(29px,3vw,45px);margin:5px 0;color:#f7e8c8}
+.arena-hero p{margin:0}
+.arena-eyebrow{font-size:11px;letter-spacing:.18em;font-weight:800;color:#e5bb70}
+.home-arena{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(330px,.8fr);gap:clamp(16px,2vw,30px);align-items:start;max-width:1510px;margin:0 auto}
+.home-board-card,.home-match-panel{min-width:0;border:1px solid #37505b;border-radius:18px;background:linear-gradient(155deg,#172c38,#0d1b26);padding:18px;box-shadow:0 20px 48px #0005}
+.arena-board-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;color:#e9d3a4}
+.arena-live-label{font-size:11px;color:#84d3aa;white-space:nowrap}
+.home-board-frame{display:block;width:100%;height:clamp(610px,64vw,900px);border:0;border-radius:10px;background:#0b1720}
+.home-board-actions{display:flex;justify-content:center;margin-top:12px}
+.home-match-panel h3{font-size:clamp(21px,2vw,28px);margin:7px 0 12px}
+.home-match-panel>p{margin:0 0 16px}
+.home-time-groups{display:grid;gap:16px;margin-top:20px}
+.home-time-label{font-size:11px;letter-spacing:.16em;font-weight:800;color:#91b5c3;margin-bottom:8px}
+.home-time-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.home-time-btn{border:1px solid #425a67;background:#1c3442;color:#e7f0ec;padding:15px 4px;border-radius:10px;font-size:18px;font-weight:800;cursor:pointer;transition:background .15s,transform .15s}
+.home-time-btn:hover{background:#315164;transform:translateY(-1px)}
+.home-time-btn.selected{background:#ddbc78;color:#17232b;border-color:#f6d99d;box-shadow:0 0 0 2px #d4aa6340}
+.arena-match-status{margin:16px 0!important;min-height:44px;padding:10px;border-radius:8px;background:#0c202c;color:#c5d2d5}
+.arena-play-btn,.arena-secondary-btn{display:block;width:100%;padding:15px 10px;border-radius:11px;font-size:16px;font-weight:800;cursor:pointer}
+.arena-play-btn{background:linear-gradient(125deg,#eacb90,#b88a43);color:#17242b;border:1px solid #f4d9a5}
+.arena-secondary-btn{margin-top:16px;background:#263d4b;color:#e7f0ec;border:1px solid #4c6875}
+.home-action-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+.home-action-cards .btn{padding:13px 8px}
+.arena-footnote{font-size:12px;margin:12px 0 0!important}
+@media(max-width:1120px){.home-arena{grid-template-columns:1fr;max-width:850px}.home-board-frame{height:780px}}
+@media(max-width:620px){.home-board-card,.home-match-panel{padding:10px;border-radius:12px}.home-board-frame{height:620px}.home-time-btn{font-size:16px;padding:12px 3px}.arena-board-top{font-size:12px}.arena-hero p{font-size:13px}}
