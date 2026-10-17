@@ -100,81 +100,83 @@ let performedDrag=false;
 let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
 const boardEl=$('board');
 boardEl.style.touchAction='none';
-// Lightweight transparent piece preview. It follows mouse and touch pointers.
-let carryGhost=null,lastPointerX=0,lastPointerY=0,draggingPiece=false,carryFrom=null;
-function clearCarryGhost(){carryGhost?.remove();carryGhost=null;document.querySelectorAll('.ca-source-lifted').forEach(el=>el.classList.remove('ca-source-lifted'));}
+let carryGhost=null,draggingPiece=false,lastPointerX=0,lastPointerY=0;
+function clearCarryGhost(){
+ carryGhost?.remove();carryGhost=null;
+ boardEl.querySelectorAll('.ca-source-lifted').forEach(el=>el.classList.remove('ca-source-lifted'));
+}
+function positionCarry(x,y){
+ lastPointerX=x;lastPointerY=y;
+ if(carryGhost){carryGhost.style.left=x+'px';carryGhost.style.top=y+'px';}
+}
 function refreshCarryGhost(){
  clearCarryGhost();
- if(!selected)return;
- const piece=game.at(selected);if(!piece)return;
- const source=boardEl.querySelector('[data-square="'+selected+'"]');
- if(!source)return;
+ // A simple click selects/highlights legal squares, never picks up the piece.
+ if(!draggingPiece||!dragOrigin)return;
+ const piece=game.at(dragOrigin),source=boardEl.querySelector('[data-square="'+dragOrigin+'"]');
+ if(!piece||!source)return;
  const rect=source.getBoundingClientRect();
  carryGhost=document.createElement('div');carryGhost.className='ca-piece-carry';
- const originalPiece=source.querySelector('svg.piece-3d');
- carryGhost.append(originalPiece?originalPiece.cloneNode(true):document.createRange().createContextualFragment(pieceSVG(unicode[piece],piece)));
+ const original=source.querySelector('svg.piece-3d');
+ carryGhost.append(original?original.cloneNode(true):document.createRange().createContextualFragment(pieceSVG(unicode[piece],piece)));
  carryGhost.setAttribute('aria-hidden','true');
  carryGhost.style.width=rect.width+'px';carryGhost.style.height=rect.height+'px';
  document.body.append(carryGhost);source.classList.add('ca-source-lifted');
- positionCarry(lastPointerX||rect.left+rect.width/2,lastPointerY||rect.top+rect.height/2);
+ positionCarry(lastPointerX,lastPointerY);
 }
-function positionCarry(x,y){lastPointerX=x;lastPointerY=y;if(carryGhost){carryGhost.style.left=x+'px';carryGhost.style.top=y+'px';}}
-function cancelCarry(){selected=null;draggingPiece=false;carryFrom=null;renderBoard();}
-function tryDrop(from,to){
- const legal=to&&game.moves({square:from}).some(m=>m.to===to);
- if(!legal){cancelCarry();return false}
- selected=from;handleSquare(to);return true;
+function finishDrag(){
+ draggingPiece=false;dragOrigin=null;dragPointer=null;clearCarryGhost();
 }
-document.addEventListener('pointermove',event=>{if(selected&&dragPointer===null&&event.pointerType!=='touch')positionCarry(event.clientX,event.clientY)},{passive:true});
-// Once a piece has been picked up with a tap, a second tap manually drops it.
-boardEl.addEventListener('click',event=>{
- if(!carryFrom||!selected||performedDrag)return;
- const sq=event.target.closest('.sq');if(!sq)return;
- if(sq.dataset.square===carryFrom){cancelCarry();return;}
- if(game.moves({square:carryFrom}).some(m=>m.to===sq.dataset.square)){
-  const from=carryFrom;carryFrom=null;tryDrop(from,sq.dataset.square);
- }else cancelCarry();
-},true);
 boardEl.addEventListener('pointerdown',event=>{
- const sq=event.target.closest('.sq');if(!sq||!boardEl.contains(sq))return;
  if(event.pointerType==='mouse'&&event.button!==0)return;
+ const sq=event.target.closest('.sq');if(!sq||!boardEl.contains(sq))return;
  const from=sq.dataset.square,piece=game.at(from);
- dragOrigin=from;dragPointer=event.pointerId;dragStartX=event.clientX;dragStartY=event.clientY;
- if(piece&&(piece===piece.toUpperCase()?'w':'b')===game.turn){
-  carryFrom=from;selected=from;positionCarry(event.clientX,event.clientY);renderBoard();
-  try{boardEl.setPointerCapture(event.pointerId)}catch{}
- }
+ // A tap on any square remains a normal click, including legal destinations.
+ if(!piece||(piece===piece.toUpperCase()?'w':'b')!==game.turn)return;
+ dragOrigin=from;dragPointer=event.pointerId;
+ dragStartX=event.clientX;dragStartY=event.clientY;
+ lastPointerX=event.clientX;lastPointerY=event.clientY;
+ draggingPiece=false;
+ try{boardEl.setPointerCapture(event.pointerId)}catch{}
 });
 boardEl.addEventListener('pointermove',event=>{
- if(dragPointer!==event.pointerId)return;
- const moved=Math.hypot(event.clientX-dragStartX,event.clientY-dragStartY);
- if(moved>6&&carryFrom)draggingPiece=true;
- if(carryFrom)positionCarry(event.clientX,event.clientY);
+ if(dragPointer!==event.pointerId||!dragOrigin)return;
+ const distance=Math.hypot(event.clientX-dragStartX,event.clientY-dragStartY);
+ positionCarry(event.clientX,event.clientY);
+ if(!draggingPiece&&distance>=9){
+  draggingPiece=true;selected=dragOrigin;renderBoard();
+ }
 });
 boardEl.addEventListener('pointerup',event=>{
  if(dragPointer!==event.pointerId)return;
  const from=dragOrigin,wasDragging=draggingPiece;
- dragOrigin=null;dragPointer=null;draggingPiece=false;
- positionCarry(event.clientX,event.clientY);
  try{boardEl.releasePointerCapture(event.pointerId)}catch{}
  if(!wasDragging){
-  // Manual click/tap pickup: leave the piece in hand until the user drops it.
-  // Prevent the browser's synthesized click from immediately cancelling pickup.
-  if(from&&carryFrom===from){performedDrag=true;setTimeout(()=>{performedDrag=false},250);}
-  return;
+  // No drag: let the square's ordinary click handler highlight legal moves.
+  finishDrag();return;
  }
- performedDrag=true;setTimeout(()=>{performedDrag=false},180);
+ positionCarry(event.clientX,event.clientY);
  const target=document.elementFromPoint(event.clientX,event.clientY)?.closest('.sq');
- if(from&&carryFrom===from&&target&&boardEl.contains(target)&&target.dataset.square===from)cancelCarry();
- else if(from&&carryFrom===from&&target&&boardEl.contains(target))tryDrop(from,target.dataset.square);
- else cancelCarry();
+ const to=target&&boardEl.contains(target)?target.dataset.square:null;
+ performedDrag=true;
+ setTimeout(()=>{performedDrag=false},250);
+ finishDrag();
+ if(to&&to!==from&&game.moves({square:from}).some(m=>m.to===to)){
+  selected=from;handleSquare(to);
+ }else{
+  // Same square, invalid square, or outside board: snap back.
+  selected=null;renderBoard();
+ }
 });
 boardEl.addEventListener('pointercancel',event=>{
- // Touch browsers can cancel a pointer while the user is still moving.
- // Keep the picked-up piece selected instead of returning it automatically.
- if(event.pointerId===dragPointer){dragPointer=null;dragOrigin=null;draggingPiece=false;}
+ if(event.pointerId!==dragPointer)return;
+ const wasDragging=draggingPiece;
+ finishDrag();
+ if(wasDragging){selected=null;renderBoard();}
 });
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected)cancelCarry()});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&draggingPiece){finishDrag();selected=null;renderBoard();}
+});
 function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);selected=null;renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const wasCapture=!!game.at(square)||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena'){window.parent.postMessage({type:'chess-academy-board-move',turn:game.turn},location.origin)}sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
