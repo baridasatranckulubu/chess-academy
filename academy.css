@@ -75,3 +75,11 @@
 .arena-clock-actions .btn{padding:8px 11px;min-height:37px;font-size:12px}
 @media(max-width:1120px){.home-board-frame{height:min(90vw,760px)}}
 @media(max-width:620px){.home-board-frame{height:min(110vw,580px)}}
+
+/* Compact vertical chess clock above the quick-match controls */
+.arena-chess-clock{order:-1;margin:0 0 22px;display:flex;flex-direction:column;gap:10px;border-radius:16px}
+.arena-clock-side{font-variant-numeric:tabular-nums;min-height:82px;display:flex;align-items:center;justify-content:center;font-size:clamp(28px,3vw,42px);letter-spacing:.08em}
+.arena-clock-side.black-clock{background:#101418;color:#f9f9f9;border:2px solid #4e5b63}
+.arena-clock-side.white-clock{background:#f3f0e9;color:#171b20;border:2px solid #d6d1c6}
+.arena-clock-side.running{outline:3px solid #d6aa55;outline-offset:2px;box-shadow:0 0 20px #e5b76b4d}
+.arena-match-status{margin-top:12px!important}
