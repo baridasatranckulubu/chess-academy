@@ -111,7 +111,9 @@ function refreshCarryGhost(){
  if(!source)return;
  const rect=source.getBoundingClientRect();
  carryGhost=document.createElement('div');carryGhost.className='ca-piece-carry';
- carryGhost.innerHTML=pieceSVG(unicode[piece],piece);carryGhost.setAttribute('aria-hidden','true');
+ const originalPiece=source.querySelector('svg.piece-3d');
+ carryGhost.append(originalPiece?originalPiece.cloneNode(true):document.createRange().createContextualFragment(pieceSVG(unicode[piece],piece)));
+ carryGhost.setAttribute('aria-hidden','true');
  carryGhost.style.width=rect.width+'px';carryGhost.style.height=rect.height+'px';
  document.body.append(carryGhost);source.classList.add('ca-source-lifted');
  positionCarry(lastPointerX||rect.left+rect.width/2,lastPointerY||rect.top+rect.height/2);
