@@ -110,3 +110,8 @@ body:has(#entry:not([hidden])) .entry h1{margin:clamp(10px,2vh,18px) 0}
 body:has(#entry:not([hidden])) .entry-actions{margin:clamp(12px,2vh,22px) 0}
 @media(min-width:851px){body:has(#entry:not([hidden])) .entry{min-height:calc(100dvh - 76px);padding-block:clamp(12px,2.5vh,28px)}body:has(#entry:not([hidden])) .entry-art{height:min(430px,calc(100dvh - 145px))}}
 @media(max-width:850px){body:has(#entry:not([hidden])) .entry{padding-block:18px;gap:20px}body:has(#entry:not([hidden])) .entry-art{height:clamp(160px,27dvh,230px)}}
+
+/* Logged-in academy: start content directly beneath navigation, no artificial vertical centering. */
+.app:not([hidden]){display:flex!important;flex-direction:column!important;min-height:0!important;height:auto!important;justify-content:flex-start!important;align-items:stretch!important}
+.app:not([hidden])>.workspace{margin:0 auto!important;align-self:stretch!important;flex:0 0 auto!important;min-height:0!important;height:auto!important;padding-top:clamp(12px,2vw,24px)!important;padding-bottom:clamp(12px,2vw,24px)!important}
+.app:not([hidden]) .workspace-head{margin-top:0!important;padding-top:0!important}
