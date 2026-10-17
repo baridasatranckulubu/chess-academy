@@ -100,51 +100,53 @@ let performedDrag=false;
 let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
 const boardEl=$('board');
 boardEl.style.touchAction='none';
-// Click once to pick up a piece, move the pointer freely, click a legal square to drop.
-let carryGhost=null;
+// Lightweight transparent piece preview. It follows mouse and touch pointers.
+let carryGhost=null,lastPointerX=0,lastPointerY=0;
 function clearCarryGhost(){if(carryGhost){carryGhost.remove();carryGhost=null;}}
 function refreshCarryGhost(){
  clearCarryGhost();
- if(!selected||mode==='mate')return;
+ if(!selected)return;
  const piece=game.at(selected);
- if(!piece||!game.moves({square:selected}).length)return;
+ if(!piece)return;
  carryGhost=document.createElement('div');
  carryGhost.className='ca-piece-carry';
  carryGhost.innerHTML=pieceSVG(unicode[piece],piece);
  carryGhost.setAttribute('aria-hidden','true');
  document.body.append(carryGhost);
+ const source=boardEl.querySelector('[data-square="'+selected+'"]');
+ const rect=source?.getBoundingClientRect();
+ carryGhost.style.left=(lastPointerX||(rect?rect.left+rect.width/2:0))+'px';
+ carryGhost.style.top=(lastPointerY||(rect?rect.top+rect.height/2:0))+'px';
 }
-document.addEventListener('pointermove',event=>{
- if(!carryGhost||event.pointerType==='touch')return;
- carryGhost.style.left=event.clientX+'px';
- carryGhost.style.top=event.clientY+'px';
-});
-
+function moveGhost(event){lastPointerX=event.clientX;lastPointerY=event.clientY;if(!carryGhost)return;carryGhost.style.left=event.clientX+'px';carryGhost.style.top=event.clientY+'px';}
+document.addEventListener('pointermove',moveGhost,{passive:true});
 boardEl.addEventListener('pointerdown',event=>{
- const sq=event.target.closest('.sq');
- if(!sq||!boardEl.contains(sq))return;
+ const sq=event.target.closest('.sq');if(!sq||!boardEl.contains(sq))return;
  if(event.pointerType==='mouse'&&event.button!==0)return;
- dragOrigin=sq.dataset.square;dragPointer=event.pointerId;
- dragStartX=event.clientX;dragStartY=event.clientY;
+ const from=sq.dataset.square,piece=game.at(from);
+ dragOrigin=from;dragPointer=event.pointerId;dragStartX=event.clientX;dragStartY=event.clientY;
+ moveGhost(event);
+ if(piece&&(piece===piece.toUpperCase()?'w':'b')===game.turn){
+   if(selected!==from){selected=from;renderBoard();}
+   try{boardEl.setPointerCapture(event.pointerId)}catch{}
+ }
 });
+boardEl.addEventListener('pointermove',event=>{if(dragPointer===event.pointerId)moveGhost(event)});
 boardEl.addEventListener('pointerup',event=>{
  if(dragPointer!==event.pointerId||!dragOrigin)return;
- const from=dragOrigin;dragOrigin=null;dragPointer=null;
+ const from=dragOrigin;dragOrigin=null;dragPointer=null;moveGhost(event);
+ try{boardEl.releasePointerCapture(event.pointerId)}catch{}
  const moved=Math.hypot(event.clientX-dragStartX,event.clientY-dragStartY);
- if(moved<12)return; // ordinary click / tap handled by click event
+ if(moved<9)return;
  const hit=document.elementFromPoint(event.clientX,event.clientY);
- const to=hit&&hit.closest('.sq');
- if(!to||!boardEl.contains(to)||to.dataset.square===from)return;
- // Suppress click synthesized after a drag, but not the next genuine tap.
- performedDrag=true;
- setTimeout(()=>{performedDrag=false},120);
- const p=game.at(from);
- if(!p||((p===p.toUpperCase()?'w':'b')!==game.turn))return;
- selected=from;
- handleSquare(to.dataset.square);
+ const to=hit?.closest('.sq');
+ performedDrag=true;setTimeout(()=>{performedDrag=false},180);
+ if(to&&boardEl.contains(to)&&to.dataset.square!==from&&game.at(from)){
+   selected=from;handleSquare(to.dataset.square);
+ }else if(selected!==from){selected=from;renderBoard();}
 });
-boardEl.addEventListener('pointercancel',()=>{dragOrigin=null;dragPointer=null;});
-document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected){selected=null;renderBoard();}});
+boardEl.addEventListener('pointercancel',()=>{dragOrigin=null;dragPointer=null;clearCarryGhost();renderBoard()});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected){selected=null;renderBoard()}});
 function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const wasCapture=!!game.at(square)||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena'){window.parent.postMessage({type:'chess-academy-board-move',turn:game.turn},location.origin)}sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
