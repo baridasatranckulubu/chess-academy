@@ -55,6 +55,7 @@ function setupBoardFrame(){
  window.ChessAcademyBoardFrame.updateCoordinates();
 }
 setupBoardFrame();
+window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.type!=='chess-academy-select-side')return;const side=event.data.side;if(side!=='w'&&side!=='b')return;flipped=side==='b';selected=null;renderBoard()});
 
 const unicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 // Self-contained vector pieces with metallic / porcelain highlights. No external assets.
