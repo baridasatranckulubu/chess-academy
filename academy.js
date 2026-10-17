@@ -79,7 +79,24 @@ const computerStatusListener=e=>{
  if(e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.type!=='chess-academy-computer-status')return;
  status.textContent=e.data.message||'Stockfish';
 };
-window.addEventListener('message',computerStatusListener);panel.append(computer);const footer=node('p','muted arena-footnote','Çevrim içi maçlar ve genel sıralama, güvenli hesap ve oyun sunucusu bağlantısından sonra etkinleşecek.');panel.append(footer);layout.append(boardCard,panel);view.append(layout)}
+window.addEventListener('message',computerStatusListener);
+const engineActions=node('div','stockfish-extra-actions');
+engineActions.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 16px;';
+const hintButton=button('💡 Hamle öner',()=>{
+ if(!computerOn){status.textContent='Önce Stockfish ile oyunu başlat.';return;}
+ frame.contentWindow?.postMessage({type:'chess-academy-computer-hint'},location.origin);
+},'btn');
+const rematchButton=button('🔁 Rövanş',()=>{
+ computerOn=true;computer.textContent='✕ Stockfish oyununu kapat';
+ resetClockForPreset();sendEngineStart();analysisOutput.textContent='Değerlendirme: hesaplanıyor...';
+},'btn');
+const resignButton=button('🏳️ Pes et',()=>{
+ if(!computerOn){status.textContent='Aktif Stockfish maçı yok.';return;}
+ frame.contentWindow?.postMessage({type:'chess-academy-computer-resign'},location.origin);
+ computerOn=false;computer.textContent='🤖 Stockfish ile oyna';
+},'btn');
+engineActions.append(hintButton,rematchButton,resignButton);
+panel.append(computer,engineActions);const footer=node('p','muted arena-footnote','Çevrim içi maçlar ve genel sıralama, güvenli hesap ve oyun sunucusu bağlantısından sonra etkinleşecek.');panel.append(footer);layout.append(boardCard,panel);view.append(layout)}
 function embedded(url,title){const view=$('view');view.append(node('h2','',title));const description=node('p','muted',bi('Çalışmanı panelden ayrılmadan yapabilirsin. Tam ekran için aşağıdaki bağlantıyı kullan.','Practice without leaving your dashboard. Use the link below for full screen.'));const frame=node('iframe','academy-embed');frame.src=url;frame.title=title;frame.loading='lazy';frame.setAttribute('allowfullscreen','');const a=node('a','btn gold',bi('↗ Tam ekranda aç','↗ Open full screen'));a.href=url;a.target='_blank';a.rel='noopener noreferrer';view.append(description,frame,a)}
 function courseHeader(){const h=node('div','topline');h.append(node('h2','',t(2)),node('p','muted',data.completed.length+' / '+lessons.length+' '+t(22)));return h}
 let lessonLevelFilter='all',lessonTopicFilter='all';
