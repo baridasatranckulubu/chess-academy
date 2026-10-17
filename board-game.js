@@ -93,13 +93,33 @@ function announce(message){$('boardNote').textContent=message;}
 function boardStatus(){if(game.isCheckmate())return w().mate+' '+(game.turn==='w'?w().black:w().white);if(game.isStalemate())return w().stalemate;if(game.isDraw())return w().draw;return w().move+': '+(game.turn==='w'?w().white:w().black)+(game.isCheck()?' · '+w().check:'');}
 function historyNotation(){const replay=new ChessEngine();const san=[];for(const entry of game.history){const m=entry.move,from=m.from,to=m.to,p=replay.at(from);if(!p)break;const capture=!!replay.at(to)||!!m.enPassant;let label='';if(p.toLowerCase()==='k'&&Math.abs(from.charCodeAt(0)-to.charCodeAt(0))===2){label=to[0]==='g'?'O-O':'O-O-O'}else{const kind=p.toUpperCase()==='P'?'':p.toUpperCase();let disamb='';if(kind){const rivals=replay.moves().filter(x=>x.to===to&&x.from!==from&&replay.at(x.from)?.toUpperCase()===p.toUpperCase());if(rivals.length){const sameFile=rivals.some(x=>x.from[0]===from[0]),sameRank=rivals.some(x=>x.from[1]===from[1]);disamb=!sameFile?from[0]:!sameRank?from[1]:from}}else if(capture)disamb=from[0];label=kind+disamb+(capture?'x':'')+to+(m.promotion?'='+m.promotion.toUpperCase():'')}const applied=replay.move(from,to,m.promotion||'q');if(!applied)break;if(replay.isCheckmate())label+='#';else if(replay.isCheck())label+='+';san.push(label)}return san}
 function updateHistoryPanel(){const notation=historyNotation(),text=notation.map((m,i)=>(i%2===0?Math.floor(i/2)+1+'. ':'')+m).join(' ');const field=document.getElementById('moveHistoryText');if(field)field.value=text;const copy=document.getElementById('copyMoves'),analyse=document.getElementById('analyseMoves');if(copy)copy.disabled=!notation.length;if(analyse){analyse.setAttribute('aria-disabled',String(!notation.length));analyse.href=notation.length?'https://lichess.org/analysis/pgn/'+notation.map(encodeURIComponent).join('_')+'#'+notation.length:'#'}if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena')window.parent.postMessage({type:'chess-academy-history',notation,text,url:notation.length?'https://lichess.org/analysis/pgn/'+notation.map(encodeURIComponent).join('_')+'#'+notation.length:null},location.origin)}
-function renderBoard(){const root=$('board');root.replaceChildren();window.ChessAcademyBoardFrame?.updateCoordinates();const valid=selected?new Set(game.moves({square:selected}).map(x=>x.to)):new Set();const squares=Array.from({length:64},(_,i)=>i);if(flipped)squares.reverse();for(const i of squares){const name=window.ChessAcademyEngine.squareName(i),piece=game.at(i),btn=document.createElement('button');btn.type='button';btn.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(selected===name?' selected':'')+(valid.has(name)?' target':'');if(piece)btn.innerHTML=pieceSVG(unicode[piece],piece);if(lastMove&&(lastMove.from===name||lastMove.to===name))btn.classList.add('last-move');btn.setAttribute('aria-label',name+' '+(piece||'empty')+(valid.has(name)?' legal target':''));btn.setAttribute('aria-pressed',String(selected===name));btn.dataset.square=name;btn.onclick=()=>{if(performedDrag){performedDrag=false;return;}handleSquare(name);};root.append(btn);}const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';updateHistoryPanel();$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`;}
+function renderBoard(){const root=$('board');root.replaceChildren();window.ChessAcademyBoardFrame?.updateCoordinates();refreshCarryGhost();const valid=selected?new Set(game.moves({square:selected}).map(x=>x.to)):new Set();const squares=Array.from({length:64},(_,i)=>i);if(flipped)squares.reverse();for(const i of squares){const name=window.ChessAcademyEngine.squareName(i),piece=game.at(i),btn=document.createElement('button');btn.type='button';btn.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(selected===name?' selected':'')+(valid.has(name)?' target':'');if(piece)btn.innerHTML=pieceSVG(unicode[piece],piece);if(lastMove&&(lastMove.from===name||lastMove.to===name))btn.classList.add('last-move');btn.setAttribute('aria-label',name+' '+(piece||'empty')+(valid.has(name)?' legal target':''));btn.setAttribute('aria-pressed',String(selected===name));btn.dataset.square=name;btn.onclick=()=>{if(performedDrag){performedDrag=false;return;}handleSquare(name);};root.append(btn);}const moves=game.history.map((x,i)=>`${i%2===0?`${Math.floor(i/2)+1}. `:''}${x.move.from}${x.move.to}${x.move.promotion||''}`);$('moveHistory').textContent=moves.join('  ')||'·';updateHistoryPanel();$('boardStatus').textContent=boardStatus();$('undoMove').disabled=mode!=='free'||game.history.length===0;$('nextMate').hidden=mode!=='mate';$('mateProgress').textContent=`${w().progress}: ${solved.size}/${puzzles.length}`;}
 // Pointer interactions: the entire 64-cell square is a touch target, not the visible piece.
 // Tap a piece then its highlighted destination, or press and drag to the destination.
 let performedDrag=false;
 let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
 const boardEl=$('board');
 boardEl.style.touchAction='none';
+// Click once to pick up a piece, move the pointer freely, click a legal square to drop.
+let carryGhost=null;
+function clearCarryGhost(){if(carryGhost){carryGhost.remove();carryGhost=null;}}
+function refreshCarryGhost(){
+ clearCarryGhost();
+ if(!selected||mode==='mate')return;
+ const piece=game.at(selected);
+ if(!piece||!game.moves({square:selected}).length)return;
+ carryGhost=document.createElement('div');
+ carryGhost.className='ca-piece-carry';
+ carryGhost.innerHTML=pieceSVG(unicode[piece],piece);
+ carryGhost.setAttribute('aria-hidden','true');
+ document.body.append(carryGhost);
+}
+document.addEventListener('pointermove',event=>{
+ if(!carryGhost||event.pointerType==='touch')return;
+ carryGhost.style.left=event.clientX+'px';
+ carryGhost.style.top=event.clientY+'px';
+});
+
 boardEl.addEventListener('pointerdown',event=>{
  const sq=event.target.closest('.sq');
  if(!sq||!boardEl.contains(sq))return;
@@ -124,6 +144,7 @@ boardEl.addEventListener('pointerup',event=>{
  handleSquare(to.dataset.square);
 });
 boardEl.addEventListener('pointercancel',()=>{dragOrigin=null;dragPointer=null;});
+document.addEventListener('keydown',event=>{if(event.key==='Escape'&&selected){selected=null;renderBoard();}});
 function handleSquare(square){if(game.isGameOver()){announce(w().end);return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);renderBoard();return;}const promotion=legal.some(m=>m.promotion)?$('promotionChoice').value:'q';const wasCapture=!!game.at(square)||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}lastMove={from,to:square};if(window.parent!==window&&new URLSearchParams(location.search).get('embed')==='arena'){window.parent.postMessage({type:'chess-academy-board-move',turn:game.turn},location.origin)}sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
