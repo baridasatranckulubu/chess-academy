@@ -1,0 +1,14 @@
+node_modules/
+.git/
+.github/
+android/
+.gradle/
+.wrangler/
+*.apk
+*.aab
+*.keystore
+*.jks
+package.json
+bun.lock
+package-lock.json
+capacitor.config.*
