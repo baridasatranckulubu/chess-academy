@@ -33,7 +33,7 @@ function xp(){return completed.length*20}
 function sync(){try{localStorage.setItem(KEY,JSON.stringify(completed))}catch{}
  if(window.parent!==window)try{window.parent.postMessage({type:'chess-academy-beginner-xp',student,xp:xp()},location.origin)}catch{}
 }
-function menu(){const box=$('piece-menu');box.replaceChildren();pieces.forEach(([id,name],i)=>{const n=completed.filter(x=>x.startsWith(id)).length,b=document.createElement('button');b.type='button';b.textContent=icons[id]+' '+name+' '+n+'/3';b.className=index===i?'active':'';b.setAttribute('aria-pressed',String(index===i));b.onclick=()=>{index=i;setup()};box.append(b)});$('xp').textContent='Toplam XP: '+xp()+' / 360 · Tamamlanan görev: '+completed.length+'/18 · Profil: '+student}
+function menu(){document.querySelectorAll('.journey-grid [data-piece]').forEach(b=>{b.classList.toggle('active',Number(b.dataset.piece)===index);b.setAttribute('aria-pressed',String(Number(b.dataset.piece)===index));});const box=$('piece-menu');box.replaceChildren();pieces.forEach(([id,name],i)=>{const n=completed.filter(x=>x.startsWith(id)).length,b=document.createElement('button');b.type='button';b.textContent=icons[id]+' '+name+' '+n+'/3';b.className=index===i?'active':'';b.setAttribute('aria-pressed',String(index===i));b.onclick=()=>{index=i;setup()};box.append(b)});$('xp').textContent='Toplam XP: '+xp()+' / 360 · Tamamlanan görev: '+completed.length+'/18 · Profil: '+student}
 function setup(){clearTimeout(timer);locked=false;selected=false;const id=pieces[index][0],list=missions.filter(m=>m.piece===id);mission=list.find(m=>!completed.includes(m.id))||list[0];try{game=new Engine(mission.fen)}catch(err){$('status').textContent='Görev açılamadı: '+err.message;return}
  const valid=game.moves({square:mission.from}).some(m=>m.to===mission.to);if(!valid){$('status').textContent='Bu görev geçerli değil.';return}
  $('piece-title').textContent=icons[id]+' '+pieces[index][1];$('explain').textContent=pieces[index][2]+' '+mission.tip;
@@ -48,5 +48,5 @@ function attempt(sq){if(locked||!game)return;if(sq===mission.from){selected=true
  const list=missions.filter(m=>m.piece===pieces[index][0]),remaining=list.some(m=>!completed.includes(m.id));
  if(remaining)timer=setTimeout(setup,1000);else if(completed.length<missions.length)timer=setTimeout(()=>{index=(index+1)%pieces.length;setup()},1200);
 }
-$('retry').onclick=setup;$('next').onclick=()=>{index=(index+1)%pieces.length;setup()};setup();sync();
+document.querySelectorAll('.journey-grid [data-piece]').forEach(b=>b.onclick=()=>{index=Number(b.dataset.piece);setup();document.getElementById('board').scrollIntoView({behavior:'smooth',block:'center'})});$('retry').onclick=setup;$('next').onclick=()=>{index=(index+1)%pieces.length;setup()};setup();sync();
 })();
