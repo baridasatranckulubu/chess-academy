@@ -59,7 +59,7 @@ function showMistake(ply,side,number){
 function setupReview(){
  const board=$('board');if(!board)return;
  const notice=document.createElement('p');notice.id='caMistakeNotice';notice.hidden=true;notice.className='ca-mistake-notice';board.closest('.chess-board-frame')?.after(notice);
- board.addEventListener('click',()=>{if(annotation){clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
+ board.addEventListener('click',event=>{if(annotation){event.stopPropagation();event.preventDefault();clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
 }
 function next(){if(!ready||busy||!queue.length)return;const fen=queue.shift();if(scores.has(fen)){next();return}busy=true;current={fen,score:undefined,turn:fen.split(' ')[1]};worker.postMessage('position fen '+fen);worker.postMessage('go movetime '+(requested?350:200));draw()}
 async function init(){
