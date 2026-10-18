@@ -63,14 +63,14 @@ async function init(){
 function schedule(full=false){
  const pos=positions();if(!pos.length)return;
  if(full)requested=true;
- const wanted=full?pos:[pos[pos.length-1]];
+ const wanted=pos;
  for(const fen of wanted)if(!scores.has(fen)&&fen!==current?.fen&&!queue.includes(fen))queue.push(fen);
  draw();init();next();
 }
 function boot(){
- if(!getGame()||!$('caReviewStart')){setTimeout(boot,250);return}
+ if(!getGame()||!$('caLiveEval')){setTimeout(boot,250);return}
  const style=document.createElement('style');style.textContent='.ca-review-tools{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0}.ca-review-tools button{padding:10px;border:1px solid #d4aa70;border-radius:8px;background:#5b482e;color:white;cursor:pointer}.ca-eval-summary{margin:12px 0;font-weight:700}#caLiveEval{font-size:23px;color:#e9c27e}#caEvalGraph{display:block;width:100%;height:auto;background:#101d27;border-radius:9px}#caReviewStats{font-size:13px;line-height:1.6}';document.head.append(style);
- $('caReviewStart').onclick=()=>schedule(true);
+
  const board=$('board');new MutationObserver(()=>{const g=getGame();if(!g)return;const key=g.fen()+'|'+g.history.length;if(key!==lastKey){lastKey=key;schedule(requested)}}).observe(board,{childList:true});
  schedule();
 }
