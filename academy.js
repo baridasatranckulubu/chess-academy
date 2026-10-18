@@ -59,26 +59,30 @@ async function adminTeacherAction(payload){
  const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-admin-teachers',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG','authorization':'Bearer '+session.access_token},body:JSON.stringify(payload)});
  const data=await response.json();if(!response.ok)throw Error(data.error||'İşlem başarısız');return data;
 }
+function teacherForm(teacher=null){
+ const form=document.createElement('form');form.className='ca-teacher-form';
+ const editing=!!teacher;
+ form.innerHTML='<div class="ca-teacher-head"><div>♟ BARIDA CHESS ACADEMY · YÖNETİM</div><h3>'+(editing?'Öğretmen bilgilerini düzenle':'Yeni öğretmen kaydı')+'</h3><p>Öğretmen hesabı, iletişim ve mesleki bilgileri</p></div><div class="ca-teacher-body"><div class="ca-teacher-step">01 · Kimlik ve iletişim</div><label>Adı soyadı<input name="display_name" minlength="2" maxlength="60" required autocomplete="name"></label><label>Telefon numarası<input name="phone" type="tel" placeholder="+905551234567" required></label><label>E-posta (iletişim)<input name="email_contact" type="email" placeholder="ogretmen@ornek.com"></label><label>İşe başlama tarihi<input name="start_date" type="date"></label><label class="ca-teacher-wide">Adres<textarea name="home_address" minlength="10" maxlength="500" required placeholder="İl, ilçe, mahalle, açık adres"></textarea></label><div class="ca-teacher-step">02 · Mesleki bilgiler</div><label>Uzmanlık alanı<input name="specialization" maxlength="160" placeholder="Satranç antrenörlüğü, başlangıç, ileri seviye"></label><label>Deneyim (yıl)<input name="experience_years" type="number" min="0" max="70" placeholder="0"></label><label>FIDE kimlik numarası (varsa)<input name="fide_id" maxlength="60"></label><label>Çalışma biçimi<select name="employment_type"><option value="">Belirtilmedi</option><option value="full_time">Tam zamanlı</option><option value="part_time">Yarı zamanlı</option><option value="contract">Sözleşmeli</option><option value="freelance">Serbest</option></select></label><label class="ca-teacher-wide">Yönetici notları<textarea name="notes" maxlength="1000" placeholder="Eğitim belgeleri, görevler, çalışma günleri veya görüşme notları"></textarea></label><div class="ca-teacher-step">03 · Hesap ve giriş güvenliği</div><label>Kullanıcı adı<input name="username" minlength="3" maxlength="24" pattern="[a-z0-9_çğıöşü]{3,24}" required autocomplete="off"></label><label>'+(editing?'Yeni şifre (değişmeyecekse boş bırakın)':'İlk giriş şifresi (en az 12 karakter)')+'<input name="password" type="password" '+(editing?'':'required')+' minlength="12" maxlength="128" autocomplete="new-password"></label></div><div class="ca-teacher-foot"><button type="submit" class="btn gold">'+(editing?'Değişiklikleri kaydet':'Öğretmen hesabı oluştur')+'</button></div>';
+ if(teacher){for(const input of form.querySelectorAll('[name]')){if(input.name==='password')continue;input.value=teacher[input.name]??''}}else form.elements.phone.value='+90';
+ return form;
+}
 async function adminTeachers(){
  const view=$('view');view.replaceChildren();
  if(realProfile?.role!=='admin'){view.append(node('p','','Yalnızca yönetici erişebilir.'));return}
- view.append(node('h2','','🛡️ Öğretmen Hesapları'),node('p','muted','Öğretmen hesaplarını oluştur, kullanıcı adlarını değiştir, yeni şifre belirle veya sil. Mevcut şifreler güvenlik nedeniyle görüntülenmez.'));
+ view.append(node('h2','','🛡️ Öğretmen Yönetimi'),node('p','muted','Öğretmen kayıtları ve giriş yetkileri. Şifreler görüntülenmez; yalnızca yeni şifre atanabilir.'));
  const status=node('p','muted','');view.append(status);
- const form=document.createElement('form');form.className='card';form.innerHTML='<h3>Yeni öğretmen</h3><label>Kullanıcı adı <input name="username" required minlength="3" maxlength="24" autocomplete="off" pattern="[a-z0-9_çğıöşü]{3,24}"></label><label>Ad soyad <input name="display_name" required minlength="2" maxlength="60"></label><label>Şifre (en az 12 karakter) <input name="password" type="password" required minlength="12" autocomplete="new-password"></label><button type="submit" class="btn primary">Öğretmen oluştur</button>';
- form.onsubmit=async event=>{event.preventDefault();const b=Object.fromEntries(new FormData(form));try{await adminTeacherAction({action:'create',...b});adminTeachers()}catch(e){status.textContent=e.message}};
+ const form=teacherForm();
+ form.onsubmit=async event=>{event.preventDefault();status.textContent='Kaydediliyor...';try{await adminTeacherAction({action:'create',...Object.fromEntries(new FormData(form))});adminTeachers()}catch(e){status.textContent=e.message}};
  view.append(form);
  try{
- const {teachers}=await adminTeacherAction({action:'list'});
- if(section!=='admin-teachers')return;
- const list=node('div','');view.append(node('h3','','Kayıtlı öğretmenler'),list);
- if(!teachers.length)list.append(node('p','muted','Henüz öğretmen hesabı yok.'));
+ const {teachers}=await adminTeacherAction({action:'list'});if(section!=='admin-teachers')return;
+ view.append(node('h3','','Kayıtlı öğretmenler'));
+ if(!teachers.length)view.append(node('p','muted','Henüz öğretmen hesabı bulunmuyor.'));
  for(const teacher of teachers){
-  const card=node('div','card');const edit=document.createElement('form');
-  edit.innerHTML='<h4></h4><label>Kullanıcı adı <input name="username" required maxlength="24"></label><label>Ad soyad <input name="display_name" required maxlength="60"></label><label>Yeni şifre (boş bırakılırsa değişmez) <input name="password" type="password" autocomplete="new-password"></label><button class="btn primary" type="submit">Bilgileri güncelle</button>';
-  edit.querySelector('h4').textContent=teacher.display_name;
-  edit.elements.username.value=teacher.username;edit.elements.display_name.value=teacher.display_name;
-  edit.onsubmit=async event=>{event.preventDefault();try{await adminTeacherAction({action:'update',id:teacher.id,...Object.fromEntries(new FormData(edit))});adminTeachers()}catch(e){status.textContent=e.message}};
-  card.append(edit,button('Öğretmeni sil',async()=>{if(!confirm(teacher.display_name+' öğretmen hesabını kalıcı olarak silmek istiyor musunuz?'))return;try{await adminTeacherAction({action:'delete',id:teacher.id});adminTeachers()}catch(e){status.textContent=e.message}},'btn danger'));list.append(card);
+  const details=document.createElement('details');details.className='card';const summary=document.createElement('summary');summary.textContent='👨‍🏫 '+teacher.display_name+' · @'+teacher.username+' · Düzenle';details.append(summary);
+  const edit=teacherForm(teacher);
+  edit.onsubmit=async event=>{event.preventDefault();status.textContent='Kaydediliyor...';try{await adminTeacherAction({action:'update',id:teacher.id,...Object.fromEntries(new FormData(edit))});adminTeachers()}catch(e){status.textContent=e.message}};
+  details.append(edit,button('Öğretmeni sil',async()=>{if(!confirm(teacher.display_name+' öğretmen hesabını kalıcı olarak silmek istiyor musunuz?'))return;try{await adminTeacherAction({action:'delete',id:teacher.id});adminTeachers()}catch(e){status.textContent=e.message}},'btn danger'));view.append(details);
  }
  }catch(e){status.textContent=e.message}
 }
