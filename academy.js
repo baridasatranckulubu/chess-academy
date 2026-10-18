@@ -84,7 +84,7 @@ function home(){
  const view=$('view');view.classList.add('home-view');view.append(node('h2','','♟ Satranç Tahtası'));
  const shell=node('section','home-board-card');shell.style.cssText='width:100%;margin:0 auto;padding:0;background:transparent;border:0;box-shadow:none';
  const wrapper=node('div','board-studio-resizer');wrapper.style.cssText='position:relative;width:700px;max-width:calc(100% - 20px);margin:0 auto;background:transparent';
- const frame=node('iframe','home-board-frame');frame.src='board.html?embed=studio&v=20261019-side-flip37';frame.title='Chess Academy ayarlanabilir satranç tahtası';frame.loading='eager';frame.style.cssText='display:block;width:100%;height:1550px;border:0;background:transparent;overflow:hidden';
+ const frame=node('iframe','home-board-frame');frame.src='board.html?embed=studio&v=20261019-graph-controls38';frame.title='Chess Academy ayarlanabilir satranç tahtası';frame.loading='eager';frame.style.cssText='display:block;width:100%;height:1550px;border:0;background:transparent;overflow:hidden';
  wrapper.append(frame);
  window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||e.data?.type!=='barida-studio-height')return;const height=Math.max(900,Math.min(9000,Number(e.data.height)||1550));frame.style.height=height+'px'});
 
