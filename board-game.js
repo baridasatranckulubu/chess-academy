@@ -146,23 +146,11 @@ window.addEventListener('message',event=>{
 });
 const unicode={K:'♔',Q:'♕',R:'♖',B:'♗',N:'♘',P:'♙',k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'};
 // Self-contained vector pieces with metallic / porcelain highlights. No external assets.
+// One canonical piece renderer for the homepage and all academy activities.
 function pieceSVG(symbol,piece){
- const white=piece===piece.toUpperCase();
- const fill=white?'url(#ivory)':'url(#obsidian)';
- const stroke=white?'#705844':'#d1ae79';
- const shadow=white?'#bda88d':'#0c1118';
- const id=white?'i':'o';
- return `<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
- <defs>
-  <linearGradient id="${id}v05" x1="0" y1="0" x2="1" y2="1">
-   ${white?'<stop offset="0" stop-color="#fffdf3"/><stop offset=".28" stop-color="#e9e1d2"/><stop offset=".57" stop-color="#c8b6a0"/><stop offset=".77" stop-color="#fff6e4"/><stop offset="1" stop-color="#9c8772"/>':'<stop offset="0" stop-color="#7d8187"/><stop offset=".25" stop-color="#323b44"/><stop offset=".52" stop-color="#0f1822"/><stop offset=".73" stop-color="#56606a"/><stop offset="1" stop-color="#090f16"/>'}
-  </linearGradient>
- </defs>
- <ellipse cx="51" cy="84" rx="30" ry="7" fill="#130c09" opacity=".27"/>
- <text x="50" y="48" fill="${shadow}" stroke="${shadow}" stroke-width="3" paint-order="stroke" opacity=".7">${symbol}</text>
- <text x="49" y="45" fill="url(#${id}v05)" stroke="${stroke}" stroke-width="1.25" paint-order="stroke">${symbol}</text>
- <path d="M29 79 Q50 87 71 79" fill="none" stroke="${white?'#fff9e9':'#adb5bb'}" stroke-width="1.3" opacity=".48"/>
- </svg>`;
+ const shared=window.ChessAcademySharedBoard;
+ if(!shared||typeof shared.pieceSVG!=='function')throw Error('Shared board renderer is required');
+ return shared.pieceSVG(symbol,piece);
 }
 const puzzles=[{"fen":"7k/8/5KQ1/8/8/8/8/8 w - - 0 1","answer":"g6g7","theme":"Mate in one"},{"fen":"k7/8/1QK5/8/8/8/8/8 w - - 0 1","answer":"b6b7","theme":"Queen support"},{"fen":"r1bqkb1r/pppp1ppp/2n2n2/4p2Q/2B1P3/8/PPPP1PPP/RNB1K1NR w KQkq - 4 4","answer":"h5f7","theme":"Scholar’s mate"},{"fen":"8/8/8/8/8/5kq1/8/7K b - - 0 1","answer":"g3g2","theme":"Black to move"},{"fen":"8/8/8/8/Q7/K7/8/k7 w - - 0 1","answer":"a4d1","theme":"Queen mate"},{"fen":"8/8/8/Q7/8/K7/8/k7 w - - 0 1","answer":"a5e1","theme":"Queen mate"},{"fen":"8/8/Q7/8/8/K7/8/k7 w - - 0 1","answer":"a6f1","theme":"Queen mate"},{"fen":"8/Q7/8/8/8/K7/8/k7 w - - 0 1","answer":"a7g1","theme":"Queen mate"},{"fen":"Q7/8/8/8/8/K7/8/k7 w - - 0 1","answer":"a8h1","theme":"Queen mate"},{"fen":"1Q6/8/8/8/8/K7/8/k7 w - - 0 1","answer":"b8b2","theme":"Queen mate"},{"fen":"8/2Q5/8/8/8/K7/8/k7 w - - 0 1","answer":"c7c1","theme":"Queen mate"},{"fen":"2Q5/8/8/8/8/K7/8/k7 w - - 0 1","answer":"c8c1","theme":"Queen mate"},{"fen":"8/8/3Q4/8/8/K7/8/k7 w - - 0 1","answer":"d6d1","theme":"Queen mate"},{"fen":"8/3Q4/8/8/8/K7/8/k7 w - - 0 1","answer":"d7d1","theme":"Queen mate"},{"fen":"3Q4/8/8/8/8/K7/8/k7 w - - 0 1","answer":"d8d1","theme":"Queen mate"},{"fen":"8/4Q3/8/8/8/K7/8/k7 w - - 0 1","answer":"e7e1","theme":"Queen mate"},{"fen":"4Q3/8/8/8/8/K7/8/k7 w - - 0 1","answer":"e8e1","theme":"Queen mate"},{"fen":"8/8/8/5Q2/8/K7/8/k7 w - - 0 1","answer":"f5f1","theme":"Queen mate"},{"fen":"5Q2/8/8/8/8/K7/8/k7 w - - 0 1","answer":"f8f1","theme":"Queen mate"},{"fen":"8/8/6Q1/8/8/K7/8/k7 w - - 0 1","answer":"g6g1","theme":"Queen mate"},{"fen":"8/7Q/8/8/8/K7/8/k7 w - - 0 1","answer":"h7h1","theme":"Queen mate"},{"fen":"8/8/8/8/Q7/K7/8/1k6 w - - 0 1","answer":"a4d1","theme":"Queen mate"},{"fen":"8/8/8/8/8/K1Q5/8/1k6 w - - 0 1","answer":"c3b2","theme":"Queen mate"},{"fen":"8/8/8/3Q4/8/K7/8/1k6 w - - 0 1","answer":"d5d1","theme":"Queen mate"},{"fen":"8/8/3Q4/8/8/K7/8/1k6 w - - 0 1","answer":"d6d1","theme":"Queen mate"},{"fen":"8/3Q4/8/8/8/K7/8/1k6 w - - 0 1","answer":"d7d1","theme":"Queen mate"},{"fen":"3Q4/8/8/8/8/K7/8/1k6 w - - 0 1","answer":"d8d1","theme":"Queen mate"},{"fen":"8/8/8/4Q3/8/K7/8/1k6 w - - 0 1","answer":"e5b2","theme":"Queen mate"}];
 // Puzzle catalogue must exist before persisted progress is filtered.
