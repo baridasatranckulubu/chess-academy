@@ -15,7 +15,7 @@ function positions(){
 }
 function chance(cp){return 1/(1+Math.exp(-Math.max(-1000,Math.min(1000,cp))/170))}
 function draw(){
- const pos=positions(),score=scores.get(pos[pos.length-1]);if(!$('caLiveEval'))return;
+ const livePositions=positions(),pos=reviewSnapshot?.positions||livePositions,score=scores.get(livePositions[livePositions.length-1]);if(!$('caLiveEval'))return;
  $('caLiveEval').textContent=fmt(score);
  const white=$('caWhiteEval'),black=$('caBlackEval');if(white)white.textContent=fmt(score);if(black)black.textContent=typeof score==='number'?fmt(-score):typeof score==='string'&&score.startsWith('M')?'M'+(-Number(score.slice(1))):'…';
  $('caReviewStatus').textContent=error||'';
@@ -38,7 +38,7 @@ function draw(){
   stats.append(buttons);
  }
 }
-let annotation=null;
+let annotation=null,reviewSnapshot=null;
 function clearAnnotation(){annotation=null;document.querySelectorAll('.ca-error-arrow,.ca-error-circle').forEach(el=>el.remove());}
 function paintAnnotation(){
  if(!annotation)return;const board=$('board');if(!board)return;
@@ -49,8 +49,8 @@ function paintAnnotation(){
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.classList.add('ca-error-arrow');svg.setAttribute('viewBox','0 0 '+bounds.width+' '+bounds.height);svg.setAttribute('preserveAspectRatio','none');svg.innerHTML='<defs><marker id="caArrowHead" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="#ff7d4d"/></marker></defs><line x1="'+cx(a)+'" y1="'+cy(a)+'" x2="'+cx(b)+'" y2="'+cy(b)+'" stroke="#ff7d4d" stroke-width="7" stroke-linecap="round" marker-end="url(#caArrowHead)"/>';board.append(svg);
 }
 function showMistake(ply,side,number){
- const game=getGame(),entry=game?.history[ply-1],fen=positions()[ply];if(!fen||!entry)return;
- const move={from:entry.move.from,to:entry.move.to};
+ if(!reviewSnapshot){const game=getGame();reviewSnapshot={positions:positions().slice(),moves:game.history.map(h=>({...h.move}))}}const entry=reviewSnapshot.moves[ply-1],fen=reviewSnapshot.positions[ply];if(!fen||!entry)return;
+ const move={from:entry.from,to:entry.to};
  window.ChessAcademyDemo.loadReviewPosition(fen,move);
  annotation=move;paintAnnotation();
  const notice=$('caMistakeNotice');if(notice){notice.hidden=false;notice.textContent=(side==='w'?'Beyaz':'Siyah')+' '+number+'. hata: '+Math.ceil(ply/2)+'. hamle. İşaretleri kaldırmak ve bu konumdan devam etmek için tahtaya sol tıkla.'}
@@ -58,6 +58,7 @@ function showMistake(ply,side,number){
 }
 function setupReview(){
  const board=$('board');if(!board)return;
+ $('resetBoard')?.addEventListener('click',()=>{reviewSnapshot=null;clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true});
  const notice=document.createElement('p');notice.id='caMistakeNotice';notice.hidden=true;notice.className='ca-mistake-notice';board.closest('.chess-board-frame')?.after(notice);
  board.addEventListener('click',event=>{if(annotation){event.stopPropagation();event.preventDefault();clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
 }
@@ -95,7 +96,7 @@ async function init(){
 function schedule(full=false){
  const pos=positions();if(!pos.length)return;
  if(full)requested=true;
- const wanted=pos;
+ const wanted=reviewSnapshot?[...new Set([...pos,...reviewSnapshot.positions])]:pos;
  for(const fen of wanted)if(!scores.has(fen)&&fen!==current?.fen&&!queue.includes(fen))queue.push(fen);
  draw();init();next();
 }
