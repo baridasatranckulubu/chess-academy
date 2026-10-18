@@ -137,8 +137,8 @@
 
 /* Four-corner proportional chessboard resizing; default remains the last approved size. */
 #resizableBoardFrame{touch-action:pan-y;position:relative}
-.board-resize-handle{position:absolute;z-index:12;width:27px;height:27px;border:0;background:transparent;color:transparent;border-radius:8px;display:grid;place-items:center;cursor:nwse-resize;touch-action:none;user-select:none;font-size:17px;line-height:1;opacity:0;transition:opacity .12s,background .12s,color .12s}
-.board-resize-handle:hover,.board-resize-handle:focus-visible{opacity:1;color:#f2d093;background:#58412c;outline:1px solid #f2d093;outline-offset:1px}
+.board-resize-handle{position:absolute;z-index:12;width:27px;height:27px;border:0;background:transparent;color:transparent;opacity:0;cursor:nwse-resize;touch-action:none;user-select:none;font-size:0;line-height:0;outline:none}
+.board-resize-handle:hover,.board-resize-handle:focus-visible{opacity:0;background:transparent;color:transparent;outline:none}
 .board-resize-handle[data-corner="tl"]{top:-12px;left:-12px;cursor:nwse-resize}
 .board-resize-handle[data-corner="tr"]{top:-12px;right:-12px;cursor:nesw-resize}
 .board-resize-handle[data-corner="bl"]{bottom:-12px;left:-12px;cursor:nesw-resize}
@@ -287,7 +287,7 @@ function initBoardResize(){
  const original=button('⟲ Orijinal',reset);
  controls.append(label,minus,slider,plus,sizeText,original);column.append(controls);
  for(const corner of ['tl','tr','bl','br']){
-  const handle=document.createElement('button');handle.type='button';handle.className='board-resize-handle';handle.dataset.corner=corner;handle.textContent=(corner==='tl'||corner==='br')?'↘':'↗';handle.title='Tahta boyutunu değiştirmek için sürükle';
+  const handle=document.createElement('button');handle.type='button';handle.className='board-resize-handle';handle.dataset.corner=corner;handle.textContent='';handle.title='Tahta boyutunu değiştirmek için sürükle';
   handle.setAttribute('aria-label','Tahtayı '+corner+' köşesinden boyutlandır');
   handle.addEventListener('pointerdown',e=>{
    if(e.pointerType==='mouse'&&e.button!==0)return;
