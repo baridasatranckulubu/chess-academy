@@ -24,7 +24,7 @@ function draw(){
  const bound=Math.max(200,...samples.map(p=>Math.abs(p.v)));
  const x=i=>pos.length===1?W/2:i*W/(pos.length-1),y=v=>mid-(v/bound)*(mid-12);
  if(samples.length)markup+='<polyline fill="none" stroke="#e9c27e" stroke-width="3" points="'+samples.map(p=>x(p.i)+','+y(p.v)).join(' ')+'"/>';
- for(const p of samples)markup+='<circle cx="'+x(p.i)+'" cy="'+y(p.v)+'" r="3" fill="#f6e6c6"><title>Hamle '+p.i+': '+fmt(p.v)+'</title></circle>';
+ if(samples.length)markup+='<polyline fill="none" stroke="#a9c8e9" stroke-width="2" stroke-dasharray="5 4" points="'+samples.map(p=>x(p.i)+','+y(-p.v)).join(' ')+'"/>';markup+='<text x="10" y="16" fill="#e9c27e" font-size="12">Beyaz avantajı</text><text x="10" y="162" fill="#a9c8e9" font-size="12">Siyah avantajı</text>'; for(const p of samples)markup+='<circle cx="'+x(p.i)+'" cy="'+y(p.v)+'" r="3" fill="#f6e6c6"><title>Hamle '+p.i+': '+fmt(p.v)+'</title></circle>';
  $('caEvalGraph').innerHTML=markup;
  const data={w:[],b:[]};for(let i=1;i<pos.length;i++){const before=scores.get(pos[i-1]),after=scores.get(pos[i]);if(typeof before!=='number'||typeof after!=='number')continue;const side=i%2?'w':'b';const loss=Math.max(0,(side==='w'?chance(before)-chance(after):chance(after)-chance(before)));data[side].push(loss)}
  const describe=side=>{const a=data[side];if(!a.length)return 'analiz bekleniyor';const avg=a.reduce((s,v)=>s+v,0)/a.length;return 'yaklaşık doğruluk %'+Math.round(100*(1-avg))+' · belirgin hata '+a.filter(v=>v>=.12).length+'/'+a.length};
