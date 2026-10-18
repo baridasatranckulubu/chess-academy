@@ -25,3 +25,10 @@
 .ca-grid>.board>.sq .piece{position:static!important;display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important;margin:0!important;padding:0!important;transform:none!important;filter:none!important}
 .ca-grid>.board>.sq .ca-piece-svg{position:static!important;display:block!important;width:88%!important;height:88%!important;margin:0!important;transform:none!important;overflow:visible!important;filter:drop-shadow(0 2px 1px #0005)!important}
 .ca-grid>.board>.sq .ca-piece-svg text{dominant-baseline:auto}
+
+/* Canonical chess board pieces and shared move markers for all academy modules. */
+.ca-grid .board>.sq .piece-3d{display:block;width:88%;height:88%;overflow:visible;filter:drop-shadow(0 2px 2px #0007);pointer-events:none}
+.ca-grid .board>.sq .piece-3d text{font-family:"DejaVu Sans","Segoe UI Symbol",serif;font-size:73px;dominant-baseline:middle;text-anchor:middle}
+.ca-grid .board>.sq .piece{display:flex;align-items:center;justify-content:center;width:100%;height:100%;pointer-events:none}
+.ca-grid .board>.sq.last-move{background-image:linear-gradient(#f2d36940,#f2d36940)!important}
+.ca-grid .board>.sq.target:after{content:"";position:absolute;inset:39%;border-radius:50%;background:#246e4c99;pointer-events:none;z-index:3}
