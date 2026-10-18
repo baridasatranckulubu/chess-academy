@@ -45,7 +45,7 @@ function showReview(){
  const engine=new window.ChessAcademyEngine.ChessEngine();engine.load(fen);
  const names=Array.from(board.querySelectorAll('[data-square]')).map(el=>el.dataset.square);
  overlay.replaceChildren();
- for(const name of names){const index=window.ChessAcademyEngine.indexOfSquare(name),piece=engine.at(name),original=board.querySelector('[data-square="'+name+'"]');const cell=document.createElement('div');cell.className=original?.className.replace(/\\b(selected|target|last-move)\\b/g,'')||'sq';cell.classList.add('ca-review-square');cell.textContent=glyphs[piece]||'';if(piece)cell.classList.add(piece===piece.toUpperCase()?'ca-review-white':'ca-review-black');overlay.append(cell)}
+ for(const name of names){const piece=engine.at(name),original=board.querySelector('[data-square="'+name+'"]');const cell=document.createElement('div');cell.className=original?.className.replace(/\\b(selected|target|last-move)\\b/g,'')||'sq';cell.classList.add('ca-review-square');cell.textContent=glyphs[piece]||'';if(piece)cell.classList.add(piece===piece.toUpperCase()?'ca-review-white':'ca-review-black');overlay.append(cell)}
  overlay.hidden=false;nav.hidden=false;$('caReviewCount').textContent=(reviewSide==='w'?'Beyaz':'Siyah')+' hata '+(reviewIndex+1)+'/'+reviewMoves.length+' · '+Math.ceil(ply/2)+'. hamle';$('caReviewPrev').disabled=reviewIndex===0;$('caReviewNext').disabled=reviewIndex===reviewMoves.length-1;
 }
 function setupReview(){
