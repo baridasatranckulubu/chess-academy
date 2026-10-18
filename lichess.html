@@ -155,7 +155,7 @@
 /* Board annotations and last move */
 #board{position:relative}
 #board .sq.ca-last-move{box-shadow:inset 0 0 0 999px #f4d76a55!important}
-#board .sq.ca-marked{outline:3px solid #f4bb48;outline-offset:-5px}
+#board .sq.ca-marked{outline:3px solid #ffffff;outline-offset:-5px}
 .ca-arrow-layer{position:absolute;inset:0;z-index:6;pointer-events:none;overflow:visible}
 .ca-audio-controls{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:8px 0 14px;color:#f2d093;font-size:13px}
 .ca-audio-controls label{display:flex;align-items:center;gap:6px}
@@ -218,13 +218,13 @@ function drawAnnotations(){
  svg.setAttribute('class','ca-arrow-layer');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('preserveAspectRatio','none');
  const defs=document.createElementNS(svg.namespaceURI,'defs'),marker=document.createElementNS(svg.namespaceURI,'marker');
  marker.setAttribute('id','ca-arrow-head');marker.setAttribute('markerWidth','5');marker.setAttribute('markerHeight','5');marker.setAttribute('refX','3.5');marker.setAttribute('refY','2.5');marker.setAttribute('orient','auto');
- const tip=document.createElementNS(svg.namespaceURI,'path');tip.setAttribute('d','M0,0 L5,2.5 L0,5 Z');tip.setAttribute('fill','#eab34a');marker.append(tip);defs.append(marker);svg.append(defs);
+ const tip=document.createElementNS(svg.namespaceURI,'path');tip.setAttribute('d','M0,0 L5,2.5 L0,5 Z');tip.setAttribute('fill','#ffffff');marker.append(tip);defs.append(marker);svg.append(defs);
  const coords=sq=>{const file=sq.charCodeAt(0)-97,rank=Number(sq[1])-1;return {x:(myColor==='black'?7-file:file)*100+50,y:(myColor==='black'?rank:7-rank)*100+50}};
  for(const a of annotations){
   if(a.from===a.to){root.querySelector('[data-square="'+a.from+'"]')?.classList.add('ca-marked');continue}
   const f=coords(a.from),t=coords(a.to),line=document.createElementNS(svg.namespaceURI,'line');
   line.setAttribute('x1',f.x);line.setAttribute('y1',f.y);line.setAttribute('x2',t.x);line.setAttribute('y2',t.y);
-  line.setAttribute('stroke','#eab34a');line.setAttribute('stroke-width','8');line.setAttribute('stroke-opacity','.78');
+  line.setAttribute('stroke','#ffffff');line.setAttribute('stroke-width','8');line.setAttribute('stroke-opacity','.78');
   line.setAttribute('stroke-linecap','round');line.setAttribute('marker-end','url(#ca-arrow-head)');svg.append(line);
  }
  root.append(svg);
