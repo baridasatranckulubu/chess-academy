@@ -2,8 +2,8 @@
 'use strict';
 const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
-const url='https://cdn.jsdelivr.net/npm/stockfish@19.0.0/bin/stockfish-19-asm.js';
-let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='';
+const sources=['https://cdn.jsdelivr.net/npm/stockfish@19.0.0/bin/stockfish-19-asm.js','https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.min.js'];
+let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0;
 const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 function positions(){
  const g=getGame();if(!g)return [];
@@ -30,28 +30,36 @@ function draw(){
  $('caReviewStats').textContent='Beyaz: '+describe('w')+' | Siyah: '+describe('b')+'. Yaklaşık istatistiklerdir; Elo veya Lichess resmi doğruluğu değildir.';
 }
 function next(){if(!ready||busy||!queue.length)return;const fen=queue.shift();if(scores.has(fen)){next();return}busy=true;current={fen,score:undefined,turn:fen.split(' ')[1]};worker.postMessage('position fen '+fen);worker.postMessage('go movetime '+(requested?350:200));draw()}
-function init(){
- if(worker)return;
+async function init(){
+ if(worker||loading)return;
+ loading=true;error='Motor dosyası indiriliyor…';draw();
  try{
- const blob=new Blob(['importScripts('+JSON.stringify(url)+');'],{type:'text/javascript'}),src=URL.createObjectURL(blob);
- worker=new Worker(src);URL.revokeObjectURL(src);
- worker.onerror=()=>{error='Stockfish yüklenemedi. İnternet bağlantısını kontrol edin.';worker.terminate();worker=null;busy=false;draw()};
- worker.onmessage=e=>{
- const line=String(e.data||'');
- if(line.includes('uciok'))worker.postMessage('isready');
- if(line.includes('readyok')){ready=true;next()}
- if(!current)return;
- const cp=line.match(/\bscore cp (-?\d+)/),mate=line.match(/\bscore mate (-?\d+)/);
- if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
- if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
- if(line.startsWith('bestmove ')){
- if(current.score!==undefined)scores.set(current.fen,current.score);
- current=null;busy=false;draw();next();
- }
- };
- worker.postMessage('uci');
- }catch(e){error='Analiz motoru başlatılamadı.';draw()}
+  const address=sources[Math.min(attempt,sources.length-1)];
+  const response=await fetch(address,{mode:'cors',cache:'force-cache'});
+  if(!response.ok)throw Error('HTTP '+response.status);
+  const script=await response.text();
+  if(script.length<10000)throw Error('Motor dosyası eksik');
+  const src=URL.createObjectURL(new Blob([script],{type:'text/javascript'}));
+  worker=new Worker(src);URL.revokeObjectURL(src);
+  worker.onerror=e=>{const reason=e.message||'Web Worker başlatılamadı';worker?.terminate();worker=null;ready=false;busy=false;current=null;loading=false;if(attempt+1<sources.length){attempt++;error='Yedek motor deneniyor…';init()}else{error='Stockfish başlatılamadı: '+reason+' (tarayıcı güvenlik kısıtlaması olabilir)';draw()}};
+  worker.onmessage=e=>{
+   const line=String(e.data||'');
+   if(line.includes('uciok'))worker.postMessage('isready');
+   if(line.includes('readyok')){ready=true;loading=false;error='';next()}
+   if(!current)return;
+   const cp=line.match(/\\bscore cp (-?\\d+)/),mate=line.match(/\\bscore mate (-?\\d+)/);
+   if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
+   if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
+   if(line.startsWith('bestmove ')){
+    if(current.score!==undefined)scores.set(current.fen,current.score);
+    current=null;busy=false;draw();next();
+   }
+  };
+  worker.postMessage('uci');
+  setTimeout(()=>{if(worker&&!ready&&loading){worker.terminate();worker=null;loading=false;if(attempt+1<sources.length){attempt++;init()}else{error='Stockfish yanıt vermedi. Tarayıcı motoru engelliyor olabilir.';draw()}}},18000);
+ }catch(e){loading=false;if(attempt+1<sources.length){attempt++;error='Alternatif motor indiriliyor…';init()}else{error='Motor dosyası alınamadı: '+e.message;draw()}}
 }
+
 function schedule(full=false){
  const pos=positions();if(!pos.length)return;
  if(full)requested=true;
