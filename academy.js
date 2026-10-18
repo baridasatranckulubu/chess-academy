@@ -84,15 +84,15 @@ function home(){
  const view=$('view');view.classList.add('home-view');view.append(node('h2','','♟ Satranç Tahtası'));
  const shell=node('section','home-board-card');shell.style.cssText='width:100%;margin:0 auto;padding:0;background:transparent;border:0;box-shadow:none';
  const wrapper=node('div','board-studio-resizer');wrapper.style.cssText='position:relative;width:700px;max-width:calc(100% - 20px);margin:0 auto;background:transparent';
- const frame=node('iframe','home-board-frame');frame.src='board.html?embed=studio&v=20261018-studio-resize22';frame.title='Chess Academy ayarlanabilir satranç tahtası';frame.loading='eager';frame.style.cssText='display:block;width:100%;height:1550px;border:0;background:transparent;overflow:hidden';
+ const frame=node('iframe','home-board-frame');frame.src='board.html?embed=studio&v=20261018-studio-resize24';frame.title='Chess Academy ayarlanabilir satranç tahtası';frame.loading='eager';frame.style.cssText='display:block;width:100%;height:1550px;border:0;background:transparent;overflow:hidden';
  wrapper.append(frame);
 
 
  shell.append(wrapper);view.append(shell);
- const apply=n=>{const width=Math.max(320,Math.min(Math.min(960,view.clientWidth-16),Math.round(n)));wrapper.style.width=width+'px';try{localStorage.setItem('barida-studio-board-width',String(width))}catch{}};
+ const apply=n=>{const width=Math.max(360,Math.min(Math.min(1060,view.clientWidth-16),Math.round(n)));wrapper.style.width=width+'px';try{localStorage.setItem('barida-studio-board-width',String(width))}catch{}};
  let stored=700;try{stored=Number(localStorage.getItem('barida-studio-board-width'))||700}catch{}apply(stored);
  // Corner hit targets live inside the iframe so they follow the actual board, not the iframe edges.
- window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||!e.data||e.data.type!=='barida-board-resize')return;apply((wrapper.getBoundingClientRect().width||700)+Number(e.data.delta||0))});
+ window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||!e.data||e.data.type!=='barida-board-resize')return;apply(Number(e.data.startWidth||wrapper.getBoundingClientRect().width)+Number(e.data.delta||0))});
 
 }
 function rivalSearch(){const view=$('view');view.classList.add('home-view');const hero=node('div','arena-hero');hero.append(node('div','arena-eyebrow','CHESS ACADEMY  /  PLAY • LEARN • IMPROVE'),node('h2','','♟ Satranç Arenası'),node('p','muted','Oyuna hazırlan, tahtada serbestçe çalış veya antrenmanına devam et.'));view.append(hero);const layout=node('div','home-arena');const boardCard=node('section','home-board-card');const boardTop=node('div','arena-board-top');boardTop.append(node('strong','','♟ SERBEST SATRANÇ TAHTASI'),node('span','arena-live-label','● ÇALIŞMA MODU'));boardCard.append(boardTop);const frame=node('iframe','home-board-frame');frame.scrolling='no';frame.setAttribute('scrolling','no');frame.src='/lichess';frame.title='İnteraktif satranç tahtası';frame.loading='eager';boardCard.append(frame);
