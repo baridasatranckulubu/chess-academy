@@ -2,7 +2,7 @@
 'use strict';
 const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
-const sources=['https://cdn.jsdelivr.net/npm/stockfish@19.0.0/bin/stockfish-19-asm.js','https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.min.js'];
+const sources=['https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.min.js','https://cdn.jsdelivr.net/npm/stockfish@19.0.0/bin/stockfish-19-asm.js'];
 let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0;
 const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 function positions(){
@@ -47,7 +47,7 @@ async function init(){
    if(line.includes('uciok'))worker.postMessage('isready');
    if(line.includes('readyok')){ready=true;loading=false;error='';next()}
    if(!current)return;
-   const cp=line.match(/\\bscore cp (-?\\d+)/),mate=line.match(/\\bscore mate (-?\\d+)/);
+   const cp=line.match(/\bscore cp (-?\d+)/),mate=line.match(/\bscore mate (-?\d+)/);
    if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
    if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
    if(line.startsWith('bestmove ')){
