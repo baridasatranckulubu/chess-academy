@@ -39,12 +39,14 @@ function setup(){clearTimeout(timer);locked=false;selected=false;captured=[];con
  $('piece-title').textContent=icons[id]+' '+pieces[index][1];$('explain').textContent=pieces[index][2]+' '+mission.tip;
  $('mission').textContent='Görev '+(list.indexOf(mission)+1)+'/3: '+mission.from+' → '+mission.to;
  $('status').className='';$('status').textContent=completed.includes(mission.id)?'Bu taşı tamamladın! Tekrar çalışabilirsin.':'Taşa dokun, sonra hedef kareye git.';menu();draw()}
-function draw(){if(!game)return;const taken=$('beginnerCaptured');taken.replaceChildren();for(const p of captured){const el=document.createElement('span');el.innerHTML=premium.pieceSVG(icons[p.toUpperCase()]||'',p);taken.append(el)}premium.coordinates(flipped);const board=$('board');board.replaceChildren();for(let i=0;i<64;i++){const n=flipped?63-i:i,sq='abcdefgh'[n%8]+(8-Math.floor(n/8)),p=game.at(sq),b=document.createElement('button');b.type='button';b.className='sq '+((Math.floor(i/8)+i%8)%2?'dark':'light')+(sq===mission.to?' target':'');b.setAttribute('aria-label',sq+(p?' '+p:''));b.dataset.square=sq;if(p)b.innerHTML=premium.pieceSVG(icons[p.toUpperCase()]||'',p);b.onclick=()=>attempt(sq);board.append(b)}}
+const sharedBoard=window.ChessAcademySharedBoard;
+const dragControl=sharedBoard.bindDrag($('board'),{canDrag:sq=>!locked&&!!game&&sq===mission?.from,onDrop:(from,to)=>{selected=true;attempt(to)}});
+function draw(){if(!game)return;const taken=$('beginnerCaptured');taken.replaceChildren();for(const p of captured){const el=document.createElement('span');el.innerHTML=sharedBoard.pieceSVG(icons[p.toUpperCase()]||'',p);taken.append(el)}premium.coordinates(flipped);sharedBoard.renderBoard({root:$('board'),game,flipped,selected:selected?mission.from:null,lastMove:locked?{from:mission.from,to:mission.to}:null,onSquare:sq=>{if(!dragControl.consumeClick())attempt(sq)}})}
 function attempt(sq){if(locked||!game)return;if(sq===mission.from){selected=true;$('status').textContent='Şimdi '+mission.to+' karesini seç.';return}if(!selected){$('status').textContent='Önce '+mission.from+' karesindeki taşı seç.';return}
  if(sq!==mission.to){$('status').className='';$('status').textContent='Bu hedef değil. '+mission.tip+' Hedef: '+mission.to;return}
  const victim=game.at(sq);const move=game.move(mission.from,sq);if(!move){$('status').textContent='Kurallara aykırı hamle. Tekrar dene.';return}
  if(victim)captured.push(victim);locked=true;const first=!completed.includes(mission.id);if(first){completed.push(mission.id);sync()}
- premium.play(move.capture?'capture':'move');$('status').className='success';$('status').textContent=first?'✓ Doğru! +20 XP.':'✓ Doğru! Bu görev zaten tamamlanmıştı, XP değişmedi.';menu();draw();
+ sharedBoard.sound(move.capture?'capture':'move');$('status').className='success';$('status').textContent=first?'✓ Doğru! +20 XP.':'✓ Doğru! Bu görev zaten tamamlanmıştı, XP değişmedi.';menu();draw();
  const list=missions.filter(m=>m.piece===pieces[index][0]),remaining=list.some(m=>!completed.includes(m.id));
  if(remaining)timer=setTimeout(setup,1000);else if(completed.length<missions.length)timer=setTimeout(()=>{index=(index+1)%pieces.length;setup()},1200);
 }
