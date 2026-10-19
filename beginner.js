@@ -17,7 +17,7 @@ const missions=[
 {id:'N3',piece:'N',fen:'7k/8/8/8/4N3/8/8/4K3 w - - 0 1',from:'e4',to:'g3',tip:'At başka taşların üzerinden sıçrayabilir.'},
 {id:'K1',piece:'K',fen:'7k/8/8/8/4K3/8/8/8 w - - 0 1',from:'e4',to:'d3',tip:'Şah bir kare çapraz gidebilir.'},
 {id:'K2',piece:'K',fen:'7k/8/8/8/4K3/8/8/8 w - - 0 1',from:'e4',to:'f4',tip:'Şah bir kare yatay gidebilir.'},
-{id:'K3',piece:'K',fen:'7k/8/8/8/4K3/8/8/8 w - - 0 1',from:'e4',to:'f5',tip:'Şah rakibin kontrol ettiği kareye gidemez.'},
+{id:'K3',piece:'K',fen:'7k/8/8/8/4K3/8/8/8 w - - 0 1',from:'e4',to:'f5',tip:'Şah bir kare çapraz ileri gidebilir; rakip şahın kontrol ettiği karelere gidemez.'},
 {id:'P1',piece:'P',fen:'7k/8/8/8/8/8/4P3/4K3 w - - 0 1',from:'e2',to:'e3',tip:'Piyon bir kare ileri yürür.'},
 {id:'P2',piece:'P',fen:'7k/8/8/8/8/8/4P3/4K3 w - - 0 1',from:'e2',to:'e4',tip:'Piyon ilk hamlede iki kare ilerleyebilir.'},
 {id:'P3',piece:'P',fen:'7k/8/8/3p4/4P3/8/8/4K3 w - - 0 1',from:'e4',to:'d5',tip:'Piyon çapraz taş alır, düz taş alamaz.'}
@@ -35,7 +35,7 @@ function sync(){try{localStorage.setItem(KEY,JSON.stringify(completed))}catch{}
 }
 function menu(){document.querySelectorAll('.journey-grid [data-piece]').forEach(b=>{b.classList.toggle('active',Number(b.dataset.piece)===index);b.setAttribute('aria-pressed',String(Number(b.dataset.piece)===index));});const box=$('piece-menu');box.replaceChildren();pieces.forEach(([id,name],i)=>{const n=completed.filter(x=>x.startsWith(id)).length,b=document.createElement('button');b.type='button';b.textContent=icons[id]+' '+name+' '+n+'/3';b.className=index===i?'active':'';b.setAttribute('aria-pressed',String(index===i));b.onclick=()=>{index=i;setup()};box.append(b)});$('xp').textContent='Toplam XP: '+xp()+' / 360 · Tamamlanan görev: '+completed.length+'/18 · Profil: '+student}
 function setup(){clearTimeout(timer);locked=false;selected=false;captured=[];const id=pieces[index][0],list=missions.filter(m=>m.piece===id);mission=list.find(m=>!completed.includes(m.id))||list[0];try{game=new Engine(mission.fen)}catch(err){$('status').textContent='Görev açılamadı: '+err.message;return}
- const valid=game.moves({square:mission.from}).some(m=>m.to===mission.to);if(!valid){$('status').textContent='Bu görev geçerli değil.';return}
+ const valid=game.moves({square:mission.from}).some(m=>m.to===mission.to);if(!valid||game.at(mission.to)?.toLowerCase()==='k'){$('status').textContent='Bu görev geçerli değil.';return}
  $('piece-title').textContent=icons[id]+' '+pieces[index][1];$('explain').textContent=pieces[index][2]+' '+mission.tip;
  $('mission').textContent='Görev '+(list.indexOf(mission)+1)+'/3: '+mission.from+' → '+mission.to;
  $('status').className='';$('status').textContent=completed.includes(mission.id)?'Bu taşı tamamladın! Tekrar çalışabilirsin.':'Taşa dokun, sonra hedef kareye git.';menu();draw()}
