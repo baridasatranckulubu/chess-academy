@@ -1,5 +1,6 @@
 /* Barida Pet Academy: original procedural 3D companions, room and motion. */
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const palette={
  lion:['#f5a947','#a75323','#f7cf85'],rabbit:['#f2dfd8','#b9909a','#fff5ed'],
  squirrel:['#d77d43','#8d4427','#f8d8b5'],tiger:['#efad55','#4d3027','#fff0cb'],
@@ -59,7 +60,8 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  const camera=new THREE.PerspectiveCamera(36,1,.1,100);camera.position.set(0,2.55,9.8);camera.lookAt(0,1.4,0);
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;container.append(renderer.domElement);
  scene.add(new THREE.HemisphereLight('#fff3d8','#514361',2.2));const key=new THREE.DirectionalLight('#ffe2a2',3);key.position.set(-4,7,5);key.castShadow=true;scene.add(key);const fill=new THREE.PointLight('#90bafc',25,12);fill.position.set(4,4,2);scene.add(fill);
- const pet=makeAnimal(animal,stage,armor);scene.add(pet.root);let motion='idle',motionAt=performance.now(),last=performance.now(),disposed=false;
+ const pet=makeAnimal(animal,stage,armor);scene.add(pet.root);
+ const loader=new GLTFLoader();loader.load('assets/pets/3d/'+encodeURIComponent(animal)+'.gltf?v=20261020-models1',gltf=>{if(disposed)return;scene.remove(pet.root);pet.root=gltf.scene;pet.body=pet.root.getObjectByName('Body')||pet.root;pet.head=pet.root.getObjectByName('Head')||pet.body;pet.paw=[];pet.root.scale.setScalar([1,1.2,1.45,1.75][Math.max(0,Math.min(3,stage))]);pet.root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});scene.add(pet.root);},undefined,e=>console.warn('Barida GLTF model fallback',e));let motion='idle',motionAt=performance.now(),last=performance.now(),disposed=false;
  const resize=()=>{const w=container.clientWidth||600,h=container.clientHeight||400;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)};const observer=new ResizeObserver(resize);observer.observe(container);resize();
  const motions=['idle','hop','turn','look','roll','sleep','stretch','wave','walk','dance','bow','shake','sit','peek','happy','sniff','spin','wiggle','rest','play','nod','bounce','pounce','yawn','scratch'];
  function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected){dispose();return}if(document.hidden)return;const t=now/1000,u=(now-motionAt)/1000;
