@@ -1,5 +1,5 @@
 <!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Chess Academy · Lichess Arena</title><style>
-:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0d1524;color:#f2e7ce;font:15px system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:24px}h1{color:#e7c58c}button,input,select{padding:10px;border-radius:8px;border:1px solid #9b835a;background:#17273c;color:#fff}button{cursor:pointer}button:disabled{opacity:.5;cursor:default}section{border:1px solid #5a4a32;border-radius:14px;padding:16px;margin:16px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.layout{display:grid;grid-template-columns:minmax(300px,520px) 1fr;gap:20px}#board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;width:100%;max-width:520px;border:7px solid #35251d;box-shadow:0 0 0 10px #67482e,0 0 0 12px #b99561,0 20px 55px #0009;border-radius:5px;touch-action:none;user-select:none}#board button{border:0;border-radius:0;padding:0;line-height:1;touch-action:none;position:relative;display:grid;place-items:center;cursor:pointer;min-width:0;min-height:0}#board .piece-3d{width:94%;height:94%;display:block;overflow:visible;filter:drop-shadow(0 4px 3px #120b0999);pointer-events:none}#board .piece-3d text{font-family:"DejaVu Sans","Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:80px;text-anchor:middle;dominant-baseline:central}#board .sq:hover .piece-3d{transform:translateY(-5%) scale(1.04)}#board .sq.selected .piece-3d{transform:translateY(-10%) scale(1.12)}.ca-piece-carry{position:fixed;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);display:grid;place-items:center;filter:drop-shadow(0 12px 8px #0009)}.ca-piece-carry .piece-3d{width:100%;height:100%}#board .ca-source-lifted .piece-3d{opacity:.2}#board .light{background:linear-gradient(135deg,#f4e6ce,#d9bf98);color:#20232a}#board .dark{background:linear-gradient(135deg,#997455,#6e4b35);color:#101c26}#board .selected{outline:4px solid #f5ca50;outline-offset:-4px}#board .target{box-shadow:inset 0 0 0 5px #eab54e}#status{min-height:35px;color:#f4d398}#moves{overflow-wrap:anywhere;line-height:1.8}a{color:#f2d093}.warn{background:#382b24;border-left:4px solid #e5aa55;padding:12px}small{color:#c5c0b7}@media(max-width:740px){.layout{grid-template-columns:1fr}main{padding:12px}}
+:root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#0d1524;color:#f2e7ce;font:15px system-ui,sans-serif}main{max-width:1100px;margin:auto;padding:24px}h1{color:#e7c58c}button,input,select{padding:10px;border-radius:8px;border:1px solid #9b835a;background:#17273c;color:#fff}button{cursor:pointer}button:disabled{opacity:.5;cursor:default}section{border:1px solid #5a4a32;border-radius:14px;padding:16px;margin:16px 0}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.layout{display:grid;grid-template-columns:minmax(300px,520px) 1fr;gap:20px}#board{display:grid;grid-template-columns:repeat(8,1fr);aspect-ratio:1;width:100%;max-width:520px;border:7px solid #35251d;box-shadow:0 0 0 10px #67482e,0 0 0 12px #b99561,0 20px 55px #0009;border-radius:5px;touch-action:none;user-select:none}#board button{border:0;border-radius:0;padding:0;line-height:1;touch-action:none;position:relative;display:grid;place-items:center;cursor:pointer;min-width:0;min-height:0}#board .piece-3d{width:94%;height:94%;display:block;overflow:visible;filter:none;pointer-events:none}#board .piece-3d text{font-family:"DejaVu Sans","Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:80px;text-anchor:middle;dominant-baseline:central}#board .sq:hover .piece-3d{transform:translateY(-5%) scale(1.04)}#board .sq.selected .piece-3d{transform:translateY(-10%) scale(1.12)}.ca-piece-carry{position:fixed;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);display:grid;place-items:center;filter:drop-shadow(0 12px 8px #0009)}.ca-piece-carry .piece-3d{width:100%;height:100%}#board .ca-source-lifted .piece-3d{opacity:.2}#board .light{background:linear-gradient(135deg,#f4e6ce,#d9bf98);color:#20232a}#board .dark{background:linear-gradient(135deg,#997455,#6e4b35);color:#101c26}#board .selected{outline:4px solid #f5ca50;outline-offset:-4px}#board .target{box-shadow:inset 0 0 0 5px #eab54e}#status{min-height:35px;color:#f4d398}#moves{overflow-wrap:anywhere;line-height:1.8}a{color:#f2d093}.warn{background:#382b24;border-left:4px solid #e5aa55;padding:12px}small{color:#c5c0b7}@media(max-width:740px){.layout{grid-template-columns:1fr}main{padding:12px}}
 /* Shared Academy board frame and coordinates */
 .chess-board-frame{position:relative;max-width:660px;margin:0 auto 18px;padding:17px 17px 9px;border-radius:22px;background:linear-gradient(145deg,#5b3b29,#211915 38%,#6b4b32 70%,#241813);border:1px solid #b99561;box-shadow:0 2px 0 #c8a571 inset,0 20px 60px #0009,0 0 0 5px #0e161a}
 .chess-board-wrap{position:relative;padding:0 0 21px 21px;perspective:1300px}
@@ -168,7 +168,7 @@ function pieceSVG(symbol,piece){
  const white=piece===piece.toUpperCase();
  const fill=white?'url(#ivory)':'url(#obsidian)';
  const stroke=white?'#67503b':'#d5bd91';
- const shadow=white?'#463727':'#070b10';
+ const shadow='transparent';
  const id=white?'i':'o';
  return `<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
  <defs>
@@ -176,7 +176,7 @@ function pieceSVG(symbol,piece){
    ${white?'<stop offset="0" stop-color="#fffefa"/><stop offset=".28" stop-color="#fff5df"/><stop offset=".57" stop-color="#f2e4cc"/><stop offset=".77" stop-color="#fffdf4"/><stop offset="1" stop-color="#e0c7a2"/>':'<stop offset="0" stop-color="#7d8187"/><stop offset=".25" stop-color="#323b44"/><stop offset=".52" stop-color="#0f1822"/><stop offset=".73" stop-color="#56606a"/><stop offset="1" stop-color="#090f16"/>'}
   </linearGradient>
  </defs>
- <ellipse cx="51" cy="84" rx="30" ry="7" fill="#130c09" opacity=".27"/>
+ 
  <text x="50" y="48" fill="${shadow}" stroke="${shadow}" stroke-width="3.5" paint-order="stroke" opacity=".85">${symbol}</text>
  <text x="49" y="45" fill="url(#${id}v05)" stroke="${stroke}" stroke-width="2.8" paint-order="stroke">${symbol}</text>
  <path d="M29 79 Q50 87 71 79" fill="none" stroke="${white?'#fff9e9':'#adb5bb'}" stroke-width="1.3" opacity=".48"/>
@@ -208,11 +208,11 @@ function audioTone(freq,duration=0.09,delay=0,kind='sine',volume=0.065){
 function playMoveAudio(){if(!soundPrefs.piece)return;audioTone(450,.045,0,'triangle',.035);audioTone(310,.07,.045,'triangle',.035)}
 function playClockAudio(){if(soundPrefs.clock)audioTone(780,.065,0,'square',.023)}
 function playEndAudio(won){if(!soundPrefs.clock)return;audioTone(470,.2);audioTone(won?660:340,.22,.2);audioTone(won?880:260,.36,.43)}
-let annotations=[],annotationStart=null;
+let annotations=[],annotationStart=null,annotationColor='#ffffff';
 function clearAnnotations(){annotations=[];drawAnnotations()}
 function drawAnnotations(){
  const root=$('board');if(!root)return;
- root.querySelectorAll('.ca-marked').forEach(el=>el.classList.remove('ca-marked'));
+ root.querySelectorAll('.ca-marked').forEach(el=>{el.classList.remove('ca-marked');el.style.removeProperty('box-shadow')});
  root.querySelector('.ca-arrow-layer')?.remove();
  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
  svg.setAttribute('class','ca-arrow-layer');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('preserveAspectRatio','none');
@@ -221,10 +221,10 @@ function drawAnnotations(){
  const tip=document.createElementNS(svg.namespaceURI,'path');tip.setAttribute('d','M0,0 L5,2.5 L0,5 Z');tip.setAttribute('fill','#ffffff');marker.append(tip);defs.append(marker);svg.append(defs);
  const coords=sq=>{const file=sq.charCodeAt(0)-97,rank=Number(sq[1])-1;return {x:(myColor==='black'?7-file:file)*100+50,y:(myColor==='black'?rank:7-rank)*100+50}};
  for(const a of annotations){
-  if(a.from===a.to){root.querySelector('[data-square="'+a.from+'"]')?.classList.add('ca-marked');continue}
+  if(a.from===a.to){const marked=root.querySelector('[data-square="'+a.from+'"]');if(marked){marked.classList.add('ca-marked');marked.style.setProperty('box-shadow','inset 0 0 0 3px '+(a.color||'#ffffff'),'important')}continue}
   const f=coords(a.from),t=coords(a.to),line=document.createElementNS(svg.namespaceURI,'line');
   line.setAttribute('x1',f.x);line.setAttribute('y1',f.y);line.setAttribute('x2',t.x);line.setAttribute('y2',t.y);
-  line.setAttribute('stroke','#ffffff');line.setAttribute('stroke-width','8');line.setAttribute('stroke-opacity','.78');
+  line.setAttribute('stroke',a.color||'#ffffff');line.setAttribute('stroke-width','4');line.setAttribute('stroke-opacity','.78');
   line.setAttribute('stroke-linecap','round');line.setAttribute('marker-end','url(#ca-arrow-head)');svg.append(line);
  }
  root.append(svg);
@@ -232,7 +232,7 @@ function drawAnnotations(){
 function installBoardAnnotations(){
  const board=$('board');board.addEventListener('contextmenu',e=>e.preventDefault());
  board.addEventListener('pointerdown',e=>{
-  if(e.button===2){e.preventDefault();annotationStart=e.target.closest('[data-square]')?.dataset.square||null}
+  if(e.button===2){e.preventDefault();annotationStart=e.target.closest('[data-square]')?.dataset.square||null;annotationColor=e.ctrlKey?'#3b8bff':e.altKey?'#35c46a':'#ffffff'}
   else if(e.button===0&&annotations.length)clearAnnotations();
  },true);
  window.addEventListener('pointerup',e=>{
@@ -240,7 +240,7 @@ function installBoardAnnotations(){
   const end=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-square]')?.dataset.square||annotationStart;
   const from=annotationStart;annotationStart=null;
   const index=annotations.findIndex(a=>a.from===from&&a.to===end);
-  if(index>=0)annotations.splice(index,1);else annotations.push({from,to:end});
+  if(index>=0)annotations.splice(index,1);else annotations.push({from,to:end,color:annotationColor});
   drawAnnotations();
  });
 }
@@ -323,7 +323,8 @@ boardEl.addEventListener('pointermove',e=>{if(e.pointerId!==dragPointer||!dragOr
 boardEl.addEventListener('pointerup',e=>{if(e.pointerId!==dragPointer)return;const from=dragOrigin,wasDragging=draggingPiece;try{boardEl.releasePointerCapture(e.pointerId)}catch{}if(!wasDragging){endDrag();performedDrag=true;setTimeout(()=>{performedDrag=false},230);playSquare(from);return}updateGhost(e.clientX,e.clientY);const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.sq');const to=target&&boardEl.contains(target)?target.dataset.square:null;performedDrag=true;setTimeout(()=>{performedDrag=false},250);endDrag();if(to&&to!==from&&engine.moves({square:from}).some(m=>m.to===to)){selected=from;playSquare(to)}else{selected=null;showBoard()}});
 boardEl.addEventListener('pointercancel',e=>{if(e.pointerId!==dragPointer)return;endDrag();selected=null;showBoard()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&dragOrigin){endDrag();selected=null;showBoard()}});
-async function playSquare(sq){if(!gameId||!gameState||gameState.status!=='started'||(engine.turn==='w'?'white':'black')!==myColor)return;const p=engine.at(sq),friendly=p&&(p===p.toUpperCase()?'w':'b')===engine.turn;if(!selected){if(friendly){selected=sq;showBoard()}return}if(sq===selected){selected=null;showBoard();return}if(friendly){selected=sq;showBoard();return}const from=selected;selected=null;const candidates=engine.moves({square:from}).filter(m=>m.to===sq);showBoard();if(!candidates.length)return;const promo=candidates.some(m=>m.promotion)?'q':'';try{const resp=await api('/api/board/game/'+encodeURIComponent(gameId)+'/move/'+from+sq+promo,{method:'POST'});note(resp.ok?'Hamle gönderildi.':'Hamle reddedildi.')}catch(e){note(e.message)}}
+function choosePromotionPiece(){return new Promise(resolve=>{const shade=document.createElement('div');shade.style.cssText='position:fixed;inset:0;z-index:99999;background:#0009;display:grid;place-items:center';const panel=document.createElement('div');panel.style.cssText='background:#172834;color:#fff;padding:22px;border:2px solid #d9b76e;border-radius:16px;text-align:center;box-shadow:0 15px 45px #000a';const title=document.createElement('h3');title.textContent='Piyon hangi taşa dönüşsün?';panel.append(title);for(const [key,label] of [['q','♛ Vezir'],['r','♜ Kale'],['b','♝ Fil'],['n','♞ At']]){const b=document.createElement('button');b.textContent=label;b.style.cssText='margin:5px;padding:12px;border:1px solid #d9b76e;border-radius:8px;background:#304453;color:white;font-size:18px;cursor:pointer';b.onclick=()=>{shade.remove();resolve(key)};panel.append(b)}const cancel=document.createElement('button');cancel.textContent='İptal';cancel.style.cssText='display:block;margin:12px auto 0;padding:7px';cancel.onclick=()=>{shade.remove();resolve(null)};panel.append(cancel);shade.append(panel);document.body.append(shade)})}
+async function playSquare(sq){if(!gameId||!gameState||gameState.status!=='started'||(engine.turn==='w'?'white':'black')!==myColor)return;const p=engine.at(sq),friendly=p&&(p===p.toUpperCase()?'w':'b')===engine.turn;if(!selected){if(friendly){selected=sq;showBoard()}return}if(sq===selected){selected=null;showBoard();return}if(friendly){selected=sq;showBoard();return}const from=selected;selected=null;const candidates=engine.moves({square:from}).filter(m=>m.to===sq);showBoard();if(!candidates.length)return;let promo='';if(candidates.some(m=>m.promotion)){const picked=await choosePromotionPiece();if(!picked){selected=from;showBoard();return}promo=picked;}try{const resp=await api('/api/board/game/'+encodeURIComponent(gameId)+'/move/'+from+sq+promo,{method:'POST'});note(resp.ok?'Hamle gönderildi.':'Hamle reddedildi.')}catch(e){note(e.message)}}
 function renderCapturedPieces(){
  const initial={p:8,n:2,b:2,r:2,q:1};const remaining={white:{p:0,n:0,b:0,r:0,q:0},black:{p:0,n:0,b:0,r:0,q:0}};
  for(const square of Array.from({length:64},(_,i)=>ChessAcademyEngine.squareName(i))){const piece=engine.at(square);if(!piece)continue;const key=piece.toLowerCase();if(!Object.hasOwn(initial,key))continue;const color=piece===piece.toUpperCase()?'white':'black';remaining[color][key]++;}
