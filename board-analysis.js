@@ -2,7 +2,7 @@
 'use strict';
 const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
-const sources=['engines/stockfish19/stockfish-19-lite-single.js'];
+const sources=['engines/stockfish19/stockfish-19-lite-single.js','https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin/stockfish-19-asm.js'];
 let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0,liveEnabled=false,bestMove=null,analysisEpoch=0;
 const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 function positions(){
@@ -67,10 +67,10 @@ async function init(){
  if(worker||loading)return;
  loading=true;error='Motor dosyası indiriliyor…';draw();
  try{
-  const address=new URL(sources[0],location.href);
-  const response=await fetch(address,{cache:'no-cache',method:'HEAD'});
-  if(!response.ok)throw Error('Yerel Stockfish WASM dosyası bulunamadı (HTTP '+response.status+')');
-  worker=new Worker(address.href);
+  const address=new URL(sources[Math.min(attempt,sources.length-1)],location.href);
+  if(attempt===0){const response=await fetch(address,{cache:'no-cache',method:'HEAD'});if(!response.ok)throw Error('Yerel WASM henüz yayınlanmadı')} 
+  if(attempt===0)worker=new Worker(address.href);
+  else {const response=await fetch(address,{mode:'cors',cache:'force-cache'});if(!response.ok)throw Error('Yedek motor indirilemedi');const script=await response.text();const blob=URL.createObjectURL(new Blob([script],{type:'text/javascript'}));worker=new Worker(blob);setTimeout(()=>URL.revokeObjectURL(blob),5000)}
   worker.onerror=e=>{const reason=e.message||'Web Worker başlatılamadı';worker?.terminate();worker=null;ready=false;busy=false;current=null;loading=false;analysisEpoch++;if(attempt+1<sources.length){attempt++;error='Yedek motor deneniyor…';init()}else{error='Stockfish başlatılamadı: '+reason+' (tarayıcı güvenlik kısıtlaması olabilir)';draw()}};
   worker.onmessage=e=>{
    const line=String(e.data||'');
