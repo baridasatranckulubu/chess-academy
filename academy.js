@@ -397,18 +397,56 @@ async function loadAssignmentCards(view){
  const empty=node('p','muted','');list.append(empty);
  [search,statusFilter,typeFilter,studentFilter].forEach(el=>el.addEventListener('input',applyFilters));
  for(const a of assignments){const card=node('article','assignment');card.dataset.assignmentId=String(a.id);const st=realRoster.find(x=>x.id===a.student_id);card.append(node('h3','',a.title),node('p','muted',(st?st.name+' · ':'')+(a.kind==='position'?'Özel tahta konumu':(PUZZLE_THEMES.find(x=>x[0]===a.theme)?.[1]||a.theme)+' · '+a.puzzle_count+' soru')+' · '+new Date(a.created_at).toLocaleDateString('tr-TR')),node('p','muted',a.instructions||''));
-  if(role==='teacher'&&a.kind==='puzzle'){const review=node('div','');review.style.cssText='margin:10px 0';const reviewBtn=button('📊 Öğrencinin yanıtlarını incele',async()=>{reviewBtn.disabled=true;try{const {data,error}=await authClient.rpc('get_academy_assignment_progress',{p_assignment_id:a.id});if(error)throw error;review.replaceChildren();const items=data.items||[];const solved=items.filter(x=>x.success).length;review.append(node('p','muted',items.length+'/'+a.puzzle_count+' soru işlendi · '+solved+' doğru · '+(items.length-solved)+' boş bırakıldı'));for(const item of items){const row=node('div','');row.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:7px 0';row.append(node('span','',item.success?'✓ Doğru':'⚠ Boş bırakıldı'),node('span','muted','Soru #'+item.id));row.append(button('♟ Konumu göster',()=>{const previous=review.querySelector('iframe');previous?.remove();const f=node('iframe','academy-embed');f.src='puzzles.html?reviewPuzzle='+encodeURIComponent(item.id);f.style.cssText='width:100%;height:760px;border:1px solid #a48d68';f.title='Bulmaca '+item.id;review.append(f);f.scrollIntoView({behavior:'smooth'})},'btn small'));review.append(row)}}catch(err){review.textContent='İnceleme yüklenemedi: '+err.message}finally{reviewBtn.disabled=false}} ,'btn small');card.append(reviewBtn,review)}
-  if(role==='teacher')card.append(button('Sil',async()=>{if(!confirm('Ödev silinsin mi?'))return;const {error}=await authClient.from('academy_assignments').delete().eq('id',a.id);if(error)alert(error.message);else loadAssignmentCards(view)},'btn small'));
+  if(role==='teacher'&&a.kind==='puzzle'){
+   card.append(button('📊 Öğrencinin yanıtlarını incele',async()=>{
+    const previous=view.querySelector('#academy-teacher-review');previous?.remove();
+    const review=node('section','panel');review.id='academy-teacher-review';review.style.cssText='width:100%;max-width:1160px;box-sizing:border-box;margin:24px auto;padding:20px;border:2px solid #a98a55;border-radius:18px;background:#102331';
+    review.append(node('h2','','📊 '+a.title+' · Öğrenci incelemesi'));
+    const close=button('✕ İncelemeyi kapat',()=>review.remove(),'btn small');review.append(close);
+    const summary=node('p','muted','Sonuçlar yükleniyor…');review.append(summary);
+    const layout=node('div','');layout.style.cssText='display:grid;grid-template-columns:minmax(240px,340px) minmax(380px,1fr);gap:18px;align-items:start';
+    const answers=node('div','');answers.style.cssText='display:grid;gap:8px;max-height:680px;overflow:auto;padding:10px;background:#172d3c;border-radius:12px';
+    const boardPanel=node('div','');boardPanel.style.cssText='min-width:0;width:100%;';
+    boardPanel.append(node('p','muted','Soldan bir soru seçerek tahtasını ve çözüm hamlelerini görüntüleyin.'));
+    layout.append(answers,boardPanel);review.append(layout);
+    const list=view.querySelector('#realAssignmentList');if(list)list.after(review);else view.append(review);
+    const mq=window.matchMedia('(max-width:850px)');const adapt=()=>layout.style.gridTemplateColumns=mq.matches?'minmax(0,1fr)':'minmax(240px,340px) minmax(0,1fr)';adapt();mq.addEventListener?.('change',adapt);
+    review.scrollIntoView({behavior:'smooth',block:'start'});
+    try{
+     const {data,error}=await authClient.rpc('get_academy_assignment_progress',{p_assignment_id:a.id});if(error)throw error;
+     const items=data.items||[],completed=items.filter(x=>x.success||Number(x.wrongMoves||0)===0),solved=completed.filter(x=>x.success).length,skipped=completed.length-solved;
+     summary.textContent=completed.length+'/'+a.puzzle_count+' tamamlanan · '+solved+' doğru · '+skipped+' boş · '+items.reduce((n,x)=>n+(Number(x.wrongMoves)||0),0)+' yanlış hamle';
+     if(!items.length)answers.append(node('p','muted','Öğrenci henüz bu ödeve başlamadı.'));
+     for(const [i,item] of items.entries()){
+      const n=Number(item.wrongMoves)||0,done=item.success||n===0;
+      const label=(i+1)+'. Soru #'+item.id+' · '+(item.success?'✓ Doğru':done?'⏭ Boş bırakıldı':'⏳ Devam ediyor')+' · '+n+' yanlış';
+      const pick=button(label,()=>{boardPanel.replaceChildren();const heading=node('h3','','♟ Soru #'+item.id);const meta=node('p','muted',(item.success?'Doğru çözüldü':done?'Boş bırakıldı':'Henüz tamamlanmadı')+' · '+n+' yanlış hamle');const f=node('iframe','');f.src='puzzles.html?reviewPuzzle='+encodeURIComponent(item.id);f.title='Soru #'+item.id+' inceleme tahtası';f.style.cssText='display:block;width:100%;height:770px;max-width:760px;border:0;border-radius:12px;background:#0c1c27';boardPanel.append(heading,meta,f);if(mq.matches)boardPanel.scrollIntoView({behavior:'smooth',block:'start'})},'btn small');pick.style.cssText='text-align:left;white-space:normal;padding:12px';answers.append(pick);
+     }
+    }catch(err){summary.textContent='İnceleme yüklenemedi: '+err.message}
+   },'btn small'));
+  }
+    if(role==='teacher')card.append(button('Sil',async()=>{if(!confirm('Ödev silinsin mi?'))return;const {error}=await authClient.from('academy_assignments').delete().eq('id',a.id);if(error)alert(error.message);else loadAssignmentCards(view)},'btn small'));
   else if(a.kind==='puzzle')card.append(button('▶ Bulmacaları çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const p=new URLSearchParams({assignment:String(a.id),theme:a.theme,target:String(a.puzzle_count),minRating:String(a.min_rating),maxRating:String(a.max_rating)});const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='puzzles.html?'+p;frame.addEventListener('load',async()=>{try{const {data,error}=await authClient.rpc('get_academy_assignment_progress',{p_assignment_id:a.id});if(error)throw error;frame.contentWindow?.postMessage({type:'chess-academy-assignment-progress-init',assignmentId:a.id,items:data.items||[]},location.origin);progress.textContent='Kaldığın yer: '+(data.items||[]).length+'/'+a.puzzle_count+' soru'}catch(err){progress.textContent='İlerleme yüklenemedi: '+err.message}});frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';frame.title=a.title;view.append(frame);const progress=node('p','muted','Doğru çözümler hesabına kaydedilir.');progress.id='assignment-progress-live';view.append(progress);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
   else card.append(button('♟ Öğretmenin sorusunu çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='custom-homework-board.html?mode=student';frame.title='Öğretmen sorusu';frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';view.append(frame);frame.addEventListener('load',()=>frame.contentWindow.postMessage({type:'barida-load-custom-board',fen:a.fen},location.origin));const message=node('p','muted','Tahtada doğru hamleyi yap.');view.append(message);const handler=async e=>{if(e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.type!=='barida-custom-board-answer')return;try{const {data,error}=await authClient.rpc('submit_academy_custom_board_answer',{p_assignment_id:a.id,p_move:e.data.move});if(error)throw error;message.textContent=data?'✓ Doğru hamle! Ödev tamamlandı.':'Bu hamle beklenen çözüm değil. Tekrar dene.'}catch(err){message.textContent='Yanıt kaydedilemedi: '+err.message}};window.addEventListener('message',handler);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
   cards.append(card);
  }applyFilters();view.append(list)
 }
 
+const academyMistakeQueues=new Map();
+window.addEventListener('message',e=>{
+ if(e.origin!==location.origin||!realUser||role!=='student'||e.data?.type!=='chess-academy-assignment-mistake')return;
+ const msg=e.data,frame=$('assignment-puzzle-frame');
+ if(!frame||e.source!==frame.contentWindow||typeof msg.assignmentId!=='string'||!/^[0-9a-f-]{36}$/i.test(msg.assignmentId)||typeof msg.puzzleId!=='string'||!/^[-a-zA-Z0-9]{1,32}$/.test(msg.puzzleId))return;
+ const prev=academyMistakeQueues.get(msg.assignmentId)||Promise.resolve();
+ const pending=prev.catch(()=>{}).then(async()=>{const {error}=await authClient.rpc('record_academy_assignment_mistake',{p_assignment_id:msg.assignmentId,p_puzzle_id:msg.puzzleId});if(error)throw error});
+ academyMistakeQueues.set(msg.assignmentId,pending);
+ pending.catch(err=>{const progress=$('assignment-progress-live');if(progress)progress.textContent='Yanlış hamle kaydedilemedi: '+err.message});
+});
 window.addEventListener('message',async e=>{
  if(e.origin!==location.origin||!realUser||role!=='student'||e.data?.type!=='chess-academy-assignment-result')return;
  const msg=e.data;const frame=$('assignment-puzzle-frame');if(!frame||e.source!==frame.contentWindow||typeof msg.assignmentId!=='string'||!/^[0-9a-f-]{36}$/i.test(msg.assignmentId)||typeof msg.puzzleId!=='string'||!/^[-a-zA-Z0-9]{1,32}$/.test(msg.puzzleId)||typeof msg.success!=='boolean')return;
  try{
+  await (academyMistakeQueues.get(msg.assignmentId)||Promise.resolve()).catch(()=>{});
   const {data,error}=await authClient.rpc('record_academy_assignment_attempt',{p_assignment_id:msg.assignmentId,p_puzzle_id:msg.puzzleId,p_success:msg.success});
   if(error)throw error;
   frame.contentWindow?.postMessage({type:'chess-academy-assignment-progress-ack',assignmentId:msg.assignmentId,puzzleId:msg.puzzleId,success:msg.success,total:data,ok:true},location.origin);
