@@ -87,7 +87,6 @@ function renderNotificationPanel(){
  panel.replaceChildren();panel.append(node('h3','','🔔 Bildirimler'));
  if(!notificationCache.length)panel.append(node('p','muted','Henüz bildiriminiz yok.'));
  for(const n of notificationCache){const row=node('div','');row.style.cssText='padding:11px 0;border-bottom:1px solid #ffffff28;'+(!n.read_at?'border-left:3px solid #e9c27e;padding-left:9px;':'');row.append(node('strong','',n.title),node('p','',n.body),node('small','',new Date(n.created_at).toLocaleString('tr-TR')));if(n.category.startsWith('assignment'))row.append(button('📝 Ödevlere git',()=>{panel.hidden=true;showSection('assignments')},'btn small'));panel.append(row)}
- if(realProfile?.role==='admin')panel.append(button('✉️ Mesaj gönder',()=>{panel.hidden=true;showSection('admin-messages')},'btn gold'));
 }
 async function toggleNotificationPanel(){
  const panel=$('caAdminBellPanel'),bell=$('caAdminBell');if(!panel)return;
@@ -101,20 +100,35 @@ async function toggleNotificationPanel(){
 }
 async function adminMessages(){
  const view=$('view');if(realProfile?.role!=='admin'||!realUser){view.append(node('p','auth-error','Yalnızca yönetici mesaj gönderebilir.'));return}
- view.append(node('h2','','✉️ Bildirim ve Mesaj Gönder'),node('p','muted','Mesajlar kullanıcıların zil bildirimlerine gönderilir. E-posta veya WhatsApp mesajı değildir.'));
- const form=node('form','');form.style.cssText='display:grid;gap:12px;max-width:650px';
- const targetLabel=node('label','','Alıcılar '),target=node('select');for(const [key,label] of [['all','Herkes (yönetici, öğretmen, öğrenci)'],['students','Yalnızca öğrenciler'],['teachers','Yalnızca öğretmenler'],['individual','Tek kişiye özel']]){const opt=node('option','',label);opt.value=key;target.append(opt)}targetLabel.append(target);form.append(targetLabel);
- const userLabel=node('label','','Kişi seç '),userSelect=node('select');userLabel.append(userSelect);userLabel.hidden=true;form.append(userLabel);
- target.onchange=()=>{userLabel.hidden=target.value!=='individual'};
- const titleLabel=node('label','','Bildirim başlığı '),title=node('input');title.required=true;title.maxLength=160;title.placeholder='Önemli duyuru';titleLabel.append(title);form.append(titleLabel);
- const bodyLabel=node('label','','Mesaj içeriği '),body=node('textarea');body.required=true;body.maxLength=2000;body.rows=6;body.placeholder='Göndermek istediğiniz mesajı yazın';bodyLabel.append(body);form.append(bodyLabel);
- const status=node('p','muted','');form.append(button('📨 Bildirimi gönder',async()=>{
-  if(!form.reportValidity())return;if(target.value==='individual'&&!userSelect.value){status.textContent='Lütfen alıcı seçin.';return}
+ const form=node('form','ca-message-form');form.noValidate=false;
+ const header=node('div','ca-message-head');
+ header.append(node('div','ca-message-eyebrow','♟ BARIDA CHESS ACADEMY · YÖNETİM'),node('h2','','✉️ Bildirim ve Mesaj Gönder'),node('p','','Öğrencilere, öğretmenlere veya seçtiğiniz kişiye platform içi duyuru gönderin.'));
+ const fields=node('div','ca-message-body');
+ fields.append(node('div','ca-message-step','01 · Alıcıları belirleyin'));
+ const targetLabel=node('label','','Alıcı grubu'),target=node('select');target.name='audience';for(const [key,label] of [['all','🌐 Herkes (yönetici, öğretmen, öğrenci)'],['students','🎓 Yalnızca öğrenciler'],['teachers','♛ Yalnızca öğretmenler'],['individual','👤 Tek kişiye özel']]){const opt=node('option','',label);opt.value=key;target.append(opt)}targetLabel.append(target);fields.append(targetLabel);
+ const audienceHint=node('div','ca-message-hint','Seçilen gruptaki tüm hesaplara bildirim gönderilir.');fields.append(audienceHint);
+ const userLabel=node('label','ca-message-wide','Alıcı seçin'),userSelect=node('select');userSelect.name='recipient';userLabel.append(userSelect);userLabel.hidden=true;fields.append(userLabel);
+ target.onchange=()=>{userLabel.hidden=target.value!=='individual';audienceHint.textContent=target.value==='individual'?'Yalnızca seçtiğiniz kullanıcı bildirimi alır.':target.value==='students'?'Bildirim sadece öğrenci hesaplarına gönderilir.':target.value==='teachers'?'Bildirim sadece öğretmen hesaplarına gönderilir.':'Seçilen gruptaki tüm hesaplara bildirim gönderilir.'};
+ fields.append(node('div','ca-message-step','02 · Bildirimi hazırlayın'));
+ const titleLabel=node('label','ca-message-wide','Bildirim başlığı'),title=node('input');title.name='title';title.required=true;title.maxLength=160;title.placeholder='Örneğin: Haftalık ders programı güncellendi';titleLabel.append(title);fields.append(titleLabel);
+ const bodyLabel=node('label','ca-message-wide','Mesaj içeriği'),body=node('textarea');body.name='body';body.required=true;body.maxLength=2000;body.rows=6;body.placeholder='Göndermek istediğiniz duyuruyu buraya yazın...';bodyLabel.append(body);fields.append(bodyLabel);
+ const counter=node('div','ca-message-counter','0 / 2000 karakter');body.addEventListener('input',()=>{counter.textContent=body.value.length+' / 2000 karakter'});fields.append(counter);
+ const footer=node('div','ca-message-foot');const status=node('p','ca-message-status','');status.setAttribute('role','status');status.setAttribute('aria-live','polite');
+ const send=button('📨 Bildirimi Gönder',()=>{},'btn gold ca-message-submit');send.type='submit';footer.append(send,status);
+ form.append(header,fields,footer);view.append(form);
+ form.onsubmit=async event=>{
+  event.preventDefault();if(!form.reportValidity())return;
+  if(target.value==='individual'&&!userSelect.value){status.textContent='Lütfen alıcı seçin.';status.dataset.state='error';return}
   if(!confirm('Bu bildirimi seçilen alıcılara göndermek istiyor musunuz?'))return;
-  try{const {data,error}=await authClient.rpc('academy_send_notification',{p_target:target.value,p_title:title.value.trim(),p_body:body.value.trim(),p_user_id:target.value==='individual'?userSelect.value:null});if(error)throw error;status.textContent='✓ '+data+' kullanıcıya bildirim gönderildi.';body.value='';notificationTimer=0;refreshAdminBell(true)}catch(e){status.textContent='Gönderilemedi: '+e.message}
- },'btn gold'),status);view.append(form);
+  send.disabled=true;status.textContent='Bildirim gönderiliyor…';status.dataset.state='loading';
+  try{
+   const {data,error}=await authClient.rpc('academy_send_notification',{p_target:target.value,p_title:title.value.trim(),p_body:body.value.trim(),p_user_id:target.value==='individual'?userSelect.value:null});
+   if(error)throw error;
+   status.textContent='✓ '+data+' kullanıcıya bildirim gönderildi.';status.dataset.state='success';body.value='';counter.textContent='0 / 2000 karakter';notificationTimer=0;refreshAdminBell(true);
+  }catch(e){status.textContent='Gönderilemedi: '+e.message;status.dataset.state='error'}finally{send.disabled=false}
+ };
  const {data,error}=await authClient.rpc('academy_notification_recipients');
- if(error){status.textContent='Kişi listesi yüklenemedi: '+error.message;return}
+ if(error){status.textContent='Kişi listesi yüklenemedi: '+error.message;status.dataset.state='error';return}
  for(const person of data||[]){const opt=node('option','',(person.display_name||person.username||'Kullanıcı')+' · '+person.role);opt.value=person.id;userSelect.append(opt)}
 }
 let paymentBadgeCache={at:0,count:0};
