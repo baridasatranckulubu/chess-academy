@@ -1,0 +1,38 @@
+name: Install Stockfish 19 WASM
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/install-stockfish-wasm.yml'
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Download and verify Stockfish 19 Lite Single WASM
+        run: |
+          set -euo pipefail
+          mkdir -p engines/stockfish19
+          base=https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin
+          curl --fail --location --retry 3 "$base/stockfish-19-lite-single.js" -o engines/stockfish19/stockfish-19-lite-single.js
+          curl --fail --location --retry 3 "$base/stockfish-19-lite-single.wasm" -o engines/stockfish19/stockfish-19-lite-single.wasm
+          test "$(wc -c < engines/stockfish19/stockfish-19-lite-single.js)" -gt 10000
+          test "$(wc -c < engines/stockfish19/stockfish-19-lite-single.wasm)" -gt 100000
+          file engines/stockfish19/stockfish-19-lite-single.wasm
+          python3 - <<'PY'
+          from pathlib import Path
+          assert Path('engines/stockfish19/stockfish-19-lite-single.wasm').read_bytes()[:4] == b'\\0asm'
+          PY
+      - name: Commit local engine files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add engines/stockfish19/
+          if ! git diff --cached --quiet; then
+            git commit -m "Vendor Stockfish 19 WASM engine binaries"
+            git push
+          fi
