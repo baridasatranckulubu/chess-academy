@@ -92,8 +92,8 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  const motions=['idle','hop','turn','look','roll','sleep','stretch','wave','walk','dance','bow','shake','sit','peek','happy','sniff','spin','wiggle','rest','play','nod','bounce','pounce','yawn','scratch'];
  function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected){dispose();return}if(document.hidden)return;const delta=Math.min((now-previousFrame)/1000,.1);previousFrame=now;if(mixer)mixer.update(delta);const t=now/1000,u=(now-motionAt)/1000;
  if(now-last>240000){motion=motions[Math.floor(Math.random()*motions.length)];motionAt=now;last=now}
- pet.root.position.set(0,0,0);pet.root.rotation.set(0,0,0);pet.body.rotation.set(0,0,0);pet.head.rotation.set(0,0,0);
- if(realAsset){renderer.render(scene,camera);return}pet.body.position.y=Math.sin(t*2)*.045;pet.head.rotation.z=Math.sin(t*1.4)*.06;
+ if(realAsset){renderer.render(scene,camera);return}pet.root.position.set(0,0,0);pet.root.rotation.set(0,0,0);pet.body.rotation.set(0,0,0);pet.head.rotation.set(0,0,0);
+ pet.body.position.y=Math.sin(t*2)*.045;pet.head.rotation.z=Math.sin(t*1.4)*.06;
  if(['hop','bounce','pounce','dance','happy'].includes(motion))pet.root.position.y=Math.abs(Math.sin(t*4))*.42;
  if(['turn','spin','peek'].includes(motion))pet.root.rotation.y=Math.sin(t*.8)*1.2;
  if(['look','nod','shake'].includes(motion))pet.head.rotation.y=Math.sin(t*2)*.4;
