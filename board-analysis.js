@@ -2,7 +2,7 @@
 'use strict';
 const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
-const sources=['https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin/stockfish-19-asm.js'];
+const sources=['engines/stockfish19/stockfish-19-lite-single.js'];
 let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0,liveEnabled=false,bestMove=null,analysisEpoch=0;
 const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 function positions(){
@@ -62,30 +62,27 @@ function setupReview(){
  const notice=document.createElement('p');notice.id='caMistakeNotice';notice.hidden=true;notice.className='ca-mistake-notice';board.closest('.chess-board-frame')?.after(notice);
  board.addEventListener('click',event=>{if(annotation){event.stopPropagation();event.preventDefault();clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
 }
-function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage('go movetime 2500');draw()}
+function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage('go movetime 3500');draw()}
 async function init(){
  if(worker||loading)return;
  loading=true;error='Motor dosyası indiriliyor…';draw();
  try{
-  const address=sources[Math.min(attempt,sources.length-1)];
-  const response=await fetch(address,{mode:'cors',cache:'force-cache'});
-  if(!response.ok)throw Error('HTTP '+response.status);
-  const script=await response.text();
-  if(script.length<10000)throw Error('Motor dosyası eksik');
-  const src=URL.createObjectURL(new Blob([script],{type:'text/javascript'}));
-  worker=new Worker(src);URL.revokeObjectURL(src);
+  const address=new URL(sources[0],location.href);
+  const response=await fetch(address,{cache:'no-cache',method:'HEAD'});
+  if(!response.ok)throw Error('Yerel Stockfish WASM dosyası bulunamadı (HTTP '+response.status+')');
+  worker=new Worker(address.href);
   worker.onerror=e=>{const reason=e.message||'Web Worker başlatılamadı';worker?.terminate();worker=null;ready=false;busy=false;current=null;loading=false;analysisEpoch++;if(attempt+1<sources.length){attempt++;error='Yedek motor deneniyor…';init()}else{error='Stockfish başlatılamadı: '+reason+' (tarayıcı güvenlik kısıtlaması olabilir)';draw()}};
   worker.onmessage=e=>{
    const line=String(e.data||'');
    if(line.includes('uciok'))worker.postMessage('isready');
-   if(line.includes('readyok')){ready=true;loading=false;error='';next()}
+   if(line.includes('readyok')){ready=true;loading=false;error='';worker.postMessage('setoption name Hash value 32');next()}
    if(!current)return;
-   const pv=line.match(/\\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/);if(pv&&liveEnabled){bestMove=pv[1];paintBestMove()}
+   const pv=line.match(/\\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/),depth=line.match(/\\bdepth (\\d+)/);if(pv&&depth&&Number(depth[1])>=10&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()){bestMove=pv[1];paintBestMove()}
    const cp=line.match(/\bscore cp (-?\d+)/),mate=line.match(/\bscore mate (-?\d+)/);
    if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
    if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
    if(line.startsWith('bestmove ')){const best=line.match(/^bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/);if(best&&liveEnabled&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()){bestMove=best[1];paintBestMove()}
-    if(current.score!==undefined)scores.set(current.fen,current.score);
+    if(current.score!==undefined&&current.epoch===analysisEpoch)scores.set(current.fen,current.score);
     current=null;busy=false;draw();next();
    }
   };
