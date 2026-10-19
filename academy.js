@@ -57,13 +57,13 @@ function render(){ensureAdminBell();if(role==='teacher'&&section==='student-deta
 
 let notificationCache=[],notificationTimer=0,notificationAccount='',paymentSyncTimer=0;
 function ensureAdminBell(){
- const logout=$('logout');if(!logout)return;
+ const logout=$('logout');if(!logout)return;logout.style.marginLeft='0';logout.style.order='901';
  const wrap=$('caAdminBellWrap');
  if(!realUser){wrap?.remove();notificationAccount='';return}
  if(wrap&&notificationAccount===realUser.id)return;
  wrap?.remove();notificationAccount=realUser.id;
- const holder=node('div','');holder.id='caAdminBellWrap';holder.style.cssText='position:relative;display:inline-flex;align-items:center;margin:0 8px';
- const bell=button('🔔 Bildirimler',()=>toggleNotificationPanel(),'btn outline');bell.id='caAdminBell';bell.setAttribute('aria-label','Bildirimleri aç');bell.setAttribute('aria-expanded','false');
+ const holder=node('div','');holder.id='caAdminBellWrap';holder.style.cssText='position:relative;display:inline-flex;align-items:center;margin:0 8px 0 auto;flex:0 0 auto;order:900';
+ const bell=button('🔔',()=>toggleNotificationPanel(),'btn outline');bell.id='caAdminBell';bell.title='Bildirimler';bell.style.cssText='min-width:43px;width:43px;padding:9px;display:inline-flex;align-items:center;justify-content:center;font-size:20px';bell.setAttribute('aria-label','Bildirimleri aç');bell.setAttribute('aria-expanded','false');
  const badge=node('span','');badge.id='caAdminBellCount';badge.style.cssText='position:absolute;right:-5px;top:-9px;background:#d52e44;color:#fff;border-radius:20px;padding:2px 6px;font-size:11px;font-weight:800;pointer-events:none';badge.hidden=true;
  const panel=node('div','');panel.id='caAdminBellPanel';panel.hidden=true;panel.style.cssText='position:fixed;top:80px;right:16px;z-index:10000;width:min(90vw,380px);max-height:430px;overflow:auto;padding:15px;border:1px solid #d5b273;border-radius:14px;background:#102735;color:#fff;box-shadow:0 14px 35px #000b';
  holder.append(bell,badge,panel);logout.before(holder);
@@ -118,17 +118,7 @@ async function adminMessages(){
  for(const person of data||[]){const opt=node('option','',(person.display_name||person.username||'Kullanıcı')+' · '+person.role);opt.value=person.id;userSelect.append(opt)}
 }
 let paymentBadgeCache={at:0,count:0};
-async function paymentNotificationBadge(){
- const nav=[...document.querySelectorAll('.navitem')].find(x=>x.textContent.includes('💳 Ödemeler'));if(!nav)return;
- try{
-  if(Date.now()-paymentBadgeCache.at>300000){
-   const rows=await paymentRPC('list');const today=payISO(new Date());let count=0;
-   for(const st of rows){if(!st.plan?.enabled)continue;const paid=new Set((st.receipts||[]).map(x=>x.dueDate));const ahead=new Date();ahead.setDate(ahead.getDate()+Number(st.plan.remindDays||0));for(const date of paymentDates(st.plan,payISO(ahead))){if(!paid.has(date))count++}}
-   paymentBadgeCache={at:Date.now(),count};
-  }
-  if(paymentBadgeCache.count){nav.textContent='💳 Ödemeler 🔴 '+paymentBadgeCache.count;nav.title=paymentBadgeCache.count+' ödeme yaklaşıyor veya gecikti';const view=$('view');if(view&&!view.querySelector('#payment-alert-chip')){const chip=node('div','');chip.id='payment-alert-chip';chip.style.cssText='padding:10px 14px;background:#4d3521;color:#fff;border:1px solid #dbac65;border-radius:12px;margin:10px 0';chip.append(node('span','', '🔔 '+paymentBadgeCache.count+' yaklaşan veya gecikmiş öğrenci ödemesi var. '),button('Ödemeleri aç',()=>showSection('admin-payments'),'btn small'));view.prepend(chip)}}
- }catch(e){console.warn('Ödeme bildirimi yüklenemedi:',e.message)}
-}
+async function paymentNotificationBadge(){/* Ödeme uyarıları yalnızca sağ üst bildirim zilinde gösterilir. */}
 // Yöneticiye özel öğrenci ödeme takibi. WhatsApp bağlantısı kullanıcı onayıyla açılır;
 // WhatsApp Business API bağlı olmadığı için otomatik mesaj gönderildiği iddia edilmez.
 const payDate=(d)=>{const [y,m,day]=d.split('-').map(Number);return new Date(y,m-1,day,12)};
