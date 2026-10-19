@@ -27,7 +27,14 @@ function sound(type){
  }catch(e){/* Sound is optional. */}
 }
 
-function pieceSVG(symbol,piece){const white=piece===piece.toUpperCase(),glyph=({k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'})[piece.toLowerCase()]||'♟',fill=white?'#ffffff':'#10151e',outline=white?'#202938':'#eef2f8';if(piece.toLowerCase()==='b'&&window.ChessAcademyPieces?.render)return window.ChessAcademyPieces.render(piece);return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="82" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="'+(white?'2.7':'1.7')+'" stroke-linejoin="round" paint-order="stroke">'+glyph+'</text></svg>'}
+function pieceSVG(symbol,piece){
+ const white=piece===piece.toUpperCase(),bishop=piece.toLowerCase()==='b';
+ const glyph=({k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'})[piece.toLowerCase()]||'♟';
+ const fill=white?'#ffffff':'#10151e',outline=white?'#202938':'#eef2f8';
+ // Preserve the original matching Unicode chess set. Only bridge the open center of the bishop's lower tails.
+ const bridge=bishop?'<path d="M45 67 H55 V82 H45 Z" fill="'+fill+'" stroke="none"/>':'';
+ return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="82" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="'+(white?'2.7':'1.7')+'" stroke-linejoin="round" paint-order="stroke">'+glyph+'</text>'+bridge+'</svg>'
+}
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
  let state=annotationState.get(root);
