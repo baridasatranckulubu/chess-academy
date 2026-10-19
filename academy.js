@@ -267,9 +267,34 @@ function petAcademy(){
  const caption=node('div','ca-pet-room-caption',ROOMS[roomIndex]+' · '+found[2]+' '+(p.variant==='female'?'♀':'♂'));room.append(caption);
  const animLabel=node('div','ca-pet-animation-label','✨ Mutlu ve enerjik');room.append(animLabel);area.append(room);
  const stats=node('div','ca-pet-stats');for(const [value,label] of [[p.coins,'🪙 Barida Altını'],[p.satiety+'/100','🍎 Tokluk'],[p.armor,'🛡️ Zırh']]){const card=node('div','ca-pet-stat');card.append(node('strong','',String(value)),node('span','',label));stats.append(card)}area.append(stats);
+ const gameLayout=node('div','ca-pet-game-layout');
+ const profile=node('aside','ca-pet-profile');
+ profile.append(node('div','ca-pet-profile-crown','👑'),node('h3','',currentName()),node('p','muted','Satranç Kahramanı'));
+ const miniStats=node('div','ca-pet-profile-stats');
+ for(const [v,l] of [['⭐','Barida UKD'],['🧩','Bu ay çözülen sorular'],['📜','Tamamlanan ödevler'],['🪙',p.coins+' Barida Altını']]){const line=node('div','ca-pet-profile-stat');line.append(node('span','',v),node('span','',l));miniStats.append(line)}profile.append(miniStats);
+ const gameCenter=node('div','ca-pet-game-center');
+ const gameShop=node('aside','ca-pet-permanent-shop');
+ const shopHead=node('div','ca-pet-shop-head');shopHead.append(node('h3','','🛍️ Barida Dükkân'),node('strong','',p.coins+' 🪙'));gameShop.append(shopHead);
+ const shopTabs=node('div','ca-pet-shop-tabs');const shopGrid=node('div','ca-pet-shop-grid');
+ const catalogs={
+  'Yiyecekler':[['apple','🍎','Elma',10],['meal','🥗','Öğün',25]],
+  'Zırhlar':[['armor','🛡️','Gümüş Zırh',80]],
+  'Aksesuarlar':[], 'Odalar':[], 'Özel':[]
+ };
+ for(const [label,items] of Object.entries(catalogs)){const tab=button(label,()=>{shopTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));tab.classList.add('active');shopGrid.replaceChildren();if(!items.length){shopGrid.append(node('p','muted','Bu koleksiyon hazırlanıyor.'));return}for(const [key,emoji,name,price] of items){const card=node('article','ca-pet-shop-tile');card.append(node('div','ca-pet-shop-emoji',emoji),node('strong','',name),button('🪙 '+price,async()=>{try{await petRpc('shop',{p_item:key});await refresh()}catch(e){alert(e.message)}},'btn small gold'));shopGrid.append(card)}} ,'btn small');shopTabs.append(tab);if(label==='Yiyecekler')tab.click()}
+ gameShop.append(shopTabs,shopGrid);
+ gameCenter.append(room,stats);
+ gameLayout.append(profile,gameCenter,gameShop);
+ area.replaceChildren(gameLayout);
+ const evolution=node('section','ca-pet-evolution-gallery');evolution.append(node('h3','','🌟 Karakter Gelişimi'));
+ const steps=node('div','ca-pet-evolution-steps');
+ for(const [name,range] of [['Yavru','0–499 soru'],['Genç','500–999 soru'],['Ergen','1.000–9.999 soru'],['Yetişkin','10.000+ soru']]){const item=node('div','ca-pet-evolution-step');item.append(portrait(p.animal,'ca-pet-evolution-image'),node('strong','',name),node('span','',range));steps.append(item)}
+ evolution.append(steps);area.append(evolution);
+ const armors=node('section','ca-pet-armor-gallery');armors.append(node('h3','','🛡️ Zırh Koleksiyonu'));
+ const armorItems=node('div','ca-pet-armor-items');for(const [name,price] of [['Zırhsız',0],['Gümüş',80],['Altın',150],['Zümrüt',300],['Efsanevi',500]]){const item=node('div','ca-pet-armor-item');item.append(node('div','ca-pet-armor-symbol',price?'🛡️':'🐾'),node('strong','',name),node('span','',price?'🪙 '+price:'Ücretsiz'));if(price>80)item.append(node('small','','🔒 Yakında'));armorItems.append(item)}armors.append(armorItems);area.append(armors);
  const toolbar=node('div','ca-pet-toolbar');toolbar.append(button('🛒 Dükkâna Git',()=>{const dialog=document.createElement('dialog');dialog.className='ca-pet-shop-dialog';const inner=node('div','ca-pet-shop');const bar=node('div','ca-pet-shop-top');bar.append(node('h3','','🛍️ Barida Dükkânı'),button('✕ Kapat',()=>dialog.close(),'btn'));inner.append(bar,node('p','muted','Bakiyen: '+p.coins+' 🪙 · Alışverişler gerçek hesabına kaydedilir.'));const goods=node('div','ca-pet-goods');for(const [key,emoji,title,price,desc] of PET_GOODS){const card=node('article','ca-pet-good');card.append(node('div','ca-pet-good-icon',emoji),node('strong','',title),node('p','muted',desc),button('🪙 '+price+' · Satın al',async()=>{try{await petRpc('shop',{p_item:key});dialog.close();dialog.remove();await refresh()}catch(e){alert(e.message)}},'btn gold'));goods.append(card)}inner.append(goods,node('p','muted','Yeni yiyecekler, özel zırhlar ve kilitli sandıklar ileride eklenecek.'));dialog.append(inner);dialog.addEventListener('close',()=>dialog.remove());document.body.append(dialog);dialog.showModal()},'btn gold'),button('🐾 Karakteri Oynat',()=>{const name=animations[Math.floor(Math.random()*animations.length)];petScene?.play(name.replace('ca-pet-',''));animLabel.textContent='🐾 '+name.replace('ca-pet-','')},'btn'));area.append(toolbar);
- const progress=node('section','ca-pet-evolution');progress.append(node('h3','','🌟 Karakter Gelişimi'),node('p','muted','Yavru: 0–499 · Genç: 500–999 · Yetişkin: 10.000+ doğrulanmış soru. Soru sayısı bağlantısı hazırlanıyor.'));area.append(progress);
- const roomInfo=node('p','muted','Odan ve karakterin hesabına bağlıdır. Hareketler bu ilk sürümde 2D katman animasyonlarıdır; gerçek 3D iskelet animasyonları henüz değildir.');area.append(roomInfo);
+
+
  // Animations are randomized at 3–5 minute intervals and only run while this screen remains visible.
  const nextMotion=()=>{if(section!=='pet-home'||!character.isConnected){petScene?.dispose();return;}const name=animations[Math.floor(Math.random()*animations.length)];petScene?.play(name.replace('ca-pet-',''));animLabel.textContent='✨ '+({ 'ca-pet-hop':'Zıplıyor','ca-pet-look':'Etrafına bakıyor','ca-pet-sway':'Sallanıyor','ca-pet-sleep':'Dinleniyor','ca-pet-bounce':'Oynuyor','ca-pet-turn':'Dönüyor','ca-pet-idle':'Mutlu ve enerjik'}[name]||'Oynuyor');setTimeout(nextMotion,180000+Math.random()*120000)};
  setTimeout(nextMotion,180000+Math.random()*120000);
