@@ -3,7 +3,7 @@
 const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
 const sources=['engines/stockfish19/stockfish-19-lite-single.js','https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin/stockfish-19-asm.js'];
-let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0,liveEnabled=false,bestMove=null,analysisEpoch=0;
+let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),depths=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0,liveEnabled=false,bestMove=null,analysisEpoch=0;
 const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 function positions(){
  const g=getGame();if(!g)return [];
@@ -14,8 +14,26 @@ function positions(){
  return out;
 }
 function chance(cp){return 1/(1+Math.exp(-Math.max(-1000,Math.min(1000,cp))/170))}
+function ensureEvalBar(){
+ const frame=document.querySelector('.chess-board-frame');if(!frame)return;
+ if($('caEngineEvalBar'))return;
+ const container=document.createElement('div');container.id='caEngineEvalBar';container.setAttribute('role','meter');container.setAttribute('aria-label','Stockfish konum değerlendirmesi');container.setAttribute('aria-valuemin','0');container.setAttribute('aria-valuemax','100');container.setAttribute('aria-valuenow','50');
+ container.innerHTML='<div class="ca-engine-meter"><div class="ca-engine-white-fill" id="caEngineWhiteFill"></div><div class="ca-engine-equal"></div></div><div class="ca-engine-numbers"><div class="ca-engine-side">⚫ <strong id="caEngineBlackPercent">50%</strong></div><div class="ca-engine-side">⚪ <strong id="caEngineWhitePercent">50%</strong></div><div class="ca-engine-depth" id="caEngineDepth">Derinlik: …</div><div class="ca-engine-score" id="caEngineScore">0.00</div></div>';
+ frame.append(container);
+}
+function updateEvalBar(score,depth){
+ ensureEvalBar();const bar=$('caEngineEvalBar');if(!bar)return;
+ const white=typeof score==='number'?Math.round(100*chance(score)):typeof score==='string'&&score.startsWith('M')?(Number(score.slice(1))>0?100:0):50;
+ $('caEngineWhiteFill').style.height=white+'%';
+ $('caEngineWhitePercent').textContent=white+'%';
+ $('caEngineBlackPercent').textContent=(100-white)+'%';
+ $('caEngineDepth').textContent='Derinlik: '+(depth||'…');
+ $('caEngineScore').textContent=fmt(score);
+ bar.setAttribute('aria-valuenow',String(white));
+ bar.setAttribute('aria-valuetext','Beyaz yüzde '+white+', siyah yüzde '+(100-white)+', analiz derinliği '+(depth||'bilinmiyor'));
+}
 function draw(){
- const livePositions=positions(),pos=reviewSnapshot?.positions||livePositions,score=scores.get(livePositions[livePositions.length-1]);if(!$('caLiveEval'))return;
+ const livePositions=positions(),pos=reviewSnapshot?.positions||livePositions,score=scores.get(livePositions[livePositions.length-1]);if(!$('caLiveEval'))return;updateEvalBar(score,current?.fen===livePositions[livePositions.length-1]?current.depth:depths.get(livePositions[livePositions.length-1]));
  $('caLiveEval').textContent=fmt(score);
  const white=$('caWhiteEval'),black=$('caBlackEval');if(white)white.textContent=fmt(score);if(black)black.textContent=typeof score==='number'?fmt(-score):typeof score==='string'&&score.startsWith('M')?'M'+(-Number(score.slice(1))):'…';
  $('caReviewStatus').textContent=error||'';
@@ -77,12 +95,12 @@ async function init(){
    if(line.includes('uciok'))worker.postMessage('isready');
    if(line.includes('readyok')){ready=true;loading=false;error='';worker.postMessage('setoption name Hash value 32');next()}
    if(!current)return;
-   const pv=line.match(/\\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/),depth=line.match(/\\bdepth (\\d+)/);if(pv&&depth&&Number(depth[1])>=10&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()){bestMove=pv[1];paintBestMove()}
+   const pv=line.match(/\\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/),depth=line.match(/\\bdepth (\\d+)/);if(depth&&current.epoch===analysisEpoch){current.depth=Math.max(current.depth,Number(depth[1]));if(current.fen===getGame()?.fen()){updateEvalBar(current.score,current.depth)}}if(pv&&depth&&Number(depth[1])>=10&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()){bestMove=pv[1];paintBestMove()}
    const cp=line.match(/\bscore cp (-?\d+)/),mate=line.match(/\bscore mate (-?\d+)/);
    if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
    if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
    if(line.startsWith('bestmove ')){const best=line.match(/^bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/);if(best&&liveEnabled&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()){bestMove=best[1];paintBestMove()}
-    if(current.score!==undefined&&current.epoch===analysisEpoch)scores.set(current.fen,current.score);
+    if(current.score!==undefined&&current.epoch===analysisEpoch)scores.set(current.fen,current.score),depths.set(current.fen,current.depth);
     current=null;busy=false;draw();next();
    }
   };
