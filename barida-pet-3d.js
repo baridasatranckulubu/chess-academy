@@ -61,13 +61,39 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'low-power'});renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));renderer.shadowMap.enabled=true;renderer.outputColorSpace=THREE.SRGBColorSpace;container.append(renderer.domElement);
  scene.add(new THREE.HemisphereLight('#fff3d8','#514361',2.2));const key=new THREE.DirectionalLight('#ffe2a2',3);key.position.set(-4,7,5);key.castShadow=true;scene.add(key);const fill=new THREE.PointLight('#90bafc',25,12);fill.position.set(4,4,2);scene.add(fill);
  const pet=makeAnimal(animal,stage,armor);scene.add(pet.root);
- const loader=new GLTFLoader();loader.load('assets/pets/3d/'+encodeURIComponent(animal)+'.gltf?v=20261020-models1',gltf=>{if(disposed)return;scene.remove(pet.root);pet.root=gltf.scene;pet.body=pet.root.getObjectByName('Body')||pet.root;pet.head=pet.root.getObjectByName('Head')||pet.body;pet.paw=[];pet.root.scale.setScalar([1,1.2,1.45,1.75][Math.max(0,Math.min(3,stage))]);pet.root.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});scene.add(pet.root);},undefined,e=>console.warn('Barida GLTF model fallback',e));let motion='idle',motionAt=performance.now(),last=performance.now(),disposed=false;
+ let mixer=null,activeClip=null,realAsset=false,previousFrame=performance.now();
+ const loader=new GLTFLoader();
+ const assetUrl=animal==='fox'?'assets/pets/third-party/quaternius-fox.glb?v=20261020':('assets/pets/3d/'+encodeURIComponent(animal)+'.gltf?v=20261020-models1');
+ loader.load(assetUrl,gltf=>{
+  if(disposed)return;
+  scene.remove(pet.root);
+  const model=gltf.scene;
+  if(animal==='fox'){
+   realAsset=true;
+   model.updateMatrixWorld(true);
+   const bounds=new THREE.Box3().setFromObject(model),size=bounds.getSize(new THREE.Vector3());
+   const maxDim=Math.max(size.x,size.y,size.z,0.01),factor=2.8/maxDim;
+   model.scale.setScalar(factor);
+   model.updateMatrixWorld(true);
+   const centered=new THREE.Box3().setFromObject(model);
+   model.position.x-=(centered.min.x+centered.max.x)/2;
+   model.position.z-=(centered.min.z+centered.max.z)/2;
+   model.position.y-=centered.min.y;
+   mixer=new THREE.AnimationMixer(model);
+   const idle=gltf.animations.find(x=>/idle/i.test(x.name))||gltf.animations[0];
+   if(idle){activeClip=mixer.clipAction(idle);activeClip.play()}
+  }else model.scale.setScalar([1,1.2,1.45,1.75][Math.max(0,Math.min(3,stage))]);
+  pet.root=model;pet.body=model.getObjectByName('Body')||model;pet.head=model.getObjectByName('Head')||pet.body;pet.paw=[];
+  model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
+  scene.add(model);
+ },undefined,e=>console.warn('Barida GLTF asset fallback',e));
+ let motion='idle',motionAt=performance.now(),last=performance.now(),disposed=false;
  const resize=()=>{const w=container.clientWidth||600,h=container.clientHeight||400;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)};const observer=new ResizeObserver(resize);observer.observe(container);resize();
  const motions=['idle','hop','turn','look','roll','sleep','stretch','wave','walk','dance','bow','shake','sit','peek','happy','sniff','spin','wiggle','rest','play','nod','bounce','pounce','yawn','scratch'];
- function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected){dispose();return}if(document.hidden)return;const t=now/1000,u=(now-motionAt)/1000;
+ function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected){dispose();return}if(document.hidden)return;const delta=Math.min((now-previousFrame)/1000,.1);previousFrame=now;if(mixer)mixer.update(delta);const t=now/1000,u=(now-motionAt)/1000;
  if(now-last>240000){motion=motions[Math.floor(Math.random()*motions.length)];motionAt=now;last=now}
  pet.root.position.set(0,0,0);pet.root.rotation.set(0,0,0);pet.body.rotation.set(0,0,0);pet.head.rotation.set(0,0,0);
- pet.body.position.y=Math.sin(t*2)*.045;pet.head.rotation.z=Math.sin(t*1.4)*.06;
+ if(realAsset){renderer.render(scene,camera);return}pet.body.position.y=Math.sin(t*2)*.045;pet.head.rotation.z=Math.sin(t*1.4)*.06;
  if(['hop','bounce','pounce','dance','happy'].includes(motion))pet.root.position.y=Math.abs(Math.sin(t*4))*.42;
  if(['turn','spin','peek'].includes(motion))pet.root.rotation.y=Math.sin(t*.8)*1.2;
  if(['look','nod','shake'].includes(motion))pet.head.rotation.y=Math.sin(t*2)*.4;
@@ -78,6 +104,6 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  if(motion==='stretch'||motion==='yawn')pet.body.scale.y=1+Math.abs(Math.sin(t))*.15;else pet.body.scale.y=1;
  renderer.render(scene,camera);
  }requestAnimationFrame(tick);
- function dispose(){if(disposed)return;disposed=true;observer.disconnect();renderer.dispose();renderer.domElement.remove();scene.traverse(o=>{o.geometry?.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose())}})}return {play(name){motion=motions.includes(name)?name:'happy';motionAt=performance.now();last=motionAt},dispose};
+ function dispose(){if(disposed)return;disposed=true;observer.disconnect();renderer.dispose();renderer.domElement.remove();scene.traverse(o=>{o.geometry?.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose())}})}return {play(name){motion=motions.includes(name)?name:'happy';motionAt=performance.now();last=motionAt;if(mixer){const clips=mixer._actions||[];const candidate=clips.find(a=>a._clip?.name?.toLowerCase().includes(name.toLowerCase()))||clips.find(a=>/idle/i.test(a._clip?.name||''));if(candidate&&candidate!==activeClip){activeClip?.fadeOut(.3);candidate.reset().fadeIn(.3).play();activeClip=candidate}}},dispose};
 }
 window.BaridaPet3D={mount};
