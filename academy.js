@@ -320,7 +320,7 @@ const PUZZLE_THEMES=[['mateIn1','👑 Tek hamlede mat'],['mateIn2','👑 İki ha
 function assignmentProgress(a){if(!a.results||typeof a.results!=='object')a.results={};return Object.values(a.results).filter(Boolean).length}
 let assignmentSelectedStudent=null;
 async function realAssignments(){
- const view=$('view');view.replaceChildren(node('h2','','♟ Ödev Stüdyosu'),node('p','muted',role==='teacher'?'Öğrenci seçin, tematik Lichess bulmacası veya özel tahta konumu atayın.':'Öğretmeninizin size atadığı çalışmaları burada görün.'));
+ const view=$('view');view.replaceChildren(node('h2','','♟ Ödev Stüdyosu'),node('p','muted',role==='teacher'?'Öğrenci, kategori, tema, zorluk ve soru sayısı seçerek BARIDA tahtasında çözülecek uygulamalı ödevler oluşturun.':'Öğretmeninizin size atadığı çalışmaları burada görün.'));
  try{
   if(role==='teacher'){
    await loadTeacherStudents();if(section!=='assignments')return;
@@ -328,20 +328,41 @@ async function realAssignments(){
    const label=(name,control)=>{const wrap=node('label','',name);wrap.style.cssText='display:grid;gap:7px;color:#fff';wrap.append(control);return wrap};
    const student=node('select');student.required=true;realRoster.forEach(st=>{const o=node('option','',st.name);o.value=st.id;student.append(o)});if(assignmentSelectedStudent&&realRoster.some(st=>st.id===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
    const title=node('input');title.placeholder='Ödev başlığı';title.required=true;title.minLength=3;title.maxLength=120;
-   const kind=node('select');[['puzzle','Lichess tematik bulmaca'],['position','Özel tahta konumu (FEN)']].forEach(([v,n])=>{const o=node('option','',n);o.value=v;kind.append(o)});
-   const theme=node('select');PUZZLE_THEMES.forEach(([v,n])=>{const o=node('option','',n);o.value=v;theme.append(o)});
-   const count=node('select');[3,5,10,15,20,30,50,75,100].forEach(n=>{const o=node('option','',n+' soru');o.value=n;count.append(o)});
-   const difficulty=node('select');[['400-1000','Başlangıç'],['800-1400','Kolay'],['1200-1800','Orta'],['1600-2300','İleri'],['2000-3000','Uzman'],['2300-3000','Usta / Çok zor']].forEach(([v,n])=>{const o=node('option','',n+' ('+v+' Elo)');o.value=v;difficulty.append(o)});
-   const fen=node('input');fen.placeholder='FEN: rnbqkbnr/pppppppp/...';fen.maxLength=140;
-   const solution=node('input');solution.placeholder='Doğru hamle (UCI): e2e4';solution.maxLength=5;
-   const instructions=node('textarea');instructions.placeholder='Öğrenciye yönergeler';instructions.maxLength=1000;
-   const fenWrap=label('Tahta başlangıç konumu (FEN)',fen),solutionWrap=label('Beklenen doğru hamle',solution);
-   const refresh=()=>{const manual=kind.value==='position';fenWrap.hidden=!manual;solutionWrap.hidden=!manual;theme.parentElement.hidden=manual;count.parentElement.hidden=manual;difficulty.parentElement.hidden=manual};
-   kind.onchange=refresh;
-   form.append(label('Öğrenci',student),label('Ödev başlığı',title),label('Çalışma türü',kind),label('Taktik teması',theme),label('Soru sayısı',count),label('Zorluk',difficulty),fenWrap,solutionWrap,label('Ödev açıklaması',instructions));refresh();
-   const submit=button('＋ Öğrenciye ödev ata',()=>{},'btn gold');submit.type='submit';form.append(submit);
+   const groups=[
+    ['mat','👑 Mat Akademisi',['mateIn1','mateIn2','mateIn3','mateIn4','mateIn5','mate','backRankMate','smotheredMate','anastasiaMate','hookMate']],
+    ['tactic','⚔ Taktik ve Kombinasyon',['fork','pin','skewer','discoveredAttack','sacrifice','deflection','attraction','interference','clearance','xRayAttack','doubleCheck','trappedPiece','hangingPiece','capturingDefender']],
+    ['endgame','♙ Oyun Sonu',['endgame','pawnEndgame','rookEndgame','bishopEndgame','knightEndgame','queenEndgame','queenRookEndgame','promotion','underPromotion']],
+    ['advantage','📈 Üstünlük ve Strateji',['advantage','crushing','equality','defensiveMove','quietMove','zugzwang','intermezzo','exposedKing','kingsideAttack','queensideAttack','attackingF2F7','advancedPawn']],
+    ['opening','♟ Açılış ve Gelişim',['opening','middlegame','development','center','castling','openingTrap']],
+    ['mixed','🎲 Karışık Uygulama',['fork','pin','skewer','mateIn1','mateIn2','endgame','advantage','sacrifice']]
+   ];
+   const category=node('select');groups.forEach(([id,name])=>{const o=node('option','',name);o.value=id;category.append(o)});
+   const theme=node('select');
+   const themeNames=new Map([...PUZZLE_THEMES,['deflection','Saptırma'],['attraction','Çekme'],['interference','Araya girme'],['clearance','Hat açma'],['xRayAttack','X ışını saldırısı'],['doubleCheck','Çifte şah'],['trappedPiece','Hapsolmuş taş'],['hangingPiece','Boştaki taş'],['capturingDefender','Savunucuyu yok etme'],['pawnEndgame','Piyon oyun sonu'],['rookEndgame','Kale oyun sonu'],['bishopEndgame','Fil oyun sonu'],['knightEndgame','At oyun sonu'],['queenEndgame','Vezir oyun sonu'],['queenRookEndgame','Vezir-kale oyun sonu'],['promotion','Terfi'],['underPromotion','Eksik terfi'],['crushing','Büyük üstünlük'],['equality','Eşitliği koruma'],['defensiveMove','Savunma hamlesi'],['quietMove','Sessiz hamle'],['zugzwang','Zugzwang'],['intermezzo','Ara hamle'],['exposedKing','Açıkta şah'],['kingsideAttack','Şah kanadı saldırısı'],['queensideAttack','Vezir kanadı saldırısı'],['attackingF2F7','f2/f7 saldırısı'],['advancedPawn','İlerlemiş piyon'],['opening','Açılış'],['middlegame','Oyun ortası'],['development','Gelişim'],['center','Merkez'],['castling','Rok'],['openingTrap','Açılış tuzağı']]);
+   const populateThemes=()=>{theme.replaceChildren();const group=groups.find(x=>x[0]===category.value)||groups[0];for(const key of group[2]){const o=node('option','',themeNames.get(key)||key);o.value=key;theme.append(o)}};
+   category.onchange=populateThemes;populateThemes();
+   const count=node('select');[10,20,50,100].forEach(n=>{const o=node('option','',n+' farklı konum');o.value=n;count.append(o)});
+   const difficulty=node('select');[['400-1000','🌱 Başlangıç'],['800-1400','🟢 Kolay'],['1200-1800','🟡 Orta'],['1600-2300','🟠 Zor'],['2000-3000','🔴 Uzman'],['2300-3000','👑 Usta']].forEach(([v,n])=>{const o=node('option','',n+' ('+v+' Elo)');o.value=v;difficulty.append(o)});
+   const instructions=node('textarea');instructions.placeholder='Öğrenciye yönergeler (isteğe bağlı)';instructions.maxLength=1000;
+   const title=node('input');title.placeholder='Ödev başlığı (boş bırakılırsa otomatik oluşturulur)';title.maxLength=120;
+   const preview=node('div','');preview.style.cssText='grid-column:1/-1;display:grid;gap:12px';
+   const previewText=node('p','muted','');preview.append(previewText);
+   const previewButton=button('♟ Örnek konumları tahtada önizle',()=>{},'btn small');
+   const frame=node('iframe','academy-embed');frame.title='Ödev soruları önizleme tahtası';frame.loading='lazy';frame.hidden=true;frame.style.cssText='width:100%;min-height:760px;border:1px solid #c59b61;border-radius:14px';
+   previewButton.onclick=()=>{frame.src='puzzles.html?'+new URLSearchParams({theme:theme.value,level:'all'});frame.hidden=false;preview.append(frame)};
+   const updateSummary=()=>{previewText.textContent='Seçim: '+(themeNames.get(theme.value)||theme.value)+' · '+count.value+' rastgele konum · '+difficulty.options[difficulty.selectedIndex].text+'. Sorular mevcut doğrulanmış bulmaca havuzundan seçilir.'};
+   [category,theme,count,difficulty].forEach(el=>el.addEventListener('change',updateSummary));updateSummary();
+   form.append(label('Öğrenci',student),label('Çalışma kategorisi',category),label('Uygulamalı konu',theme),label('Soru sayısı',count),label('Zorluk derecesi',difficulty),label('Ödev başlığı',title),label('Öğrenciye açıklama',instructions),previewButton,preview);
+   const submit=button('＋ Otomatik konumlu ödev oluştur',()=>{},'btn gold');submit.type='submit';form.append(submit);
    const msg=node('p','muted','');view.append(form,msg);
-   form.onsubmit=async e=>{e.preventDefault();submit.disabled=true;msg.textContent='Ödev kaydediliyor...';try{if(kind.value==='position'&&(!/^([prnbqkPRNBQK1-8]+\/){7}[prnbqkPRNBQK1-8]+\s[wb]\s/.test(fen.value.trim())||!/^[a-h][1-8][a-h][1-8][qrbn]?$/.test(solution.value.trim())))throw Error('Geçerli FEN ve UCI hamlesi girin.');const [min_rating,max_rating]=difficulty.value.split('-').map(Number);const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title:title.value.trim(),kind:kind.value,theme:theme.value,puzzle_count:Number(count.value),min_rating,max_rating,fen:kind.value==='position'?fen.value.trim():null,solution_uci:kind.value==='position'?solution.value.trim():null,instructions:instructions.value.trim()});if(error)throw error;msg.textContent='✓ Ödev öğrenci hesabına atandı.';assignmentSelectedStudent=student.value;await loadAssignmentCards(view)}catch(err){msg.textContent='Ödev kaydedilemedi: '+err.message}finally{submit.disabled=false}};
+   form.onsubmit=async e=>{e.preventDefault();submit.disabled=true;msg.textContent='Ödev hazırlanıyor…';try{
+    if(!realRoster.length)throw Error('Önce sınıfa öğrenci ekleyin.');
+    const [min_rating,max_rating]=difficulty.value.split('-').map(Number);
+    const selectedTheme=theme.value;
+    const generatedTitle=title.value.trim()||(themeNames.get(selectedTheme)||selectedTheme)+' · '+count.value+' konum';
+    const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title:generatedTitle,kind:'puzzle',theme:selectedTheme,puzzle_count:Number(count.value),min_rating,max_rating,fen:null,solution_uci:null,instructions:instructions.value.trim()});
+    if(error)throw error;msg.textContent='✓ '+count.value+' konumluk ödev öğrenci hesabına atandı. Sorular çözüm sırasında seçilen tema ve seviyeden rastgele yüklenir.';assignmentSelectedStudent=student.value;await loadAssignmentCards(view)
+   }catch(err){msg.textContent='Ödev oluşturulamadı: '+err.message}finally{submit.disabled=false}};
   }
   await loadAssignmentCards(view);
  }catch(e){view.append(node('p','auth-error','Ödevler yüklenemedi: '+e.message))}
