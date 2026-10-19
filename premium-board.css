@@ -33,3 +33,29 @@
 .ca-grid .board>.sq .piece{display:flex;align-items:center;justify-content:center;width:100%;height:100%;pointer-events:none}
 .ca-grid .board>.sq.last-move{background-image:linear-gradient(#f2d36940,#f2d36940)!important}
 .ca-grid .board>.sq.target:after{content:"";position:absolute;inset:39%;border-radius:50%;background:#246e4c99;pointer-events:none;z-index:3}
+
+/* Flat centered pieces and single-layer clean board annotations, 2026-10-19 */
+.ca-grid .board>.sq .piece-3d,
+.ca-grid .board>.sq:hover .piece-3d,
+.board .sq .piece-3d,
+.board .sq:hover .piece-3d {
+ width:94%!important;height:94%!important;display:block!important;
+ margin:auto!important;transform:none!important;filter:none!important;
+ opacity:1!important;transition:none!important;overflow:visible!important;
+}
+.ca-grid .board>.sq .piece-3d text,
+.board .sq .piece-3d text {
+ font-size:80px!important;font-weight:900!important;
+ dominant-baseline:central!important;text-anchor:middle!important;
+ filter:none!important;paint-order:stroke!important;
+}
+.ca-grid .board>.sq .piece,
+.board .sq .piece {display:flex!important;align-items:center!important;justify-content:center!important;line-height:1!important;filter:none!important}
+.ca-board-annotations,.ca-board-annotations *{
+ filter:none!important;box-shadow:none!important;
+ text-shadow:none!important;stroke-dasharray:none!important;
+}
+.ca-board-annotations line{stroke-width:8!important;stroke-linecap:round!important}
+.ca-board-annotations circle{stroke-width:5!important}
+.ca-board-annotations polygon{stroke:none!important}
+.ca-drag-ghost,.ca-drag-ghost svg{filter:none!important;opacity:1!important}
