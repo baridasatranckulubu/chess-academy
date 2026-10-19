@@ -17,9 +17,14 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p engines/stockfish19
-          base=https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin
-          curl --fail --location --retry 3 "$base/stockfish-19-lite-single.js" -o engines/stockfish19/stockfish-19-lite-single.js
-          curl --fail --location --retry 3 "$base/stockfish-19-lite-single.wasm" -o engines/stockfish19/stockfish-19-lite-single.wasm
+          # jsDelivr returns HTTP 403 for the oversized stockfish npm package.
+          # Fetch the official published npm tarball instead of the CDN.
+          npm pack stockfish@19.0.1 --pack-destination /tmp --silent
+          archive=$(find /tmp -maxdepth 1 -name 'stockfish-19.0.1.tgz' -print -quit)
+          test -n "$archive"
+          tar -xzf "$archive" -C engines/stockfish19 --strip-components=2 \
+            package/bin/stockfish-19-lite-single.js \
+            package/bin/stockfish-19-lite-single.wasm
           test "$(wc -c < engines/stockfish19/stockfish-19-lite-single.js)" -gt 10000
           test "$(wc -c < engines/stockfish19/stockfish-19-lite-single.wasm)" -gt 100000
           file engines/stockfish19/stockfish-19-lite-single.wasm
