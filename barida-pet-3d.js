@@ -62,8 +62,8 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  const pet=makeAnimal(animal,stage,armor);scene.add(pet.root);let motion='idle',motionAt=performance.now(),last=performance.now(),disposed=false;
  const resize=()=>{const w=container.clientWidth||600,h=container.clientHeight||400;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)};const observer=new ResizeObserver(resize);observer.observe(container);resize();
  const motions=['idle','hop','turn','look','roll','sleep','stretch','wave','walk','dance','bow','shake','sit','peek','happy','sniff','spin','wiggle','rest','play','nod','bounce','pounce','yawn','scratch'];
- function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected||document.hidden)return;const t=now/1000,u=(now-motionAt)/1000;
- if(now-last>180000+Math.random()*120000){motion=motions[Math.floor(Math.random()*motions.length)];motionAt=now;last=now}
+ function tick(now){if(disposed)return;requestAnimationFrame(tick);if(!container.isConnected){dispose();return}if(document.hidden)return;const t=now/1000,u=(now-motionAt)/1000;
+ if(now-last>240000){motion=motions[Math.floor(Math.random()*motions.length)];motionAt=now;last=now}
  pet.root.position.set(0,0,0);pet.root.rotation.set(0,0,0);pet.body.rotation.set(0,0,0);pet.head.rotation.set(0,0,0);
  pet.body.position.y=Math.sin(t*2)*.045;pet.head.rotation.z=Math.sin(t*1.4)*.06;
  if(['hop','bounce','pounce','dance','happy'].includes(motion))pet.root.position.y=Math.abs(Math.sin(t*4))*.42;
@@ -76,6 +76,6 @@ export function mount(container,{animal='lion',stage=0,armor=0,roomIndex=0}={}){
  if(motion==='stretch'||motion==='yawn')pet.body.scale.y=1+Math.abs(Math.sin(t))*.15;else pet.body.scale.y=1;
  renderer.render(scene,camera);
  }requestAnimationFrame(tick);
- return {play(name){motion=motions.includes(name)?name:'happy';motionAt=performance.now();last=motionAt},dispose(){disposed=true;observer.disconnect();renderer.dispose();renderer.domElement.remove();scene.traverse(o=>{o.geometry?.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose())}})}};
+ function dispose(){if(disposed)return;disposed=true;observer.disconnect();renderer.dispose();renderer.domElement.remove();scene.traverse(o=>{o.geometry?.dispose();if(o.material){const ms=Array.isArray(o.material)?o.material:[o.material];ms.forEach(m=>m.dispose())}})}return {play(name){motion=motions.includes(name)?name:'happy';motionAt=performance.now();last=motionAt},dispose};
 }
 window.BaridaPet3D={mount};
