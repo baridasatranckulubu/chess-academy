@@ -6,7 +6,7 @@ for(const file of ['board.html','index.html']){
  const html=read(file);
  assert(html.includes('chess-premium-board-v23'),file+' missing premium board style');
  assert(html.includes('chess-board-coordinate-fix-v24'),file+' missing coordinate layout fix');
- assert(html.includes('src="board-game.js"'),file+' missing shared board code');
+ assert(/src="board-game\.js(?:\?[^\"]*)?"/.test(html),file+' missing shared board code');
  assert(html.includes('id="flipBoard"'),file+' missing flip button');
  assert(html.includes('id="board"'),file+' missing chessboard');
 }
