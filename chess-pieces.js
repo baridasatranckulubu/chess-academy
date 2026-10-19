@@ -4,7 +4,7 @@ const shapes={
  p:'<circle cx="50" cy="26" r="12"/><path d="M41 40 Q50 36 59 40 L66 68 H34 Z"/><path d="M31 68 H69 L75 78 H25 Z"/>',
  r:'<path d="M26 19 H37 V29 H45 V19 H55 V29 H63 V19 H74 V38 H68 L64 69 H36 L32 38 H26 Z"/><path d="M29 68 H71 L76 79 H24 Z"/><path class="cut" d="M34 39 H66"/>',
  n:'<path d="M29 76 L33 62 L24 50 L31 39 L30 27 L42 18 L59 19 L70 30 L73 41 L63 48 L54 42 L48 50 L57 66 L66 76 Z"/><path class="cut" d="M32 52 L47 47 M36 36 L49 34"/><circle class="eye" cx="55" cy="30" r="3.5"/>',
- b:'<path d="M50 13 C31 24 30 39 43 49 L37 68 H63 L57 49 C70 38 69 24 50 13 Z"/><path class="cut" d="M43 40 L60 24"/><path d="M30 68 H70 L75 79 H25 Z"/>',
+ b:'<path d="M50 14 C39 22 31 33 35 45 Q38 54 43 59 L39 68 H61 L57 59 Q62 54 65 45 C69 33 61 22 50 14 Z"/><path class="cut" d="M50 23 V51"/><path d="M31 68 H69 L74 79 H26 Z"/>',
  q:'<circle cx="19" cy="25" r="6"/><circle cx="35" cy="19" r="6"/><circle cx="50" cy="14" r="6"/><circle cx="65" cy="19" r="6"/><circle cx="81" cy="25" r="6"/><path d="M19 31 L31 65 H69 L81 31 L64 43 L50 25 L36 43 Z"/><path d="M28 66 H72 L77 79 H23 Z"/>',
  k:'<path d="M46 11 H54 V22 H64 V30 H54 V42 H46 V30 H36 V22 H46 Z"/><path d="M35 44 Q50 35 65 44 L69 68 H31 Z"/><path d="M28 68 H72 L78 79 H22 Z"/><path class="cut" d="M38 52 H62"/>'
 };
