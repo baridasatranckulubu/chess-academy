@@ -65,6 +65,7 @@ for (const [name, source] of Object.entries({
 })) {
   assert.match(source, /ChessAcademySharedBoard/, name + ' must use the shared chessboard');
 }
+assert.match(sharedEngine, /ca-canonical-piece/, 'canonical pieces must have full-square wrapper sizing');
 assert.match(premium, /shared\.pieceSVG\(symbol,piece\)/, 'premium pieces must delegate to the canonical renderer');
 assert.match(premium, /shared\.sound\(type\)/, 'premium audio must delegate to shared sound');
 assert.match(premium, /setSoundEnabled/, 'premium sound toggle must synchronize with shared board');
