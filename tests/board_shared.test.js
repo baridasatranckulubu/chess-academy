@@ -7,7 +7,7 @@ for(const page of ['classroom.html','puzzles.html']){
  assert(/href="premium-board\.css(?:\?[^\"]*)?"/.test(html),page+' CSS missing');
  assert(html.includes('src="premium-board.js"'),page+' JS missing');
  const app=page==='classroom.html'?'classroom.js':'puzzles.js';
- assert(html.indexOf('src="premium-board.js"')<html.indexOf('src="'+app+'"'),'shared board must load before '+app);
+ assert(html.indexOf('src="premium-board.js"')<html.indexOf('src="'+app),'shared board must load before '+app);
  const code=read(app);
  assert(code.includes('ChessPremiumBoard?.init'),app+' premium init missing');
  assert(code.includes('premium?.coordinates(flipped)'),app+' coordinates missing');
