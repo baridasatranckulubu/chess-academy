@@ -4,6 +4,7 @@ const $=id=>document.getElementById(id),files=[],pieces={K:'♔',Q:'♕',R:'♖'
 const premium=window.ChessPremiumBoard?.init({boardId:'board'});let flipped=false;
 if(premium)premium.flipButton.onclick=()=>premium.flip(()=>{flipped=!flipped;render()});
 let manifest=null,pool=[],used=new Set(),loadedShards=new Set(),puzzle=null,game=new ChessEngine(),selected=null,ply=0,waiting=false,token=0,advance=null,hadError=false,hintsUsed=0,moveHistory=[];
+const requestedTheme=new URLSearchParams(location.search).get('theme');if(requestedTheme&&Array.from($('theme').options).some(o=>o.value===requestedTheme))$('theme').value=requestedTheme;
 const ADAPT_KEY='chess-academy-adaptive-v21';let adapt;try{adapt=JSON.parse(localStorage.getItem(ADAPT_KEY))}catch{}if(!adapt||typeof adapt.rating!=='number')adapt={rating:1100,solved:0,failed:0,history:[]};
 function recordResult(ok){if(!puzzle||$('level').value!=='adaptive')return;const before=adapt.rating,expected=1/(1+Math.pow(10,(puzzle[3]-before)/400)),score=ok?1:0;adapt.rating=Math.max(400,Math.min(3000,Math.round(before+28*(score-expected))));adapt[ok?'solved':'failed']++;adapt.history.push({id:puzzle[0],ok,rating:puzzle[3],at:new Date().toISOString()});adapt.history=adapt.history.slice(-250);try{localStorage.setItem(ADAPT_KEY,JSON.stringify(adapt))}catch{}updateAdaptive()}
 function updateAdaptive(){const el=$('adaptive-info');if(el)el.textContent='Uyarlanabilir seviye: '+adapt.rating+' · Tamamlanan: '+adapt.solved+' · Başarısız: '+adapt.failed+' · Bu puan yalnızca çalışma önerisidir, resmî Elo değildir.'}
