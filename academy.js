@@ -65,7 +65,7 @@ function ensureAdminBell(){
  const holder=node('div','');holder.id='caAdminBellWrap';holder.style.cssText='position:relative;display:inline-flex;align-items:center;margin:0 8px';
  const bell=button('🔔 Bildirimler',()=>toggleNotificationPanel(),'btn outline');bell.id='caAdminBell';bell.setAttribute('aria-label','Bildirimleri aç');bell.setAttribute('aria-expanded','false');
  const badge=node('span','');badge.id='caAdminBellCount';badge.style.cssText='position:absolute;right:-5px;top:-9px;background:#d52e44;color:#fff;border-radius:20px;padding:2px 6px;font-size:11px;font-weight:800;pointer-events:none';badge.hidden=true;
- const panel=node('div','');panel.id='caAdminBellPanel';panel.hidden=true;panel.style.cssText='position:absolute;bottom:calc(100% + 12px);right:0;z-index:10000;width:min(90vw,380px);max-height:430px;overflow:auto;padding:15px;border:1px solid #d5b273;border-radius:14px;background:#102735;color:#fff;box-shadow:0 14px 35px #000b';
+ const panel=node('div','');panel.id='caAdminBellPanel';panel.hidden=true;panel.style.cssText='position:fixed;top:80px;right:16px;z-index:10000;width:min(90vw,380px);max-height:430px;overflow:auto;padding:15px;border:1px solid #d5b273;border-radius:14px;background:#102735;color:#fff;box-shadow:0 14px 35px #000b';
  holder.append(bell,badge,panel);logout.before(holder);
 }
 async function refreshAdminBell(force=false){
