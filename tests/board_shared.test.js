@@ -12,7 +12,7 @@ for(const page of ['classroom.html','puzzles.html']){
  assert(code.includes('ChessPremiumBoard?.init'),app+' premium init missing');
  assert(code.includes('premium?.coordinates(flipped)'),app+' coordinates missing');
  assert(code.includes('premium.flipButton.onclick'),app+' flip missing');
- assert(code.includes('premium?.play(')||code.includes('Shared.sound(')||code.includes('sharedBoard.sound('),app+' sound missing');
+ assert(code.includes('premium?.play(')||code.includes('Shared.sound(')||code.includes('sharedBoard.sound(')||code.includes('ChessAcademySharedBoard.sound('),app+' sound missing');
 }
 assert(shared.includes("letters=flipped?'hgfedcba':'abcdefgh'"));
 assert(shared.includes("numbers=flipped?'12345678':'87654321'"));
