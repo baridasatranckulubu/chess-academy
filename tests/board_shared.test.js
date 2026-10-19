@@ -12,7 +12,7 @@ for(const page of ['classroom.html','puzzles.html']){
  assert(code.includes('ChessPremiumBoard?.init'),app+' premium init missing');
  assert(code.includes('premium?.coordinates(flipped)'),app+' coordinates missing');
  assert(code.includes('premium.flipButton.onclick'),app+' flip missing');
- assert(code.includes('premium?.play(')||code.includes('Shared.sound(')||code.includes('sharedBoard.sound('),app+' sound missing');
+ assert(code.includes('premium?.play(')||code.includes('Shared.sound(')||code.includes('sharedBoard.sound(')||code.includes('ChessAcademySharedBoard.sound('),app+' sound missing');
 }
 assert(shared.includes("letters=flipped?'hgfedcba':'abcdefgh'"));
 assert(shared.includes("numbers=flipped?'12345678':'87654321'"));
@@ -20,7 +20,7 @@ assert(shared.includes("sound.textContent=enabled?'🔊 Ses açık':'🔇 Ses ka
 assert(shared.includes('ca-spin')&&shared.includes("tone('flip')"));assert(shared.includes('ca-volume-panel'));assert(shared.includes('chess-academy-volume'));assert(read('classroom.js').includes('AbortController'));
 assert(css.includes('grid-template-columns:repeat(8,minmax(0,1fr))'));
 const academy=read('academy.js');
-assert(/practiceFrame\.src\s*=\s*'board\.html(?:\?[^']*)?'/.test(academy),'assignments board missing');
+assert(/frame\.src\s*=\s*'board\.html(?:\?[^']*)?'/.test(academy),'embedded homepage board missing');
 assert(academy.includes("embedded('classroom.html?"),'classroom link missing');
 assert(academy.includes("embedded('puzzles.html?"),'tactics link missing');
 console.log('PASS: tactics, classroom, assignments and standalone boards have premium features');
