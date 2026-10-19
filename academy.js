@@ -112,7 +112,7 @@ async function adminMessages(){
   if(!confirm('Bu bildirimi seçilen alıcılara göndermek istiyor musunuz?'))return;
   try{const {data,error}=await authClient.rpc('academy_send_notification',{p_target:target.value,p_title:title.value.trim(),p_body:body.value.trim(),p_user_id:target.value==='individual'?userSelect.value:null});if(error)throw error;status.textContent='✓ '+data+' kullanıcıya bildirim gönderildi.';body.value='';notificationTimer=0;refreshAdminBell(true)}catch(e){status.textContent='Gönderilemedi: '+e.message}
  },'btn gold'),status);view.append(form);
- const {data,error}=await authClient.from('profiles').select('id,display_name,username,role').order('display_name').limit(1000);
+ const {data,error}=await authClient.rpc('academy_notification_recipients');
  if(error){status.textContent='Kişi listesi yüklenemedi: '+error.message;return}
  for(const person of data||[]){const opt=node('option','',(person.display_name||person.username||'Kullanıcı')+' · '+person.role);opt.value=person.id;userSelect.append(opt)}
 }
