@@ -327,7 +327,6 @@ async function realAssignments(){
    const form=node('form','assignment-form');form.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:22px;border:1px solid #9573a0;border-radius:18px;background:#192338';
    const label=(name,control)=>{const wrap=node('label','',name);wrap.style.cssText='display:grid;gap:7px;color:#fff';wrap.append(control);return wrap};
    const student=node('select');student.required=true;realRoster.forEach(st=>{const o=node('option','',st.name);o.value=st.id;student.append(o)});if(assignmentSelectedStudent&&realRoster.some(st=>st.id===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
-   const title=node('input');title.placeholder='Ödev başlığı';title.required=true;title.minLength=3;title.maxLength=120;
    const groups=[
     ['mat','👑 Mat Akademisi',['mateIn1','mateIn2','mateIn3','mateIn4','mateIn5','mate','backRankMate','smotheredMate','anastasiaMate','hookMate']],
     ['tactic','⚔ Taktik ve Kombinasyon',['fork','pin','skewer','discoveredAttack','sacrifice','deflection','attraction','interference','clearance','xRayAttack','doubleCheck','trappedPiece','hangingPiece','capturingDefender']],
