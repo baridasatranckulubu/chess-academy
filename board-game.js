@@ -2,7 +2,7 @@
 (function(){
 'use strict';
 const {ChessEngine}=window.ChessAcademyEngine;
-const game=new ChessEngine();let selected=null,flipped=false,mode='free',challenge=0,solved=new Set(),advanceTimer=null;
+const game=new ChessEngine();let keyboardMoves=[],keyboardPly=0,keyboardNavigating=false;let selected=null,flipped=false,mode='free',challenge=0,solved=new Set(),advanceTimer=null;
 const boardRoot=document.getElementById('board');
 let soundEnabled=true,audioContext=null,lastMove=null,flipBusy=false;
 try{soundEnabled=AcademyStorage.getItem('chess-academy-sound')!=='off'}catch{}
@@ -283,10 +283,22 @@ boardEl.addEventListener('pointercancel',event=>{
  finishDrag();
  if(wasDragging){selected=null;renderBoard();}
 });
+function navigateBoardHistory(delta){
+ if(!keyboardNavigating){keyboardMoves=game.history.map(h=>({...h.move}));keyboardPly=keyboardMoves.length;keyboardNavigating=true}
+ const target=Math.max(0,Math.min(keyboardMoves.length,keyboardPly+delta));if(target===keyboardPly)return;
+ const replay=new ChessEngine();for(let i=0;i<target;i++){const m=keyboardMoves[i];if(!replay.move(m.from,m.to,m.promotion||'q'))return}
+ game.load(replay.fen());keyboardPly=target;selected=null;lastMove=target?{from:keyboardMoves[target-1].from,to:keyboardMoves[target-1].to}:null;renderBoard();
+ const status=$('boardStatus');if(status)status.textContent='Hamle geçmişi: '+target+' / '+keyboardMoves.length+' · ← geri / → ileri';
+}
+document.addEventListener('keydown',event=>{
+ if(event.key!=='ArrowLeft'&&event.key!=='ArrowRight')return;
+ if(event.altKey||event.ctrlKey||event.metaKey||/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement?.tagName||'')||document.activeElement?.isContentEditable)return;
+ event.preventDefault();navigateBoardHistory(event.key==='ArrowLeft'?-1:1)
+});
 document.addEventListener('keydown',event=>{
  if(event.key==='Escape'&&draggingPiece){finishDrag();selected=null;renderBoard();}
 });
-async function handleSquare(square){if(editSquare(square))return;if(game.isGameOver()){announce(w().end);return;}if(computerSide&&(game.turn!==computerSide||stockfishThinking)){announce('Stockfish hamlesi bekleniyor.');return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);selected=null;renderBoard();return;}let promotion='q';if(legal.some(m=>m.promotion)){promotion=await window.ChessAcademySharedBoard.choosePromotion(game.turn);if(!promotion){renderBoard();return}}const captured=game.at(square);const wasCapture=!!captured||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(!move){announce(w().illegal);renderBoard();return;}if(captured)capturedPieces.push(captured);lastMove={from,to:square};postBoardMove();sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();if(computerSide&&mode==='free')queueComputerMove();}
+async function handleSquare(square){if(editSquare(square))return;if(game.isGameOver()){announce(w().end);return;}if(computerSide&&(game.turn!==computerSide||stockfishThinking)){announce('Stockfish hamlesi bekleniyor.');return;}const piece=game.at(square),current=piece&&(piece===piece.toUpperCase()?'w':'b');if(!selected){if(current===game.turn){selected=square;announce(w().choose);}else announce(w().select);renderBoard();return;}if(square===selected){selected=null;renderBoard();return;}if(current===game.turn){selected=square;announce(w().choose);renderBoard();return;}const from=selected;selected=null;const legal=game.moves({square:from}).filter(m=>m.to===square);if(!legal.length){announce(w().illegal);selected=null;renderBoard();return;}let promotion='q';if(legal.some(m=>m.promotion)){promotion=await window.ChessAcademySharedBoard.choosePromotion(game.turn);if(!promotion){renderBoard();return}}const captured=game.at(square);const wasCapture=!!captured||legal.some(m=>m.enPassant);const move=game.move(from,square,promotion);if(move){keyboardNavigating=false;keyboardMoves=[]}if(!move){announce(w().illegal);renderBoard();return;}if(captured)capturedPieces.push(captured);lastMove={from,to:square};postBoardMove();sound(game.isCheckmate()?'mate':game.isCheck()?'check':wasCapture?'capture':'move');if(mode==='mate'){const expected=puzzles[challenge].answer;if(move.uci===expected&&game.isCheckmate()){if(!solved.has(challenge)){solved.add(challenge);try{AcademyStorage.setItem('academy-v04-mates',JSON.stringify([...solved]));}catch{}announce(w().success);}else announce(w().again);scheduleNextPuzzle();}else{game.undo();lastMove=null;announce(w().wrong);}}else announce(boardStatus());renderBoard();updateLearning();if(computerSide&&mode==='free')queueComputerMove();}
 function cancelAdvance(){if(advanceTimer!==null){clearTimeout(advanceTimer);advanceTimer=null;}}
 function scheduleNextPuzzle(){cancelAdvance();advanceTimer=setTimeout(()=>{advanceTimer=null;if(mode==='mate')nextMate();},1700);}
 function startMate(){stopComputer();cancelAdvance();mode='mate';challenge=0;game.load(puzzles[challenge].fen);selected=null;lastMove=null;announce(w().puzzle);renderBoard();}
