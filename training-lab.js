@@ -11,7 +11,6 @@ lessons:[
 ['Sicilya Savunması',START,'e2e4 c7c5 g1f3 d7d6 d2d4','Sicilya Savunması başlangıç hamlelerini oyna.','Siyah c piyonu ile merkez için asimetrik mücadele eder.'],
 ['Vezir Gambiti',START,'d2d4 d7d5 c2c4','Vezir Gambiti başlangıcını oyna.','c4 piyonu siyahın d5 merkezini sorgular.'],
 ['Londra Sistemi',START,'d2d4 d7d5 c1f4','Londra Sistemi başlangıcını oyna.','Beyaz filini piyon zinciri kapanmadan geliştirir.'],
-,
 ['İskoç Oyunu',START,'e2e4 e7e5 g1f3 b8c6 d2d4','Merkezi d4 sürüşüyle aç.','Açık merkezde hızlı gelişim ve tempo.'],
 ['Dört At Açılışı',START,'e2e4 e7e5 g1f3 b8c6 b1c3 g8f6','Dört atı geliştir.','Simetrik gelişim, merkez kontrolü.'],
 ['Viyana Oyunu',START,'e2e4 e7e5 b1c3','Viyana düzenini kur.','c3 atı ile esnek e4 merkezi.'],
