@@ -25,7 +25,7 @@ jobs:
           file engines/stockfish19/stockfish-19-lite-single.wasm
           python3 - <<'PY'
           from pathlib import Path
-          assert Path('engines/stockfish19/stockfish-19-lite-single.wasm').read_bytes()[:4] == b'\\0asm'
+          assert Path('engines/stockfish19/stockfish-19-lite-single.wasm').read_bytes()[:4] == bytes([0,97,115,109])
           PY
       - name: Commit local engine files
         run: |
