@@ -287,7 +287,7 @@ function navigateBoardHistory(delta){
  if(!keyboardNavigating){keyboardMoves=game.history.map(h=>({...h.move}));keyboardPly=keyboardMoves.length;keyboardNavigating=true}
  const target=Math.max(0,Math.min(keyboardMoves.length,keyboardPly+delta));if(target===keyboardPly)return;
  const replay=new ChessEngine();for(let i=0;i<target;i++){const m=keyboardMoves[i];if(!replay.move(m.from,m.to,m.promotion||'q'))return}
- game.load(replay.fen());keyboardPly=target;selected=null;lastMove=target?{from:keyboardMoves[target-1].from,to:keyboardMoves[target-1].to}:null;renderBoard();
+ game.load(window.ChessAcademyEngine.START);for(let i=0;i<target;i++){const m=keyboardMoves[i];game.move(m.from,m.to,m.promotion||'q')}keyboardPly=target;selected=null;lastMove=target?{from:keyboardMoves[target-1].from,to:keyboardMoves[target-1].to}:null;renderBoard();
  const status=$('boardStatus');if(status)status.textContent='Hamle geçmişi: '+target+' / '+keyboardMoves.length+' · ← geri / → ileri';
 }
 document.addEventListener('keydown',event=>{
