@@ -27,7 +27,12 @@ function sound(type){
  }catch(e){/* Sound is optional. */}
 }
 
-function pieceSVG(symbol,piece){const white=piece===piece.toUpperCase();return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="74" text-anchor="middle" font-size="78" font-family="DejaVu Sans,Segoe UI Symbol,serif" fill="'+(white?'#f9f9f3':'#1b242a')+'" stroke="'+(white?'#303940':'#f0eee4')+'" stroke-width="1.6" paint-order="stroke">'+symbol+'</text></svg>'}
+function pieceSVG(symbol,piece){
+ const white=piece===piece.toUpperCase();
+ const fill=white?'#f8f5e9':'#252b35';
+ const outline=white?'#343b46':'#e5e2d9';
+ return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false" preserveAspectRatio="xMidYMid meet"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="80" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="2.4" stroke-linejoin="round" paint-order="stroke">'+symbol+'</text></svg>'
+}
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
  let state=annotationState.get(root);
@@ -41,7 +46,7 @@ function boardAnnotations(root,flipped){
  state.flipped=flipped;drawAnnotations(root,state)
 }
 function drawAnnotations(root,state){
- root.querySelector('.ca-board-annotations')?.remove();const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('class','ca-board-annotations');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5';
+ root.querySelectorAll('.ca-board-annotations').forEach(el=>el.remove());const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('class','ca-board-annotations');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;filter:none!important;box-shadow:none!important;opacity:1';
  const xy=sq=>{const f='abcdefgh'.indexOf(sq[0]),rank=Number(sq[1]);return state.flipped?[(7-f)*100+50,(rank-1)*100+50]:[f*100+50,(8-rank)*100+50]};
  const el=(name,attrs)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n};
  for(const [sq,color] of state.marks){const [x,y]=xy(sq);svg.append(el('circle',{cx:x,cy:y,r:37,fill:'none',stroke:color,'stroke-width':5,opacity:.85}))}
