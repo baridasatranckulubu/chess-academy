@@ -42,4 +42,38 @@ assert.match(standalone, /\$\('flipBoard'\)\.onclick\s*=\s*async/, 'flip control
 assert.match(standalone, /frame\.animate\(/, 'flip handler must animate the board frame');
 assert.match(standalone, /prefers-reduced-motion:\s*reduce/, 'flip handler must respect reduced motion');
 assert.match(standalone, /flipped\s*=\s*!flipped/, 'flip handler must change board orientation');
+
+const premium = read('premium-board.js');
+const sharedEngine = read('shared-chess-board.js');
+const training = read('training-lab.js');
+const beginner = read('beginner.js');
+const coordinates = read('coordinates.js');
+for (const [name, source] of Object.entries({
+  'premium-board.js': premium,
+  'shared-chess-board.js': sharedEngine,
+  'training-lab.js': training,
+  'beginner.js': beginner,
+  'coordinates.js': coordinates
+})) {
+  assert.doesNotThrow(() => new vm.Script(source, { filename: name }), name + ' must parse');
+}
+for (const [name, source] of Object.entries({
+  'premium-board.js': premium,
+  'training-lab.js': training,
+  'beginner.js': beginner,
+  'coordinates.js': coordinates
+})) {
+  assert.match(source, /ChessAcademySharedBoard/, name + ' must use the shared chessboard');
+}
+assert.match(sharedEngine, /ca-canonical-piece/, 'canonical pieces must have full-square wrapper sizing');
+assert.match(premium, /shared\.pieceSVG\(symbol,piece\)/, 'premium pieces must delegate to the canonical renderer');
+assert.match(premium, /shared\.sound\(type\)/, 'premium audio must delegate to shared sound');
+assert.match(premium, /setSoundEnabled/, 'premium sound toggle must synchronize with shared board');
+for (const page of ['training-lab.html','beginner.html','coordinates.html']) {
+  const html = read(page);
+  assert.match(html, /premium-board\.css/, page + ' must use shared styling');
+  assert.match(html, /shared-chess-board\.js/, page + ' must load the canonical board engine');
+  assert.match(html, /premium-board\.js/, page + ' must load shared controls');
+}
+
 console.log('PASS shared board integration, board flip contracts, accessibility and JS syntax');

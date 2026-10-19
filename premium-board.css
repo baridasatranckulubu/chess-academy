@@ -27,8 +27,9 @@
 .ca-grid>.board>.sq .ca-piece-svg text{dominant-baseline:auto}
 
 /* Canonical chess board pieces and shared move markers for all academy modules. */
-.ca-grid .board>.sq .piece-3d{display:block;width:88%;height:88%;overflow:visible;filter:drop-shadow(0 2px 2px #0007);pointer-events:none}
-.ca-grid .board>.sq .piece-3d text{font-family:"DejaVu Sans","Segoe UI Symbol",serif;font-size:73px;dominant-baseline:middle;text-anchor:middle}
+.ca-grid .board>.sq .piece-3d{display:block;width:90%;height:90%;overflow:visible;filter:drop-shadow(0 2px 1px #100b0875) drop-shadow(1px 5px 2px #1d0e0980);transform:translateY(-2%);transition:transform .14s ease;pointer-events:none}
+.ca-grid .board>.sq:hover .piece-3d{transform:translateY(-7%) scale(1.045)}
+.ca-grid .board>.sq .piece-3d text{font-family:"DejaVu Sans","Segoe UI Symbol","Noto Sans Symbols 2",serif;font-size:80px;dominant-baseline:central;text-anchor:middle;font-weight:400}
 .ca-grid .board>.sq .piece{display:flex;align-items:center;justify-content:center;width:100%;height:100%;pointer-events:none}
 .ca-grid .board>.sq.last-move{background-image:linear-gradient(#f2d36940,#f2d36940)!important}
 .ca-grid .board>.sq.target:after{content:"";position:absolute;inset:39%;border-radius:50%;background:#246e4c99;pointer-events:none;z-index:3}
