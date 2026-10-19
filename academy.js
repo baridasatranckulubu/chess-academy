@@ -344,6 +344,17 @@ async function realAssignments(){
    const difficulty=node('select');[['400-1000','🌱 Başlangıç'],['800-1400','🟢 Kolay'],['1200-1800','🟡 Orta'],['1600-2300','🟠 Zor'],['2000-3000','🔴 Uzman'],['2300-3000','👑 Usta']].forEach(([v,n])=>{const o=node('option','',n+' ('+v+' Elo)');o.value=v;difficulty.append(o)});
    const instructions=node('textarea');instructions.placeholder='Öğrenciye yönergeler (isteğe bağlı)';instructions.maxLength=1000;
    const title=node('input');title.placeholder='Ödev başlığı (boş bırakılırsa otomatik oluşturulur)';title.maxLength=120;
+   const assignmentKind=node('select');[['puzzle','🎲 Otomatik rastgele konumlar'],['position','♟ Serbest tahtada kendi sorumu hazırla']].forEach(([value,label])=>{const o=node('option','',label);o.value=value;assignmentKind.append(o)});
+   const manualWrap=node('div','');manualWrap.style.cssText='grid-column:1/-1;display:grid;gap:10px';manualWrap.hidden=true;
+   const manualInfo=node('p','muted','Taşları sürüklemek yerine paletten seçip karelere yerleştir, sonra doğru hamleyi seç. Öğrenci soruyu aynı BARIDA tahtasında çözer.');
+   const manualFrame=node('iframe','academy-embed');manualFrame.title='Öğretmenin serbest satranç tahtası';manualFrame.loading='lazy';manualFrame.style.cssText='width:100%;min-height:820px;border:1px solid #c59b61;border-radius:14px';
+   const manualStatus=node('p','muted','Henüz soru aktarılmadı.');
+   let manualPosition=null;
+   manualWrap.append(manualInfo,manualFrame,manualStatus);
+   const onCustomBoard=e=>{if(e.origin!==location.origin||e.source!==manualFrame.contentWindow||e.data?.type!=='barida-custom-board-created')return;if(typeof e.data.fen!=='string'||typeof e.data.solution!=='string')return;manualPosition={fen:e.data.fen,solution:e.data.solution};manualStatus.textContent='✓ Soru hazır: '+manualPosition.solution};
+   window.addEventListener('message',onCustomBoard);
+   const switchKind=()=>{const custom=assignmentKind.value==='position';manualWrap.hidden=!custom;for(const el of [category,theme,count,difficulty])el.parentElement.hidden=custom;preview.hidden=custom;previewButton.hidden=custom;if(custom&&!manualFrame.src)manualFrame.src='custom-homework-board.html'};
+   assignmentKind.onchange=switchKind;
    const preview=node('div','');preview.style.cssText='grid-column:1/-1;display:grid;gap:12px';
    const previewText=node('p','muted','');preview.append(previewText);
    const previewButton=button('♟ Örnek konumları tahtada önizle',()=>{},'btn small');
@@ -351,7 +362,7 @@ async function realAssignments(){
    previewButton.onclick=()=>{frame.src='puzzles.html?'+new URLSearchParams({theme:theme.value,level:'all'});frame.hidden=false;preview.append(frame)};
    const updateSummary=()=>{previewText.textContent='Seçim: '+(themeNames.get(theme.value)||theme.value)+' · '+count.value+' rastgele konum · '+difficulty.options[difficulty.selectedIndex].text+'. Sorular mevcut doğrulanmış bulmaca havuzundan seçilir.'};
    [category,theme,count,difficulty].forEach(el=>el.addEventListener('change',updateSummary));updateSummary();
-   form.append(label('Öğrenci',student),label('Çalışma kategorisi',category),label('Uygulamalı konu',theme),label('Soru sayısı',count),label('Zorluk derecesi',difficulty),label('Ödev başlığı',title),label('Öğrenciye açıklama',instructions),previewButton,preview);
+   form.append(label('Öğrenci',student),label('Çalışma türü',assignmentKind),label('Çalışma kategorisi',category),label('Uygulamalı konu',theme),label('Soru sayısı',count),label('Zorluk derecesi',difficulty),label('Ödev başlığı',title),label('Öğrenciye açıklama',instructions),previewButton,preview,manualWrap);switchKind();
    const submit=button('＋ Otomatik konumlu ödev oluştur',()=>{},'btn gold');submit.type='submit';form.append(submit);
    const msg=node('p','muted','');view.append(form,msg);
    form.onsubmit=async e=>{e.preventDefault();submit.disabled=true;msg.textContent='Ödev hazırlanıyor…';try{
@@ -359,8 +370,8 @@ async function realAssignments(){
     const [min_rating,max_rating]=difficulty.value.split('-').map(Number);
     const selectedTheme=theme.value;
     const generatedTitle=title.value.trim()||(themeNames.get(selectedTheme)||selectedTheme)+' · '+count.value+' konum';
-    const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title:generatedTitle,kind:'puzzle',theme:selectedTheme,puzzle_count:Number(count.value),min_rating,max_rating,fen:null,solution_uci:null,instructions:instructions.value.trim()});
-    if(error)throw error;msg.textContent='✓ '+count.value+' konumluk ödev öğrenci hesabına atandı. Sorular çözüm sırasında seçilen tema ve seviyeden rastgele yüklenir.';assignmentSelectedStudent=student.value;await loadAssignmentCards(view)
+    if(assignmentKind.value==='position'&&!manualPosition)throw Error('Önce serbest tahtada konumu ve doğru hamleyi oluşturup aktarın.');const custom=assignmentKind.value==='position';const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title:custom?(title.value.trim()||'Öğretmenin özel satranç sorusu'):generatedTitle,kind:custom?'position':'puzzle',theme:custom?'custom':selectedTheme,puzzle_count:custom?1:Number(count.value),min_rating,max_rating,fen:custom?manualPosition.fen:null,solution_uci:custom?manualPosition.solution:null,instructions:instructions.value.trim()});
+    if(error)throw error;msg.textContent=custom?'✓ Serbest tahta sorusu öğrenciye atandı.':'✓ '+count.value+' konumluk ödev öğrenci hesabına atandı. Sorular çözüm sırasında seçilen tema ve seviyeden rastgele yüklenir.';assignmentSelectedStudent=student.value;await loadAssignmentCards(view)
    }catch(err){msg.textContent='Ödev oluşturulamadı: '+err.message}finally{submit.disabled=false}};
   }
   await loadAssignmentCards(view);
@@ -388,7 +399,7 @@ async function loadAssignmentCards(view){
  for(const a of assignments){const card=node('article','assignment');card.dataset.assignmentId=String(a.id);const st=realRoster.find(x=>x.id===a.student_id);card.append(node('h3','',a.title),node('p','muted',(st?st.name+' · ':'')+(a.kind==='position'?'Özel tahta konumu':(PUZZLE_THEMES.find(x=>x[0]===a.theme)?.[1]||a.theme)+' · '+a.puzzle_count+' soru')+' · '+new Date(a.created_at).toLocaleDateString('tr-TR')),node('p','muted',a.instructions||''));
   if(role==='teacher')card.append(button('Sil',async()=>{if(!confirm('Ödev silinsin mi?'))return;const {error}=await authClient.from('academy_assignments').delete().eq('id',a.id);if(error)alert(error.message);else loadAssignmentCards(view)},'btn small'));
   else if(a.kind==='puzzle')card.append(button('▶ Bulmacaları çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const p=new URLSearchParams({assignment:String(a.id),theme:a.theme,target:String(a.puzzle_count),minRating:String(a.min_rating),maxRating:String(a.max_rating)});const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='puzzles.html?'+p;frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';frame.title=a.title;view.append(frame);const progress=node('p','muted','Doğru çözümler hesabına kaydedilir.');progress.id='assignment-progress-live';view.append(progress);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
-  else card.append(node('p','muted','Tahta konumu: '+a.fen+' · Doğru hamle öğretmen tarafından belirlenmiştir. İnteraktif hamle doğrulaması sonraki geliştirmede bağlanacak.'));
+  else card.append(button('♟ Öğretmenin sorusunu çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='custom-homework-board.html?mode=student';frame.title='Öğretmen sorusu';frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';view.append(frame);frame.addEventListener('load',()=>frame.contentWindow.postMessage({type:'barida-load-custom-board',fen:a.fen},location.origin));const message=node('p','muted','Tahtada doğru hamleyi yap.');view.append(message);const handler=async e=>{if(e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.type!=='barida-custom-board-answer')return;try{const {data,error}=await authClient.rpc('submit_academy_custom_board_answer',{p_assignment_id:a.id,p_move:e.data.move});if(error)throw error;message.textContent=data?'✓ Doğru hamle! Ödev tamamlandı.':'Bu hamle beklenen çözüm değil. Tekrar dene.'}catch(err){message.textContent='Yanıt kaydedilemedi: '+err.message}};window.addEventListener('message',handler);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
   cards.append(card);
  }applyFilters();view.append(list)
 }
