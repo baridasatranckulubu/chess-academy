@@ -17,7 +17,7 @@ main{max-width:1260px!important;width:100%;box-sizing:border-box;margin:0 auto;p
 .layout .panel .controls button{background:#214d45!important;border-color:#4caa89!important}
 .layout .panel .notation-box{background:#0d2030!important;border-color:#38586a!important;color:#eaf5ff!important}
 .layout .panel .status{color:#c4f5d9!important}
-body.academy-inline-puzzle{background:#07111b!important}
+body.academy-inline-puzzle{background:transparent!important}
 body.academy-inline-puzzle main{padding:0!important;max-width:none!important}
 body.academy-inline-puzzle .layout{gap:clamp(12px,2vw,24px)!important}
 html.barida-parent-light,html.barida-parent-light body.academy-inline-puzzle{background:#f1f5fa!important;color:#1c3148!important;color-scheme:light}
@@ -25,4 +25,11 @@ html.barida-parent-light body.academy-inline-puzzle main{background:transparent!
 @media(max-width:800px){.layout{grid-template-columns:minmax(0,1fr)!important}.layout .panel{padding:16px!important}.layout>div:first-child{max-width:610px;width:100%;margin:0 auto}}
 </style><script id="barida-puzzle-theme-sync-v2">
 (()=>{if(new URLSearchParams(location.search).get('inline')!=='1')return;const sync=()=>{try{document.documentElement.classList.toggle('barida-parent-light',parent.document.documentElement.dataset.academyTheme==='light')}catch(e){}};sync();try{new MutationObserver(sync).observe(parent.document.documentElement,{attributes:true,attributeFilter:['data-academy-theme']})}catch(e){}})();
+</script><style id="barida-canvas-seam-v4">
+html.barida-canvas-linked,html.barida-canvas-linked body{background:var(--barida-parent-canvas,#09131b)!important;background-image:none!important}
+html.barida-canvas-linked body{min-height:0!important}
+html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-layout,.board-area,.board-controls){background-color:transparent!important;background-image:none!important}
+</style><script id="barida-canvas-link-v4">
+(()=>{if(window.parent===window)return;const embedded=new URLSearchParams(location.search).get('inline')==='1'||document.body.classList.contains('embedded-studio');if(!embedded)return;const sync=()=>{try{const parentDoc=parent.document;const surface=parentDoc.querySelector('.workspace')||parentDoc.body;const color=getComputedStyle(surface).backgroundColor;document.documentElement.style.setProperty('--barida-parent-canvas',color);document.documentElement.classList.add('barida-canvas-linked')}catch(e){}};sync();try{new MutationObserver(sync).observe(parent.document.documentElement,{attributes:true,attributeFilter:['data-academy-theme']})}catch(e){}
+})();
 </script></body></html>
