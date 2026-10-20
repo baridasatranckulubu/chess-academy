@@ -201,3 +201,13 @@ input:disabled,button:disabled{opacity:.65}
 #view.barida-teacher-landing .teacher-card-icon{font-size:30px}
 @media(max-width:760px){#view.barida-teacher-landing .teacher-landing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:450px){#view.barida-teacher-landing .teacher-landing-grid{grid-template-columns:1fr}#view.barida-teacher-landing .teacher-landing-card{min-height:130px}#view.barida-teacher-landing .teacher-landing-hero{min-height:65px}}
+
+/* Teacher student leaderboard: readable text on every theme */
+#view:has(>.report-table)>.report-table{width:100%;overflow-x:auto;border:1px solid #52647d;border-radius:14px;background:#142436!important;color:#f3f7ff!important}
+#view:has(>.report-table)>.report-table .report-row{color:#eef5ff!important;background:#172b40!important;border-bottom:1px solid #3d536b!important}
+#view:has(>.report-table)>.report-table .report-row span{color:#eef5ff!important;opacity:1!important;text-shadow:none!important}
+#view:has(>.report-table)>.report-table .report-head{background:#26435e!important;color:#fff!important;font-weight:800!important}
+#view:has(>.report-table)>.report-table .report-head span{color:#fff!important}
+#view:has(>.report-table)>.report-table .report-row:not(.report-head):hover{background:#28435e!important}
+#view:has(>.report-table)>h2{color:#fff!important}
+#view:has(>.report-table)>.muted{color:#c7d8ec!important}
