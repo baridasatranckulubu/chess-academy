@@ -1,0 +1,7 @@
+{
+  "count": 300,
+  "format": "webp",
+  "filePattern": "piyon-{number:03}.webp",
+  "size": "256x256",
+  "assignment": "stable hash of student ID modulo 300"
+}
