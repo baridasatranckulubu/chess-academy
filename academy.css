@@ -231,3 +231,9 @@ input:disabled,button:disabled{opacity:.65}
 #view:has(iframe.academy-embed){background:transparent!important;color:var(--barida-text,#f0f7ff)!important}
 #view iframe.academy-embed,#view iframe.home-board-frame{background:#07111b!important;border:0!important;box-shadow:none!important;color-scheme:dark}
 #view .home-board-card,#view .board-studio-resizer{background:transparent!important;border:0!important;box-shadow:none!important}
+
+/* An embedded page must inherit the academy's selected canvas theme. */
+html[data-academy-theme="light"] #view iframe.academy-embed,
+html[data-academy-theme="light"] #view iframe.home-board-frame{background:#f1f5fa!important;color-scheme:light}
+html[data-academy-theme="dark"] #view iframe.academy-embed,
+html[data-academy-theme="dark"] #view iframe.home-board-frame{background:#07111b!important;color-scheme:dark}
