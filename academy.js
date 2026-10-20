@@ -324,10 +324,10 @@ async function staffDashboard(){
  stats.replaceChildren();stat('👥',realRoster.length,'Öğrencilerim');stat('📚',rows.reduce((n,p)=>n+(p.completed_lessons?.length||0),0),'Tamamlanan ders');stat('🧩',q,'Çözülen soru');stat('🎯',q?Math.round(c/q*100)+'%':'—','Soru başarı oranı');
  detail.append(node('h3','','🌟 Öğrencilerimin gelişimi'));if(!realRoster.length)detail.append(node('p','sd-note','Henüz öğrenci kaydı bulunmuyor.'));
  realRoster.slice(0,12).forEach(st=>{const p=st.progress||{},questions=Number(p.questions_answered)||0,correct=Number(p.correct_answers)||0;line(st.name||'Öğrenci',(p.completed_lessons?.length||0)+' ders · '+questions+' soru',questions?Math.round(correct/questions*100)+'%':'—')});
- quick.append(node('h3','','⚡ Öğretmen kısayolları'),node('div','sd-actions'));action('👥 Öğrencilerim','students');action('📝 Ödevler','assignments');action('📊 Sınıf raporları','teacher-overview');action('📅 Yoklama','attendance');
+ quick.append(node('h3','','⚡ Öğretmen kısayolları'),node('div','sd-actions'));action('👥 Öğrencilerim','teacher-students');action('📝 Ödevler','assignments');action('📊 Sınıf raporları','teacher-overview');action('📅 Yoklama','attendance');
  status.textContent='Öğrenci ve soru istatistikleri yüklendi. Ödev atama/tamamlama toplamları merkezi kayıttan doğrulanamadığından burada gösterilmiyor.';
  }
- }catch(e){status.textContent='Veriler yüklenemedi: '+e.message;console.error('Dashboard load',e)}
+ }catch(e){status.textContent='Verilere şu anda bağlanılamadı. Bağlantını kontrol edip yeniden deneyebilirsin.';console.error('Dashboard load',e);stats.replaceChildren();detail.replaceChildren();quick.replaceChildren();detail.append(node('h3','',admin?'Yönetim merkezi':'Öğretmen çalışma alanı'),node('p','sd-note','Canlı istatistikler şu anda alınamıyor. Diğer işlemlere devam edebilirsin.'));quick.append(node('h3','',admin?'Yönetim işlemleri':'Öğretmen işlemleri'),node('div','sd-actions'));if(admin){action('♛ Öğretmen yönetimi','admin-teacher-list');action('💳 Ödemeler','admin-payments');action('✉️ Bildirimler','admin-messages');action('👑 Öğretmen ekle','admin-teachers')}else{action('👥 Öğrencilerim','teacher-students');action('📝 Ödevler','assignments');action('📊 Sınıf raporları','teacher-overview');action('📅 Yoklama','attendance')}const retry=button('↻ Verileri yeniden dene',()=>staffDashboard());retry.style.marginTop='12px';status.after(retry)}
 }
 
 function petAcademy(){
