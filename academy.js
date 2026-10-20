@@ -254,7 +254,7 @@ if(!document.getElementById('barida-static-banner-style')){const style=document.
 function baridaBanner(el,variant){
  el.style.setProperty('background','transparent','important');el.style.setProperty('background-image','none','important');el.style.setProperty('animation','none','important');el.style.setProperty('position','relative','important');el.style.setProperty('overflow','hidden','important');el.style.setProperty('isolation','isolate','important');
  el.querySelectorAll('.barida-mascot,.barida-hero-piece,.bd-hero-art,.barida-banner-image').forEach(x=>x.remove());
- const img=document.createElement('img');img.className='barida-banner-image';img.src='assets/banners/'+variant+'.svg';img.alt='Barida Satranç Kulübü '+variant+' karşılama görseli';img.decoding='async';img.loading='eager';img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;display:block;max-width:none;border:0;border-radius:inherit;';el.prepend(img);
+ const img=document.createElement('img');img.className='barida-banner-image';img.src='assets/banners/'+variant+'.jpg';img.onerror=()=>{img.onerror=null;img.src='assets/banners/'+variant+'.svg'};img.alt='Barida Satranç Kulübü '+variant+' karşılama görseli';img.decoding='async';img.loading='eager';img.style.cssText='position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;display:block;max-width:none;border:0;border-radius:inherit;';el.prepend(img);
  for(const child of el.children){if(child!==img){child.style.position='relative';child.style.zIndex='1'}}
 }
 
