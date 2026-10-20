@@ -787,11 +787,23 @@ async function renderTeacherStudents(){
   const pending=new Set((requests||[]).map(x=>x.student_id));
   if(pending.size)view.append(node('p','muted','🔔 '+pending.size+' öğrenciden şifre değişikliği isteği var.'));
   if(!realRoster.length){view.append(node('p','muted','Henüz kayıtlı öğrenciniz yok.'));view.append(button('＋ Yeni öğrenci kaydı',()=>openStudentRegistration(),'btn gold'));return;}
+  
+/* 300 deterministic illustrated pawn portraits: 10 palettes x 10 outfits x 3 crowns. */
+function baridaPawnAvatar(studentId){
+ const id=String(studentId||'student');let hash=2166136261;for(let i=0;i<id.length;i++){hash=Math.imul(hash^id.charCodeAt(i),16777619)}const variant=(hash>>>0)%300;
+ const palette=['#f6b938','#ffe1a0','#242a37','#f4b1ce','#a8ddf1','#c6a4fc','#d58d54','#f7e9d3','#66cbb4','#eaa76d'][variant%10];
+ const outfit=['#d02f4c','#286ba9','#6546ab','#169781','#ed7c31','#37465f','#e6a91c','#a94b91','#507c34','#883c31'][Math.floor(variant/10)%10];
+ const accent=['#ffe08a','#b7e9ff','#ffc0ed'][Math.floor(variant/100)];
+ const accessory=['♛','✦','◆','★','♟','♞','✧','♜','✿','♕'][Math.floor(variant/10)%10];
+ const svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><radialGradient id="bg"><stop stop-color="${accent}"/><stop offset="1" stop-color="#152a38"/></radialGradient><radialGradient id="body" cx=".35" cy=".2" r=".9"><stop stop-color="#fff4d0"/><stop offset=".45" stop-color="${palette}"/><stop offset="1" stop-color="#65402c"/></radialGradient><linearGradient id="robe" x2="0" y2="1"><stop stop-color="${outfit}"/><stop offset="1" stop-color="#18232e"/></linearGradient></defs><rect width="100" height="100" rx="19" fill="url(#bg)"/><circle cx="79" cy="18" r="17" fill="#ffffff" opacity=".16"/><ellipse cx="50" cy="91" rx="37" ry="7" fill="#000" opacity=".32"/><path d="M18 90Q17 63 33 59H67Q83 63 82 90Z" fill="url(#robe)" stroke="#d4a95d" stroke-width="2.2"/><path d="M25 75L34 65M75 75L66 65" stroke="${accent}" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="42" r="29" fill="url(#body)" stroke="#7c522f" stroke-width="1.7"/><ellipse cx="39" cy="43" rx="4.5" ry="6.8" fill="#15202c"/><ellipse cx="61" cy="43" rx="4.5" ry="6.8" fill="#15202c"/><circle cx="40" cy="41" r="1.8" fill="#fff"/><circle cx="62" cy="41" r="1.8" fill="#fff"/><ellipse cx="28" cy="53" rx="5" ry="3" fill="#ed7b88" opacity=".7"/><ellipse cx="72" cy="53" rx="5" ry="3" fill="#ed7b88" opacity=".7"/><path d="M43 56Q50 64 57 56" fill="none" stroke="#7e3032" stroke-width="2.5" stroke-linecap="round"/><path d="M27 22L22 7L38 14L50 3L62 14L78 7L73 22Z" fill="${accent}" stroke="#9b6b28" stroke-width="2"/><circle cx="50" cy="14" r="4" fill="${outfit}"/><circle cx="23" cy="7" r="3" fill="#fff4b6"/><circle cx="50" cy="3" r="3" fill="#fff4b6"/><circle cx="77" cy="7" r="3" fill="#fff4b6"/><text x="50" y="84" text-anchor="middle" font-size="15" font-weight="bold" fill="${accent}">${accessory}</text></svg>`;
+ return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+
   const grid=node('div','student-grid');
   for(const st of realRoster){
    const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',async()=>{const panel=node('section','ca-schedule-editor');panel.append(node('strong','','Haftalık ders günleri'));let existing=[];try{existing=await attendanceRPC('get_schedule',{p_student_id:st.id})||[]}catch{}const pick=schedulePicker(existing);panel.append(pick,button('💾 Günleri Kaydet',async()=>{try{await attendanceRPC('schedule',{p_student_id:st.id,p_weekdays:pickedSchedule(pick)});panel.remove();alert('Haftalık ders günleri kaydedildi.')}catch(e){alert(e.message)}},'btn gold'));card.append(panel)},'btn small');card.append(schedule);
-   card.append(node('div','avatar',st.name.split(' ').map(x=>x[0]).join('')),node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));
-   if(pending.has(st.id))card.append(node('p','','🔔 Şifre sıfırlama isteği bekliyor'));
+   const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');portrait.src=baridaPawnAvatar(st.id);portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
+   
    card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',async()=>{
     const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');
     if(password===null)return;if(password.length<12){alert('Şifre en az 12 karakter olmalıdır.');return;}
