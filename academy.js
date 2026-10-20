@@ -264,7 +264,7 @@ function baridaHeroPiece(kind){
  const scene=node('div','barida-piece-scene'),base=node('div','barida-piece-base'),body=node('div','barida-piece-body'),neck=node('div','barida-piece-neck'),head=node('div','barida-piece-head'),crown=node('div','barida-piece-crown');scene.classList.add('barida-piece-'+kind);scene.append(base,body,neck,head,crown);stage.append(scene);return stage;
 }
 async function staffDashboard(){
- const view=$('view'),admin=realProfile?.role==='admin';view.replaceChildren();view.classList.add('barida-staff-dashboard');
+ const view=$('view'),admin=realProfile?.role==='admin';view.replaceChildren();view.classList.remove('barida-student-dashboard');view.classList.add('barida-staff-dashboard');view.classList.toggle('barida-teacher-home',!admin);view.classList.toggle('barida-admin-home',admin);
  if(!document.getElementById('barida-staff-dashboard-css')){const style=document.createElement('style');style.id='barida-staff-dashboard-css';style.textContent=`
  #view.barida-staff-dashboard{max-width:1240px;margin:auto;padding:16px 12px 45px}
  .barida-staff-dashboard .sd-hero{background:linear-gradient(125deg,#203c68,#4953a3 65%,#8274cf);padding:32px;border-radius:24px;color:white;margin-bottom:19px}
@@ -290,6 +290,7 @@ async function staffDashboard(){
  html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-stat,html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-panel{background:#222d45;border-color:#3d4a65;color:#e9eeff}
  html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-panel h3,html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-line strong,html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-stat strong{color:#f2efff!important}
  `;document.head.append(style)}
+ if(!document.getElementById('barida-teacher-home-style')){const st=document.createElement('style');st.id='barida-teacher-home-style';st.textContent='#view.barida-teacher-home .sd-hero{background:linear-gradient(115deg,#311747,#683b8f 62%,#b46fae)!important;border:1px solid #ba7bd3!important}#view.barida-teacher-home .sd-kicker{color:#ffd2ff!important}#view.barida-teacher-home .sd-actions button{background:#efe1fb;border-color:#c7a4e5;color:#4d256d}#view.barida-admin-home .sd-hero{background:linear-gradient(115deg,#49300e,#956115 60%,#d6a646)!important;border:1px solid #d4a444!important}';document.head.append(st)}
  const hero=node('section','sd-hero');hero.append(node('div','sd-kicker','♟ BARIDA SATRANÇ KULÜBÜ · '+(admin?'YÖNETİM':'ÖĞRETMEN')+' PANELİ'),node('h2','',admin?'👑 Akademi Yönetim Merkezi':'📚 Öğretmen Ana Sayfası'),node('p','',admin?'Öğretmenlerini ve akademinin eğitim sonuçlarını tek yerden takip et.':'Öğrencilerini, derslerini ve sınıfının gelişimini buradan takip et.'));view.append(hero);baridaBanner(hero,admin?'admin':'teacher');
  const status=node('p','sd-note','Güncel kayıtlar yükleniyor…');view.append(status);
  const stats=node('div','sd-stats'),panels=node('div','sd-panels'),detail=node('section','sd-panel'),quick=node('section','sd-panel');view.append(stats,panels);panels.append(detail,quick);
