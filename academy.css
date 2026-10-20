@@ -237,3 +237,9 @@ html[data-academy-theme="light"] #view iframe.academy-embed,
 html[data-academy-theme="light"] #view iframe.home-board-frame{background:#f1f5fa!important;color-scheme:light}
 html[data-academy-theme="dark"] #view iframe.academy-embed,
 html[data-academy-theme="dark"] #view iframe.home-board-frame{background:#07111b!important;color-scheme:dark}
+
+/* Teacher menu stays above the dashboard and remains usable on hover. */
+.academy-topnav .barida-teacher-nav{position:relative;z-index:110!important}
+.academy-topnav .barida-teacher-nav[open]>.nav-category-items{display:block!important;position:absolute!important;top:100%;left:0;z-index:111!important;min-width:230px;max-height:min(70vh,600px);overflow-y:auto;overscroll-behavior:contain}
+.academy-topnav .barida-teacher-nav>summary{cursor:pointer}
+@media(hover:none){.academy-topnav .barida-teacher-nav[open]>.nav-category-items{max-height:65vh}}
