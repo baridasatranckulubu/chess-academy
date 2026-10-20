@@ -162,3 +162,8 @@ input:disabled,button:disabled{opacity:.65}
 .topbar .brand span:not(.barida-brand-knight) b{display:inline-block;color:#e9fff4;background:linear-gradient(110deg,#caffea 0%,#19e49b 19%,#f7fff9 36%,#ff65b2 54%,#ff258f 68%,#19e49b 87%,#caffea 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:barida-brand-colorflow 7s ease-in-out infinite;text-shadow:none;filter:drop-shadow(0 0 5px #19e49b44)}
 @keyframes barida-brand-colorflow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 @media(prefers-reduced-motion:reduce){.topbar .brand span:not(.barida-brand-knight) b{animation:none;background-position:40% 50%}}
+
+/* Animate BARIDA itself in sync with the neon club name */
+.topbar .brand span:not(.barida-brand-knight){color:#e9fff4;background:linear-gradient(110deg,#caffea 0%,#19e49b 19%,#f7fff9 36%,#ff65b2 54%,#ff258f 68%,#19e49b 87%,#caffea 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:barida-brand-colorflow 7s ease-in-out infinite;text-shadow:none;filter:drop-shadow(0 0 5px #19e49b44)}
+.topbar .brand span:not(.barida-brand-knight) b{background:none;-webkit-background-clip:initial;background-clip:initial;-webkit-text-fill-color:inherit;animation:none;filter:none}
+@media(prefers-reduced-motion:reduce){.topbar .brand span:not(.barida-brand-knight){animation:none;background-position:40% 50%}}
