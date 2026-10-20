@@ -24,6 +24,17 @@ body.barida-seamless-inline .layout{background:transparent!important}
 body.barida-seamless-inline :is(.panel,.card,.info,.controls,.journey-card){background-color:#142a3b!important;color:#edf7ff!important;border-color:#456377!important}
 body.barida-seamless-inline :is(.muted,main>p){color:#c1d5e4!important}
 body.barida-seamless-inline :is(button,select,input){color-scheme:dark}
+</style><style id="barida-theme-sync-v3">
+/* Match the parent academy canvas instead of showing a disconnected rectangle. */
+html.barida-parent-light:has(body.barida-seamless-inline),
+html.barida-parent-light body.barida-seamless-inline{background:#f1f5fa!important;color:#1d3044!important;color-scheme:light!important}
+html.barida-parent-light body.barida-seamless-inline main{background:transparent!important;color:#1d3044!important}
+html.barida-parent-light body.barida-seamless-inline main>p{color:#40566d!important;-webkit-text-fill-color:#40566d!important}
+html.barida-parent-light body.barida-seamless-inline :is(.panel,.card,.info,.controls,.journey-card){background:#142a3b!important;color:#f0f7ff!important}
+html.barida-parent-light body.barida-seamless-inline :is(.panel,.card,.info,.controls,.journey-card) :is(p,span,label,h2,h3,h4){color:inherit}
+html.barida-parent-light body.barida-seamless-inline .layout{background:transparent!important}
+html.barida-parent-light body.barida-seamless-inline :is(input,select,button){color-scheme:dark}
+html:not(.barida-parent-light) body.barida-seamless-inline main>p{color:#c5d7e6!important;-webkit-text-fill-color:#c5d7e6!important}
 </style></head><body><main><h1>🎯 Koordinat Avı</h1><p>Satranç tahtasındaki kareleri hızla tanı. Bu, Barida'nın ortak tahta bileşeni üzerinde çalışan uygulamalı bir hız oyunudur.</p><div class="layout"><div><div id="board" class="board" aria-label="Satranç koordinatları"></div></div><div><section class="panel"><div>Bulman gereken kare</div><div id="target" class="target-name" aria-live="polite">e4</div><div class="stats"><div><strong id="score">0</strong><div>Doğru</div></div><div><strong id="errors">0</strong><div>Hata</div></div><div><strong id="time">60</strong><div>Saniye</div></div></div><p id="feedback" aria-live="polite">Başlat'a bas ve hedef kareyi seç.</p><button id="start" class="action">▶ 60 saniyelik oyunu başlat</button><button id="flip" class="action">⇅ Tahtayı çevir</button><p><label><input id="showCoords" type="checkbox" checked> Tahta koordinatlarını göster</label></p></section><section class="panel"><h3>🏆 Kişisel rekor</h3><p id="record">Henüz rekor yok.</p><p>Doğru kareye her dokunuşta yeni hedef gelir. Yanlış karede puan kazanılmaz.</p><p><a href="academy.html">← Akademiye dön</a></p></section></div></div></main><script src="premium-board.js"></script><script src="shared-chess-board.js"></script><script src="coordinates.js"></script><script>
 if(new URLSearchParams(location.search).get('inline')==='1'){
  document.body.classList.add('barida-inline-coordinate');
@@ -40,4 +51,9 @@ if(new URLSearchParams(location.search).get('inline')==='1'){
  window.addEventListener('load',fit);document.fonts?.ready?.then(fit);
  setTimeout(fit,200);
 }
+</script><script id="barida-parent-theme-sync-v3">
+(()=>{if(new URLSearchParams(location.search).get('inline')!=='1')return;
+ const sync=()=>{try{document.documentElement.classList.toggle('barida-parent-light',parent.document.documentElement.dataset.academyTheme==='light')}catch(e){}};
+ sync();try{new MutationObserver(sync).observe(parent.document.documentElement,{attributes:true,attributeFilter:['data-academy-theme']})}catch(e){}
+})();
 </script></body></html>
