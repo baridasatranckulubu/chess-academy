@@ -127,3 +127,15 @@ body{background:var(--barida-green-deep);color:var(--barida-text)}
 .brand b,.brand:first-letter{color:var(--barida-pink)}
 .top-right select{background:#184b39;border-color:#5a836e;color:#fff}
 .entry-art{background:radial-gradient(circle at 50% 55%,#386e50,#174532 50%,#09281e 85%)}
+
+/* Match the neon pink + emerald green homepage design */
+:root{--barida-green:#19e49b;--barida-green-deep:#070d15;--barida-pink:#ff258f;--barida-text:#f6f2f5;--barida-surface:#101b20}
+body{background:#070d15;color:#f6f2f5}
+.topbar{background:#080f17;border-bottom:1px solid #19e49b65;box-shadow:0 2px 22px #19e49b16}
+.brand b,.brand:first-letter{color:#ff258f;text-shadow:0 0 13px #ff258f55}
+.top-right select{background:#111c25;border:1px solid #19e49b88;color:#f6f2f5}
+.entry-art{background:radial-gradient(circle at 25% 42%,#ff258f35,transparent 44%),radial-gradient(circle at 77% 62%,#19e49b30,transparent 46%),#070d15}
+.btn.gold,.btn.primary,.navitem.active{border-color:#19e49b!important;background:linear-gradient(125deg,#0f483a,#103329)!important;color:#f7fff9!important;box-shadow:0 0 16px #19e49b25}
+.btn:hover,.navitem:hover{border-color:#ff258f!important;box-shadow:0 0 14px #ff258f20}
+.nav-category summary{color:#ffb7d9}
+input:focus,select:focus,textarea:focus{outline-color:#19e49b}
