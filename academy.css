@@ -177,3 +177,8 @@ input:disabled,button:disabled{opacity:.65}
 /* Floating crown illusion: duplicate only the crown area above the banner edge. */
 #view .sd-hero:has(>.barida-banner-image)>.barida-banner-crown,#view .bd-hero:has(>.barida-banner-image)>.barida-banner-crown{display:block!important;position:absolute!important;left:0!important;top:-19px!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:fill!important;pointer-events:none!important;z-index:3!important;border:0!important;border-radius:0!important;clip-path:polygon(54% 0,73% 0,73% 17%,54% 17%)!important;filter:drop-shadow(0 -5px 5px #0005)!important}
 @media(max-width:700px){#view .sd-hero:has(>.barida-banner-image)>.barida-banner-crown,#view .bd-hero:has(>.barida-banner-image)>.barida-banner-crown{top:-13px!important;clip-path:polygon(52% 0,75% 0,75% 20%,52% 20%)!important}}
+
+/* Mobile: keep banner lettering visible and float the crown beyond the frame */
+#view .sd-hero:has(>.barida-banner-image),#view .bd-hero:has(>.barida-banner-image){max-width:100%!important;overflow:visible!important}
+#view .sd-hero:has(>.barida-banner-image)>.barida-banner-crown,#view .bd-hero:has(>.barida-banner-image)>.barida-banner-crown{display:block!important;z-index:5!important}
+@media(max-width:700px){#view .sd-hero:has(>.barida-banner-image),#view .bd-hero:has(>.barida-banner-image){aspect-ratio:9/1!important;min-height:0!important;height:auto!important;margin-top:30px!important}#view .sd-hero>.barida-banner-image,#view .bd-hero>.barida-banner-image{object-fit:fill!important;width:100%!important;height:100%!important}#view .sd-hero>.barida-banner-crown,#view .bd-hero>.barida-banner-crown{top:-11px!important;clip-path:polygon(55% 0,74% 0,74% 24%,55% 24%)!important}}
