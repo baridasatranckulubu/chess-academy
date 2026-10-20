@@ -5,6 +5,16 @@ body.barida-inline-coordinate main>h1,body.barida-inline-coordinate main>p:first
 body.barida-inline-coordinate .layout{gap:16px!important}
 body.barida-inline-coordinate .panel{border-radius:14px!important}
 body.barida-inline-coordinate .panel a[href="academy.html"]{display:none!important}
+</style><style id="barida-seamless-inline">
+html:has(body.barida-seamless-inline){overflow:hidden!important}
+body.barida-seamless-inline{background:transparent!important;overflow:hidden!important;margin:0!important}
+body.barida-seamless-inline main{max-width:none!important;width:100%!important;box-sizing:border-box!important;margin:0!important;padding:0!important}
+body.barida-seamless-inline main>h1,
+body.barida-seamless-inline main>p:first-of-type{display:none!important}
+body.barida-seamless-inline main>p:has(>a[href="academy.html"]){display:none!important}
+body.barida-seamless-inline main a[href="academy.html"]{display:none!important}
+body.barida-seamless-inline .layout{gap:16px!important}
+@media(max-width:700px){body.barida-seamless-inline main{padding:0!important}}
 </style></head><body><main><h1>🎯 Koordinat Avı</h1><p>Satranç tahtasındaki kareleri hızla tanı. Bu, Barida'nın ortak tahta bileşeni üzerinde çalışan uygulamalı bir hız oyunudur.</p><div class="layout"><div><div id="board" class="board" aria-label="Satranç koordinatları"></div></div><div><section class="panel"><div>Bulman gereken kare</div><div id="target" class="target-name" aria-live="polite">e4</div><div class="stats"><div><strong id="score">0</strong><div>Doğru</div></div><div><strong id="errors">0</strong><div>Hata</div></div><div><strong id="time">60</strong><div>Saniye</div></div></div><p id="feedback" aria-live="polite">Başlat'a bas ve hedef kareyi seç.</p><button id="start" class="action">▶ 60 saniyelik oyunu başlat</button><button id="flip" class="action">⇅ Tahtayı çevir</button><p><label><input id="showCoords" type="checkbox" checked> Tahta koordinatlarını göster</label></p></section><section class="panel"><h3>🏆 Kişisel rekor</h3><p id="record">Henüz rekor yok.</p><p>Doğru kareye her dokunuşta yeni hedef gelir. Yanlış karede puan kazanılmaz.</p><p><a href="academy.html">← Akademiye dön</a></p></section></div></div></main><script src="premium-board.js"></script><script src="shared-chess-board.js"></script><script src="coordinates.js"></script><script>
 if(new URLSearchParams(location.search).get('inline')==='1'){
  document.body.classList.add('barida-inline-coordinate');
@@ -12,5 +22,13 @@ if(new URLSearchParams(location.search).get('inline')==='1'){
  new ResizeObserver(report).observe(document.body);
  window.addEventListener('load',report);
  setTimeout(report,300);
+}
+</script><script id="barida-inline-sizing">
+if(new URLSearchParams(location.search).get('inline')==='1'){
+ document.body.classList.add('barida-seamless-inline');
+ const fit=()=>{try{const main=document.querySelector('main');const h=Math.max(document.body.scrollHeight,document.documentElement.scrollHeight,main?Math.ceil(main.getBoundingClientRect().bottom+24):0);parent.postMessage({type:'barida-inline-height',height:h+20},location.origin)}catch(e){}};
+ new ResizeObserver(fit).observe(document.body);
+ window.addEventListener('load',fit);document.fonts?.ready?.then(fit);
+ setTimeout(fit,200);
 }
 </script></body></html>
