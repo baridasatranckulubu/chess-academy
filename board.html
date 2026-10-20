@@ -289,4 +289,12 @@ html.barida-canvas-linked,html.barida-canvas-linked body{background:var(--barida
 html.barida-canvas-linked body{min-height:0!important}
 html.barida-canvas-linked body>main,html.barida-canvas-linked body>.wrap,html.barida-canvas-linked body>.layout{background:transparent!important;background-image:none!important;min-height:0!important;box-shadow:none!important}
 html.barida-canvas-linked body>main::before,html.barida-canvas-linked body>main::after{box-shadow:none}
+</style><style id="barida-board-studio-dark-fix-v7">
+/* Studio board uses one navy canvas, irrespective of conflicting legacy light selectors. */
+html:has(body.embedded-studio),html body.embedded-studio{background:#07111b!important;background-image:none!important;color:#edf7ff!important;color-scheme:dark!important}
+html body.embedded-studio :is(main.wrap,.wrap,.hero,.dashboardgrid,.studio-layout,.studio-main,.board-area,.board-controls){background:transparent!important;background-image:none!important;color:#edf7ff!important}
+html body.embedded-studio :is(.hero>div:first-child,.panel,.card,#caMovePanel){background:#142a3b!important;color:#edf7ff!important;border-color:#436175!important}
+html body.embedded-studio :is(.hero p,.muted){color:#bed2e1!important}
+html body.embedded-studio :is(input,select,textarea){background:#152c3d!important;color:#f0f7ff!important;border-color:#456477!important}
+html body.embedded-studio button:not(.sq):not(.barida-promotion-choice):not(.barida-promotion-cancel){color-scheme:dark}
 </style></body></html>
