@@ -185,3 +185,19 @@ input:disabled,button:disabled{opacity:.65}
 
 /* No duplicated floating crown overlay */
 #view .barida-banner-crown{display:none!important}
+
+/* Dedicated teacher landing page, intentionally separate from administrator dashboard */
+#view.barida-teacher-landing{width:min(1200px,100%);max-width:1200px;margin:0 auto;padding:18px 16px 52px;box-sizing:border-box;color:#edf0ff}
+#view.barida-teacher-landing .teacher-landing-hero{position:relative;width:100%;aspect-ratio:9/1;min-height:90px;margin:14px 0 30px;border-radius:20px;overflow:hidden}
+#view.barida-teacher-landing .teacher-landing-hero>.barida-banner-image{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;border-radius:20px}
+#view.barida-teacher-landing .teacher-landing-hero>:not(.barida-banner-image){display:none!important}
+#view.barida-teacher-landing>h2{color:#f7d9ff;font-size:clamp(24px,3vw,34px);margin:18px 0 8px}
+#view.barida-teacher-landing .teacher-landing-intro{color:#c5b8dc;margin:0 0 24px;line-height:1.6}
+#view.barida-teacher-landing .teacher-landing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+#view.barida-teacher-landing .teacher-landing-card{display:flex;flex-direction:column;align-items:flex-start;gap:12px;min-height:165px;padding:22px;text-align:left;border-radius:20px;border:1px solid #6e478f;background:linear-gradient(145deg,#302044,#21162f);color:#f9edff;cursor:pointer;box-shadow:0 8px 22px #0002}
+#view.barida-teacher-landing .teacher-landing-card:hover{border-color:#e0a1ff;transform:translateY(-2px)}
+#view.barida-teacher-landing .teacher-landing-card strong{font-size:19px}
+#view.barida-teacher-landing .teacher-landing-card small{color:#d4c5e2;line-height:1.5;font-size:13px}
+#view.barida-teacher-landing .teacher-card-icon{font-size:30px}
+@media(max-width:760px){#view.barida-teacher-landing .teacher-landing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:450px){#view.barida-teacher-landing .teacher-landing-grid{grid-template-columns:1fr}#view.barida-teacher-landing .teacher-landing-card{min-height:130px}#view.barida-teacher-landing .teacher-landing-hero{min-height:65px}}
