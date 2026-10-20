@@ -802,7 +802,41 @@ function baridaPawnAvatar(studentId){
   const grid=node('div','student-grid');
   for(const st of realRoster){
    const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',async()=>{const panel=node('section','ca-schedule-editor');panel.append(node('strong','','Haftalık ders günleri'));let existing=[];try{existing=await attendanceRPC('get_schedule',{p_student_id:st.id})||[]}catch{}const pick=schedulePicker(existing);panel.append(pick,button('💾 Günleri Kaydet',async()=>{try{await attendanceRPC('schedule',{p_student_id:st.id,p_weekdays:pickedSchedule(pick)});panel.remove();alert('Haftalık ders günleri kaydedildi.')}catch(e){alert(e.message)}},'btn gold'));card.append(panel)},'btn small');card.append(schedule);
-   const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%300+1).padStart(3,'0');portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261020-edge-repair64';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
+   function baridaCenterAvatarPortrait(img){
+ if(img.dataset.avatarFixed==='1')return;
+ try{
+  const src=img.naturalWidth, sh=img.naturalHeight;if(!src||!sh)return;
+  const cv=document.createElement('canvas');cv.width=src;cv.height=sh;
+  const ctx=cv.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
+  const pixels=ctx.getImageData(0,0,src,sh).data;
+  const lum=(x,y)=>{const k=(y*src+x)*4;return(pixels[k]*.299+pixels[k+1]*.587+pixels[k+2]*.114)};
+  const columns=[];
+  for(let x=Math.round(src*.1);x<Math.round(src*.9);x++){
+   let dark=0,contrast=0,n=0;
+   for(let y=Math.round(sh*.16);y<Math.round(sh*.82);y+=3){
+    const v=lum(x,y);if(v<47)dark++;if(x>2)contrast+=Math.abs(v-lum(x-2,y));n++;
+   }
+   columns.push({x,dark:dark/n,contrast:contrast/n});
+  }
+  // A neighboring collage portrait is separated by a nearly black vertical gutter.
+  const candidates=columns.filter(c=>c.dark>.77&&c.contrast>6&&c.x>src*.18&&c.x<src*.82);
+  if(!candidates.length)return;
+  let seam=candidates.sort((a,b)=>b.dark-a.dark)[0].x;
+  let left=0,right=src;
+  // Keep the larger portrait region, discarding the neighboring character.
+  if(seam>=src*.48)right=seam;else left=seam;
+  if(right-left<src*.48)return;
+  const result=document.createElement('canvas');result.width=src;result.height=sh;
+  const out=result.getContext('2d');
+  // Extend the portrait's edge colors into the spare width; never enlarge the pawn.
+  const width=right-left, offset=Math.round((src-width)/2);
+  out.drawImage(cv,left,0,1,sh,0,0,offset,sh);
+  out.drawImage(cv,right-1,0,1,sh,offset+width,0,src-offset-width,sh);
+  out.drawImage(cv,left,0,width,sh,offset,0,width,sh);
+  img.dataset.avatarFixed='1';img.src=result.toDataURL('image/webp',.9);
+ }catch(e){/* Keep original if browser canvas processing is unavailable. */}
+}
+const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%300+1).padStart(3,'0');portrait.addEventListener('load',()=>baridaCenterAvatarPortrait(portrait));portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261020-avatar-align65';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
    
    card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',async()=>{
     const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');
