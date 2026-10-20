@@ -17,7 +17,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install image tools
-        run: python -m pip install 'Pillow>=10,<13' 'numpy>=1.26,<3'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --no-cache-dir 'Pillow>=10,<13' 'numpy>=1.26,<3'
+          python -c 'import PIL, numpy; print("Pillow", PIL.__version__, "NumPy", numpy.__version__)'
       - name: Normalize all 300 images
         run: python scripts/normalize_student_avatars.py
       - name: Commit repaired WebP avatars
