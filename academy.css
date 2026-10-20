@@ -226,3 +226,8 @@ input:disabled,button:disabled{opacity:.65}
 
 /* Embedded chess activities use one page scrollbar, never an inner viewport */
 #view iframe.academy-puzzle-inline{display:block!important;width:100%!important;max-width:100%!important;min-height:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;background:transparent!important;margin:12px 0!important;box-shadow:none!important}
+
+/* Consistent dark canvas around all embedded learning tools. */
+#view:has(iframe.academy-embed){background:transparent!important;color:var(--barida-text,#f0f7ff)!important}
+#view iframe.academy-embed,#view iframe.home-board-frame{background:#07111b!important;border:0!important;box-shadow:none!important;color-scheme:dark}
+#view .home-board-card,#view .board-studio-resizer{background:transparent!important;border:0!important;box-shadow:none!important}
