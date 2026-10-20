@@ -1,68 +1,64 @@
-"""Rebuild the 300 student avatars from the ORIGINAL archive.
+"""Repair the 300 original pawn avatar files using Pillow only.
 
-Crop collage gutters on all four sides, keeping the pawn's original scale.
-The script is idempotent: it always starts from the archived source.
+The original ZIP is always the input, so repeated runs do not zoom or
+progressively crop images.  Strip likely neighboring collage tiles from edges.
 """
 from io import BytesIO
 from pathlib import Path
 from zipfile import ZipFile
 from PIL import Image, ImageFilter, ImageOps
-import numpy as np
+from statistics import median
 
 ROOT = Path("assets/avatars")
 ARCHIVE = Path("BARIDA_300_Piyon_Avatari.zip")
-if not ARCHIVE.is_file():
-    raise SystemExit("Original avatar archive not found; cannot safely repair.")
+if not ARCHIVE.exists():
+    raise SystemExit("Missing BARIDA_300_Piyon_Avatari.zip")
 ROOT.mkdir(parents=True, exist_ok=True)
 
-def fix(source):
-    image = ImageOps.fit(source.convert("RGB"), (256, 256), Image.Resampling.LANCZOS)
-    a = np.asarray(image, dtype=np.float32)
-    h, w = a.shape[:2]
-    gray = a @ np.array([.299,.587,.114], dtype=np.float32)
-    # Look for unusually strong row/column boundaries separating collage tiles.
-    # A boundary is significant only if it extends across much of the image.
-    def boundary_scores(axis):
-        if axis == 0:
-            delta = np.abs(gray[2:,:] - gray[:-2,:])
-            return np.quantile(delta, .72, axis=1)
-        delta = np.abs(gray[:,2:] - gray[:,:-2])
-        return np.quantile(delta, .72, axis=0)
-    rows, cols = boundary_scores(0), boundary_scores(1)
-    def crop_edge(scores, length, side):
-        # Restrict to the outer 28%; never cut through the center of a pawn.
-        low = 5 if side == 'start' else int(length*.72)
-        high = int(length*.28) if side == 'start' else length-5
-        candidates = [(float(scores[i-1]), i) for i in range(low,high)]
-        if not candidates:return 0 if side=='start' else length
-        strength, pos = max(candidates)
-        typical = float(np.median(scores))+1
-        if strength < max(36,typical*2.8):return 0 if side=='start' else length
-        return pos+2 if side=='start' else pos-2
-    left=crop_edge(cols,w,'start')
-    right=crop_edge(cols,w,'end')
-    top=crop_edge(rows,h,'start')
-    bottom=crop_edge(rows,h,'end')
-    if right-left < 175: left,right=0,w
-    if bottom-top < 175: top,bottom=0,h
-    # Preserve size, replace collage fragments with softly extended background.
-    if (left,right,top,bottom)==(0,w,0,h):return image
-    inner=image.crop((left,top,right,bottom))
-    result=Image.new('RGB',(w,h))
-    # Extend the nearest valid edge pixel, not another character or black gutter.
-    result.paste(inner,(left,top))
-    if left:result.paste(inner.crop((0,0,1,inner.height)).resize((left,inner.height)),(0,top))
-    if right<w:result.paste(inner.crop((inner.width-1,0,inner.width,inner.height)).resize((w-right,inner.height)),(right,top))
-    band=result.crop((0,top,w,top+1))
-    if top:result.paste(band.resize((w,top)),(0,0))
-    band=result.crop((0,bottom-1,w,bottom))
-    if bottom<h:result.paste(band.resize((w,h-bottom)),(0,bottom))
-    return result.filter(ImageFilter.GaussianBlur(.35))
+def repair(source):
+    im = ImageOps.fit(source.convert("RGB"), (256, 256), method=Image.Resampling.LANCZOS)
+    # Calculate boundary contrast across each row/column, without NumPy.
+    gray = im.convert("L").resize((128, 128))
+    p = gray.load()
+    vertical = []
+    horizontal = []
+    for x in range(2, 126):
+        vals = [abs(p[x+1,y]-p[x-1,y]) for y in range(15,113,3)]
+        vertical.append((x, sorted(vals)[int(len(vals)*.7)]))
+    for y in range(2, 126):
+        vals = [abs(p[x,y+1]-p[x,y-1]) for x in range(15,113,3)]
+        horizontal.append((y, sorted(vals)[int(len(vals)*.7)]))
+    def edge(scores, side):
+        typical=median(v for _,v in scores)
+        candidates=[(v,i) for i,v in scores if (7<=i<=35 if side=='start' else 92<=i<=120)]
+        if not candidates:return 0 if side=='start' else 256
+        strength,at=max(candidates)
+        if strength<max(48,typical*3):
+            return 0 if side=='start' else 256
+        return min(70,(at+2)*2) if side=='start' else max(186,(at-2)*2)
+    left,right=edge(vertical,'start'),edge(vertical,'end')
+    top,bottom=edge(horizontal,'start'),edge(horizontal,'end')
+    if right-left<186:left,right=0,256
+    if bottom-top<186:top,bottom=0,256
+    if (left,right,top,bottom)==(0,256,0,256):return im
+    center=im.crop((left,top,right,bottom))
+    output=Image.new("RGB",(256,256))
+    output.paste(center,(left,top))
+    if left:
+        output.paste(center.crop((0,0,1,center.height)).resize((left,center.height)),(0,top))
+    if right<256:
+        output.paste(center.crop((center.width-1,0,center.width,center.height)).resize((256-right,center.height)),(right,top))
+    if top:
+        output.paste(output.crop((0,top,256,top+1)).resize((256,top)),(0,0))
+    if bottom<256:
+        output.paste(output.crop((0,bottom-1,256,bottom)).resize((256,256-bottom)),(0,bottom))
+    return output
 
-with ZipFile(ARCHIVE) as z:
-    names=sorted(n for n in z.namelist() if n.startswith('assets/avatars/piyon-') and n.endswith('.webp'))
-    if len(names)!=300:raise SystemExit(f'Expected 300 images, got {len(names)}')
+with ZipFile(ARCHIVE) as archive:
+    names=sorted(n for n in archive.namelist() if n.startswith("assets/avatars/piyon-") and n.endswith(".webp"))
+    if len(names)!=300:
+        raise SystemExit(f"Expected 300 source portraits; got {len(names)}")
     for name in names:
-        with Image.open(BytesIO(z.read(name))) as source:
-            fix(source).save(ROOT/Path(name).name,'WEBP',quality=90,method=6)
-print('Rebuilt 300 source images, trimming detected collage boundaries on four edges.')
+        with Image.open(BytesIO(archive.read(name))) as source:
+            repair(source).save(ROOT/Path(name).name,"WEBP",quality=90,method=6)
+print("Successfully rebuilt 300 avatar images.")
