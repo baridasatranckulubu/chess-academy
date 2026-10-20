@@ -12,8 +12,8 @@ for path in paths:
         image = source.convert("RGB")
         width, height = image.size
         # The original collage tiles have neighboring characters near the edges.
-        # Retain the centered 68% horizontally, removing 16% from each side.
-        edge = round(width * 0.16)
+        # Keep the full original width and center it, without side cropping.
+        edge = 0
         centered = image.crop((edge, 0, width - edge, height))
         framed = ImageOps.fit(centered, (256, 256), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
         framed.save(path, "WEBP", quality=91, method=6)
