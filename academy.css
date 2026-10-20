@@ -139,3 +139,20 @@ body{background:#070d15;color:#f6f2f5}
 .btn:hover,.navitem:hover{border-color:#ff258f!important;box-shadow:0 0 14px #ff258f20}
 .nav-category summary{color:#ffb7d9}
 input:focus,select:focus,textarea:focus{outline-color:#19e49b}
+
+/* Accessibility: neon identity with high-contrast readable content */
+:root{color-scheme:dark}
+.app,.workspace,.side,#view,.tile,.lesson-detail,.auth-card{color:#f7fafc}
+.muted,.version,.tile p,.lesson-detail p,.entry-content p{color:#d1dce1!important}
+.navitem,.lesson-row,.nav-category-items a{color:#f2f6fa!important}
+.navitem.active{color:#ffffff!important;font-weight:800}
+button,.btn{font-weight:700}
+input,textarea,select{color:#f8fbff;background-color:#13232c;border-color:#52736c}
+input::placeholder,textarea::placeholder{color:#b4c6c9;opacity:1}
+input:disabled,button:disabled{opacity:.65}
+#view a:not(.btn){text-decoration-color:#ff258f;text-underline-offset:3px}
+#view :is(h1,h2,h3,h4){color:#ffffff}
+.brand{display:inline-flex;align-items:center;gap:10px;font-size:clamp(13px,1.65vw,22px);line-height:1.2;letter-spacing:.015em;white-space:normal}
+.brand b{color:#ff7dbb}
+.barida-brand-knight{display:inline-grid;place-items:center;flex:none;width:44px;height:44px;border:1px solid #19e49b;border-radius:12px;background:linear-gradient(135deg,#ff258f29,#19e49b2b);font-size:35px;color:#080d15;text-shadow:-2px 0 #ff258f,2px 0 #19e49b,0 0 15px #19e49b88;filter:drop-shadow(0 0 5px #ff258f44)}
+@media(max-width:520px){.barida-brand-knight{width:35px;height:35px;font-size:28px}.brand{gap:6px;font-size:13px}}
