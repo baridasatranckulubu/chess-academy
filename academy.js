@@ -314,19 +314,19 @@ async function staffDashboard(){
  try{
  if(!realUser||!authClient){status.textContent='Gerçek hesapla giriş yapıldığında akademi kayıtları gösterilir.';return}
  if(admin){
- const {teachers}=await adminTeacherAction({action:'list'});if(section!=='staff-home')return;
+ let teachers=[];let teacherLoadError=null;try{const result=await adminTeacherAction({action:'list'});teachers=Array.isArray(result.teachers)?result.teachers:[]}catch(err){teacherLoadError=err;console.warn('Admin teacher stats unavailable',err)}if(section!=='staff-home')return;
  const ids=teachers.map(t=>t.id);
  const {data:links,error:linkError}=ids.length?await authClient.from('teacher_students').select('teacher_id,student_id').in('teacher_id',ids):{data:[],error:null};
  const studentIds=[...new Set((links||[]).map(x=>x.student_id))];
  const {data:progress,error:progressError}=studentIds.length?await authClient.from('student_progress').select('user_id,questions_answered,correct_answers').in('user_id',studentIds):{data:[],error:null};
- const accessible=!linkError&&!progressError;
+ const accessible=!teacherLoadError&&!linkError&&!progressError;
  const questions=(progress||[]).reduce((n,p)=>n+(Number(p.questions_answered)||0),0),correct=(progress||[]).reduce((n,p)=>n+(Number(p.correct_answers)||0),0);
  stats.replaceChildren();stat('♛',teachers.length,'Toplam öğretmen');stat('👥',accessible?studentIds.length:'—','Bağlı öğrenci');stat('🧩',accessible?questions:'—','Çözülen soru');stat('🎯',accessible&&questions?Math.round(100*correct/questions)+'%':'—','Soru başarı oranı');
  detail.append(node('h3','','♛ Öğretmen bazında performans'));
- if(!teachers.length)detail.append(node('p','sd-note','Henüz kayıtlı öğretmen bulunmuyor.'));
+ if(teacherLoadError)detail.append(node('p','sd-note','Öğretmen istatistikleri alınamadı: '+teacherLoadError.message));else if(!teachers.length)detail.append(node('p','sd-note','Henüz kayıtlı öğretmen bulunmuyor.'));
  teachers.forEach(t=>{const owned=(links||[]).filter(l=>l.teacher_id===t.id).map(l=>l.student_id),rows=(progress||[]).filter(p=>owned.includes(p.user_id)),q=rows.reduce((n,p)=>n+(Number(p.questions_answered)||0),0),c=rows.reduce((n,p)=>n+(Number(p.correct_answers)||0),0);line(t.display_name||t.username,accessible?owned.length+' öğrenci · '+q+' soru':'Öğrenci verisine erişilemiyor',accessible&&q?Math.round(c/q*100)+'%':'—')});
  quick.append(node('h3','','⚡ Yönetim kısayolları'),node('div','sd-actions'));action('♛ Öğretmenler','admin-teacher-list');action('👑 Öğretmen ekle','admin-teachers');action('💳 Ödemeler','admin-payments');action('✉️ Bildirim gönder','admin-messages');
- status.textContent=accessible?'Öğretmen ve öğrenci ilerleme kayıtları yüklendi. Ödev sayıları mevcut merkezi veri kaynağında doğrulanamadığından gösterilmiyor.':'Öğretmenler yüklendi. Öğrenci ilerleme verilerinin bir kısmına erişilemiyor; eksik rakamlar sıfır gösterilmedi.';
+ status.textContent=teacherLoadError?'Yönetici istatistik servisine erişilemiyor. Öğretmen ve ödeme yönetimi kısayolları kullanılabilir.':accessible?'Öğretmen ve öğrenci ilerleme kayıtları yüklendi. Ödev sayıları mevcut merkezi veri kaynağında doğrulanamadığından gösterilmiyor.':'Öğretmenler yüklendi. Öğrenci ilerleme verilerinin bir kısmına erişilemiyor; eksik rakamlar sıfır gösterilmedi.';
  }else{
  await loadTeacherStudents();if(section!=='staff-home')return;
  const rows=realRoster.map(st=>st.progress||{}),q=rows.reduce((n,p)=>n+(Number(p.questions_answered)||0),0),c=rows.reduce((n,p)=>n+(Number(p.correct_answers)||0),0);
