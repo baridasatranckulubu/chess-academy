@@ -243,3 +243,9 @@ html[data-academy-theme="dark"] #view iframe.home-board-frame{background:#07111b
 .academy-topnav .barida-teacher-nav[open]>.nav-category-items{display:block!important;position:absolute!important;top:100%;left:0;z-index:111!important;min-width:230px;max-height:min(70vh,600px);overflow-y:auto;overscroll-behavior:contain}
 .academy-topnav .barida-teacher-nav>summary{cursor:pointer}
 @media(hover:none){.academy-topnav .barida-teacher-nav[open]>.nav-category-items{max-height:65vh}}
+
+/* Seamless training surfaces: no artificial panel behind embedded activities. */
+#view:has(iframe.academy-puzzle-inline),#view.home-view:has(iframe.home-board-frame){background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important}
+#view iframe.academy-puzzle-inline,#view iframe.home-board-frame{display:block!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important;min-height:0!important;margin:0!important;vertical-align:top}
+#view .home-board-card:has(iframe.home-board-frame),#view .board-studio-resizer{background:transparent!important;background-image:none!important;border:0!important;box-shadow:none!important}
+html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-academy-theme="light"] #view iframe.home-board-frame,html[data-academy-theme="dark"] #view iframe.academy-puzzle-inline,html[data-academy-theme="dark"] #view iframe.home-board-frame{background:transparent!important}
