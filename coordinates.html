@@ -68,4 +68,10 @@ html.barida-canvas-linked,html.barida-canvas-linked body{background:var(--barida
 html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-layout,.studio-main,.board-area,.board-controls){background-color:transparent!important;background-image:none!important;box-shadow:none}
 html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-layout,.studio-main){border-color:transparent}
 html.barida-canvas-linked body{margin:0!important}
+</style><style id="barida-seamless-final-v6">
+/* Keep the entire iframe canvas identical to the academy, not just its main element. */
+html.barida-canvas-linked,html.barida-canvas-linked body{background:var(--barida-parent-canvas,#07111b)!important;background-image:none!important;color-scheme:inherit!important}
+html.barida-canvas-linked body{min-height:0!important}
+html.barida-canvas-linked body>main,html.barida-canvas-linked body>.wrap,html.barida-canvas-linked body>.layout{background:transparent!important;background-image:none!important;min-height:0!important;box-shadow:none!important}
+html.barida-canvas-linked body>main::before,html.barida-canvas-linked body>main::after{box-shadow:none}
 </style></body></html>
