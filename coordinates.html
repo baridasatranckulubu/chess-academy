@@ -63,4 +63,9 @@ html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-lay
 </style><script id="barida-canvas-link-v4">
 (()=>{if(window.parent===window)return;const embedded=new URLSearchParams(location.search).get('inline')==='1'||document.body.classList.contains('embedded-studio');if(!embedded)return;const sync=()=>{try{const parentDoc=parent.document;const surface=parentDoc.querySelector('.workspace')||parentDoc.body;const color=getComputedStyle(surface).backgroundColor;document.documentElement.style.setProperty('--barida-parent-canvas',color);document.documentElement.classList.add('barida-canvas-linked')}catch(e){}};sync();try{new MutationObserver(sync).observe(parent.document.documentElement,{attributes:true,attributeFilter:['data-academy-theme']})}catch(e){}
 })();
-</script></body></html>
+</script><style id="barida-embedded-surface-v5">
+html.barida-canvas-linked,html.barida-canvas-linked body{background:var(--barida-parent-canvas,#09131b)!important;background-image:none!important}
+html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-layout,.studio-main,.board-area,.board-controls){background-color:transparent!important;background-image:none!important;box-shadow:none}
+html.barida-canvas-linked body :is(main,.wrap,.layout,.dashboardgrid,.studio-layout,.studio-main){border-color:transparent}
+html.barida-canvas-linked body{margin:0!important}
+</style></body></html>
