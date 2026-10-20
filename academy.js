@@ -256,6 +256,7 @@ function baridaBanner(el,variant){
  el.querySelectorAll('.barida-mascot,.barida-hero-piece,.bd-hero-art,.barida-banner-image').forEach(x=>x.remove());
  const files={admin:'barida-admin-banner.jpg',teacher:'barida-teacher-banner.jpg','student-boy':'barida-student-banner-2.jpg','student-girl':'barida-student-banner-2.jpg',student:'barida-student-banner-2.jpg'};
  const img=document.createElement('img');img.className='barida-banner-image';img.src='assets/banners/'+(files[variant]||files.student);img.alt='Barida Satranç Kulübü panel görseli';img.decoding='async';img.loading='eager';img.style.cssText='position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;display:block;max-width:none;border:0;border-radius:inherit;';el.prepend(img);
+ const crown=img.cloneNode(false);crown.className='barida-banner-crown';crown.alt='';crown.setAttribute('aria-hidden','true');el.append(crown);
  for(const child of el.children){if(child!==img){child.style.position='relative';child.style.zIndex='1'}}
 
 }
