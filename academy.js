@@ -247,60 +247,64 @@ function teacherOverview(){if(realUser){renderRealClassReport();return}const vie
 const BARIDA_PETS=[['lion','🦁','Aslan'],['rabbit','🐰','Tavşan'],['squirrel','🐿️','Sincap'],['tiger','🐯','Kaplan'],['turtle','🐢','Kaplumbağa'],['panda','🐼','Panda'],['fox','🦊','Tilki'],['wolf','🐺','Kurt'],['deer','🦌','Geyik'],['dragon','🐉','Ejderha']];
 async function petRpc(name,args={}){if(!realUser||!authClient)throw Error('Karakterler için gerçek öğrenci hesabıyla giriş yapın.');const {data,error}=await authClient.rpc('academy_pet_'+name,args);if(error)throw error;return data}
 function petAcademy(){
- const view=$('view');view.classList.add('ca-pet-view');view.replaceChildren();
- const head=node('header','ca-pet-header');head.append(node('div','ca-pet-kicker','✦ BARIDA PET ACADEMY'),node('h2','','🏡 Benim Satranç Dünyam'));view.append(head);
- const area=node('section','ca-pet-world');view.append(area);
- const actions=node('div','ca-pet-actions');for(const [label,key] of [['♟ Analiz Tahtası','home'],['🧩 Bulmacalar','tactics'],['📝 Ödevler','assignments'],['🎯 Antrenman','practice']])actions.append(button(label,()=>showSection(key),'btn'));view.append(actions);
- const PET_GOODS=[['apple','🍎','Elma',10,'+15 tokluk'],['meal','🥗','Besleyici öğün',25,'+40 tokluk'],['armor','🛡️','Gümüş Zırh',80,'1 zırh hakkı']];
- const ROOMS=['Şövalye Odası','Orman Evi','Uzay Odası','Kütüphane','Denizci Odası','Saray Odası','Oyun Odası','Kış Evi','Spor Odası','Çiçek Bahçesi'];
- const animations=['ca-pet-idle','ca-pet-hop','ca-pet-look','ca-pet-sway','ca-pet-sleep','ca-pet-bounce','ca-pet-turn'];
- const portrait=(key,cls)=>{const img=document.createElement('img');img.src='assets/pets/'+key+'.svg';img.alt=BARIDA_PETS.find(x=>x[0]===key)?.[2]||'Karakter';img.className=cls;img.loading='lazy';return img};
- async function refresh(){area.replaceChildren(node('p','muted','Karakter dünyası yükleniyor…'));try{const p=await petRpc('state');if(section!=='pet-home')return;area.replaceChildren();
- if(!p.animal){area.append(node('h3','','🌟 Satranç kahramanını seç'),node('p','muted','Seçim bir defaya mahsustur.'));const grid=node('div','ca-pet-picker');BARIDA_PETS.forEach(([key,emoji,name])=>{const card=node('article','ca-pet-choice');card.append(portrait(key,'ca-pet-preview'),node('h3','',name));const variants=node('div','ca-pet-variants');for(const [v,label] of [['female','♀ Dişi'],['male','♂ Erkek']])variants.append(button(label,async()=>{if(!confirm(name+' karakterini kalıcı olarak seçmek istiyor musun?'))return;try{await petRpc('choose',{p_animal:key,p_variant:v});refresh()}catch(e){alert(e.message)}},'btn small'));card.append(variants);grid.append(card)});area.append(grid);return}
- const found=BARIDA_PETS.find(x=>x[0]===p.animal)||BARIDA_PETS[0];
- const roomIndex=Array.from(realUser.id).reduce((n,c)=>n+c.charCodeAt(0),0)%10;
- const room=node('section','ca-pet-room ca-pet-room-'+roomIndex);const title=node('div','ca-pet-room-sign',currentName());room.append(title);
- const shelf=node('div','ca-pet-room-shelf');shelf.textContent='♛  ♜  ♚';room.append(shelf);
- const windowBox=node('div','ca-pet-room-window');windowBox.textContent=['🌙','🌲','🪐','📚','⛵','🏰','🎮','❄️','⚽','🌷'][roomIndex];room.append(windowBox);
- const character=node('div','ca-pet-3d-stage');room.append(character);let petScene=null;import('./barida-pet-3d.js?v=20261020-3d1').then(m=>{if(character.isConnected)petScene=m.mount(character,{animal:p.animal,roomIndex,armor:p.armor,stage:0})}).catch(e=>{character.append(portrait(p.animal,'ca-pet-character'));console.warn('3D motor yüklenemedi',e)});
- const carpet=node('div','ca-pet-carpet');room.append(carpet);
- const caption=node('div','ca-pet-room-caption',ROOMS[roomIndex]+' · '+found[2]+' '+(p.variant==='female'?'♀':'♂'));room.append(caption);
- const animLabel=node('div','ca-pet-animation-label','✨ Mutlu ve enerjik');room.append(animLabel);area.append(room);
- const stats=node('div','ca-pet-stats');for(const [value,label] of [[p.coins,'🪙 Barida Altını'],[p.satiety+'/100','🍎 Tokluk'],[p.armor,'🛡️ Zırh']]){const card=node('div','ca-pet-stat');card.append(node('strong','',String(value)),node('span','',label));stats.append(card)}area.append(stats);
- const gameLayout=node('div','ca-pet-game-layout');
- const profile=node('aside','ca-pet-profile');
- profile.append(node('div','ca-pet-profile-crown','👑'),node('h3','',currentName()),node('p','muted','Satranç Kahramanı'));
- const miniStats=node('div','ca-pet-profile-stats');
- for(const [v,l] of [['⭐','Barida UKD'],['🧩','Bu ay çözülen sorular'],['📜','Tamamlanan ödevler'],['🪙',p.coins+' Barida Altını']]){const line=node('div','ca-pet-profile-stat');line.append(node('span','',v),node('span','',l));miniStats.append(line)}profile.append(miniStats);
- const gameCenter=node('div','ca-pet-game-center');
- const gameShop=node('aside','ca-pet-permanent-shop');
- const shopHead=node('div','ca-pet-shop-head');shopHead.append(node('h3','','🛍️ Barida Dükkân'),node('strong','',p.coins+' 🪙'));gameShop.append(shopHead);
- const shopTabs=node('div','ca-pet-shop-tabs');const shopGrid=node('div','ca-pet-shop-grid');
- const catalogs={
-  'Yiyecekler':[['apple','🍎','Elma',10],['meal','🥗','Öğün',25]],
-  'Zırhlar':[['armor','🛡️','Gümüş Zırh',80]],
-  'Aksesuarlar':[], 'Odalar':[], 'Özel':[]
- };
- for(const [label,items] of Object.entries(catalogs)){const tab=button(label,()=>{shopTabs.querySelectorAll('button').forEach(b=>b.classList.remove('active'));tab.classList.add('active');shopGrid.replaceChildren();if(!items.length){shopGrid.append(node('p','muted','Bu koleksiyon hazırlanıyor.'));return}for(const [key,emoji,name,price] of items){const card=node('article','ca-pet-shop-tile');card.append(node('div','ca-pet-shop-emoji',emoji),node('strong','',name),button('🪙 '+price,async()=>{try{await petRpc('shop',{p_item:key});await refresh()}catch(e){alert(e.message)}},'btn small gold'));shopGrid.append(card)}} ,'btn small');shopTabs.append(tab);if(label==='Yiyecekler')tab.click()}
- gameShop.append(shopTabs,shopGrid);
- gameCenter.append(room,stats);
- gameLayout.append(profile,gameCenter,gameShop);
- area.replaceChildren(gameLayout);
- const evolution=node('section','ca-pet-evolution-gallery');evolution.append(node('h3','','🌟 Karakter Gelişimi'));
- const steps=node('div','ca-pet-evolution-steps');
- for(const [name,range] of [['Yavru','0–499 soru'],['Genç','500–999 soru'],['Ergen','1.000–9.999 soru'],['Yetişkin','10.000+ soru']]){const item=node('div','ca-pet-evolution-step');item.append(portrait(p.animal,'ca-pet-evolution-image'),node('strong','',name),node('span','',range));steps.append(item)}
- evolution.append(steps);area.append(evolution);
- const armors=node('section','ca-pet-armor-gallery');armors.append(node('h3','','🛡️ Zırh Koleksiyonu'));
- const armorItems=node('div','ca-pet-armor-items');for(const [name,price] of [['Zırhsız',0],['Gümüş',80],['Altın',150],['Zümrüt',300],['Efsanevi',500]]){const item=node('div','ca-pet-armor-item');item.append(node('div','ca-pet-armor-symbol',price?'🛡️':'🐾'),node('strong','',name),node('span','',price?'🪙 '+price:'Ücretsiz'));if(price>80)item.append(node('small','','🔒 Yakında'));armorItems.append(item)}armors.append(armorItems);area.append(armors);
- const toolbar=node('div','ca-pet-toolbar');toolbar.append(button('🛒 Dükkâna Git',()=>{const dialog=document.createElement('dialog');dialog.className='ca-pet-shop-dialog';const inner=node('div','ca-pet-shop');const bar=node('div','ca-pet-shop-top');bar.append(node('h3','','🛍️ Barida Dükkânı'),button('✕ Kapat',()=>dialog.close(),'btn'));inner.append(bar,node('p','muted','Bakiyen: '+p.coins+' 🪙 · Alışverişler gerçek hesabına kaydedilir.'));const goods=node('div','ca-pet-goods');for(const [key,emoji,title,price,desc] of PET_GOODS){const card=node('article','ca-pet-good');card.append(node('div','ca-pet-good-icon',emoji),node('strong','',title),node('p','muted',desc),button('🪙 '+price+' · Satın al',async()=>{try{await petRpc('shop',{p_item:key});dialog.close();dialog.remove();await refresh()}catch(e){alert(e.message)}},'btn gold'));goods.append(card)}inner.append(goods,node('p','muted','Yeni yiyecekler, özel zırhlar ve kilitli sandıklar ileride eklenecek.'));dialog.append(inner);dialog.addEventListener('close',()=>dialog.remove());document.body.append(dialog);dialog.showModal()},'btn gold'),button('🐾 Karakteri Oynat',()=>{const name=animations[Math.floor(Math.random()*animations.length)];petScene?.play(name.replace('ca-pet-',''));animLabel.textContent='🐾 '+name.replace('ca-pet-','')},'btn'));area.append(toolbar);
-
-
- // Animations are randomized at 3–5 minute intervals and only run while this screen remains visible.
- const nextMotion=()=>{if(section!=='pet-home'||!character.isConnected){petScene?.dispose();return;}const name=animations[Math.floor(Math.random()*animations.length)];petScene?.play(name.replace('ca-pet-',''));animLabel.textContent='✨ '+({ 'ca-pet-hop':'Zıplıyor','ca-pet-look':'Etrafına bakıyor','ca-pet-sway':'Sallanıyor','ca-pet-sleep':'Dinleniyor','ca-pet-bounce':'Oynuyor','ca-pet-turn':'Dönüyor','ca-pet-idle':'Mutlu ve enerjik'}[name]||'Oynuyor');setTimeout(nextMotion,180000+Math.random()*120000)};
- setTimeout(nextMotion,180000+Math.random()*120000);
- }catch(e){area.replaceChildren(node('p','auth-error',e.message))}}
- refresh();
+ const view=$('view');view.classList.remove('ca-pet-view');view.classList.add('barida-student-dashboard');view.replaceChildren();
+ if(!document.getElementById('barida-student-dashboard-style')){
+  const css=document.createElement('style');css.id='barida-student-dashboard-style';css.textContent=`
+ #view.barida-student-dashboard{max-width:1220px;margin:0 auto;padding:16px 12px 45px;color:#23334e}
+ .barida-student-dashboard .bd-hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#5949bb,#7664e6 60%,#aa8cf1);color:white;border-radius:26px;padding:clamp(22px,4vw,44px);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;box-shadow:0 14px 35px #37286c32}
+ .barida-student-dashboard .bd-hero:after{content:'✦ ✧ ✦';position:absolute;right:17%;top:8%;font-size:42px;color:#ffffff44;pointer-events:none}
+ .barida-student-dashboard .bd-eyebrow{font-weight:800;letter-spacing:1.6px;font-size:12px;color:#e9dcff}
+ .barida-student-dashboard .bd-hero h2{font-size:clamp(25px,4vw,40px);color:#fff!important;margin:9px 0}
+ .barida-student-dashboard .bd-hero p{color:#f3edff!important;margin:0;line-height:1.6}
+ .barida-student-dashboard .bd-hero-art{font-size:clamp(62px,9vw,112px);filter:drop-shadow(0 12px 8px #30216655)}
+ .barida-student-dashboard .bd-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:15px;margin:20px 0}
+ .barida-student-dashboard .bd-card,.barida-student-dashboard .bd-panel{background:#fff;border:1px solid #e4e4f2;border-radius:22px;box-shadow:0 9px 22px #3137670d;padding:21px;color:#26324a}
+ .barida-student-dashboard .bd-card{display:flex;flex-direction:column;gap:9px}
+ .barida-student-dashboard .bd-icon{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:#f0ebff;font-size:27px}
+ .barida-student-dashboard .bd-number{font-size:clamp(26px,3vw,35px);font-weight:900;color:#302b65}
+ .barida-student-dashboard .bd-label{font-size:13px;color:#5b6481;font-weight:700}
+ .barida-student-dashboard .bd-main{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}
+ .barida-student-dashboard .bd-panel h3{font-size:20px;color:#273253!important;margin:0 0 14px}
+ .barida-student-dashboard .bd-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .barida-student-dashboard .bd-action{display:flex;align-items:center;gap:11px;border:1px solid #e4e2f4;background:#f7f6ff;color:#342e63;padding:17px 13px;border-radius:16px;cursor:pointer;text-align:left;font:700 14px inherit;font-family:inherit;font-weight:800;transition:transform .15s,background .15s}
+ .barida-student-dashboard .bd-action:hover{background:#ebe6ff;transform:translateY(-2px)}
+ .barida-student-dashboard .bd-action .bd-action-icon{font-size:27px}
+ .barida-student-dashboard .bd-progress-track{height:12px;background:#ebe8f6;border-radius:30px;overflow:hidden;margin:13px 0}
+ .barida-student-dashboard .bd-progress-fill{height:100%;background:linear-gradient(90deg,#8b77eb,#57c7bd);border-radius:30px}
+ .barida-student-dashboard .bd-assignment{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 0;border-bottom:1px solid #ecebf4}
+ .barida-student-dashboard .bd-assignment:last-child{border-bottom:0}
+ .barida-student-dashboard .bd-assignment strong{color:#273253}
+ .barida-student-dashboard .bd-assignment small{display:block;color:#65718b;margin-top:4px}
+ .barida-student-dashboard .bd-pill{border-radius:30px;padding:6px 11px;font-size:12px;font-weight:800;background:#fff0d4;color:#855d1e;white-space:nowrap}
+ .barida-student-dashboard .bd-pill.done{background:#dff8ed;color:#146f4d}
+ .barida-student-dashboard .bd-muted{color:#65718b;line-height:1.6}
+ .barida-student-dashboard .bd-profile-row{display:flex;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid #efedf6;color:#46516c}
+ .barida-student-dashboard .bd-profile-row strong{color:#30365a;text-align:right;overflow-wrap:anywhere}
+ @media(max-width:850px){.barida-student-dashboard .bd-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.barida-student-dashboard .bd-main{grid-template-columns:1fr}}
+ @media(max-width:480px){.barida-student-dashboard .bd-hero{grid-template-columns:1fr}.barida-student-dashboard .bd-hero-art{position:absolute;right:14px;bottom:10px;opacity:.25}.barida-student-dashboard .bd-actions{grid-template-columns:1fr}.barida-student-dashboard .bd-card{padding:15px}}
+ html[data-academy-theme=dark] #view.barida-student-dashboard .bd-card,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-panel{background:#202a40;color:#eaf0ff;border-color:#3b4966}
+ html[data-academy-theme=dark] #view.barida-student-dashboard .bd-panel h3,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-number,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-profile-row strong,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-assignment strong{color:#f5f1ff!important}
+ html[data-academy-theme=dark] #view.barida-student-dashboard .bd-action{background:#2c3552;color:#f4eeff;border-color:#4b5678}
+ html[data-academy-theme=dark] #view.barida-student-dashboard .bd-label,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-muted,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-profile-row{color:#d0d8ec}
+ `;document.head.append(css);
+ }
+ const hero=node('section','bd-hero');const intro=node('div');intro.append(node('div','bd-eyebrow','✦ BARIDA CHESS ACADEMY · ÖĞRENCİ PANELİ'),node('h2','','Merhaba, '+currentName()+'! 👋'),node('p','','Bugün yeni hamleler öğrenmeye hazır mısın? Her soru seni daha güçlü bir satranç oyuncusu yapar.'));hero.append(intro,node('div','bd-hero-art','♞'));view.append(hero);
+ const assignmentsList=Array.isArray(data.assignments)?data.assignments:[];
+ const completed=assignmentsList.filter(a=>{if(a.kind==='puzzle'){try{return assignmentProgress(a)>=Math.max(1,Number(a.target)||5)}catch{return false}}return Array.isArray(data.completed)&&data.completed.includes(a.lesson)}).length;
+ const pending=assignmentsList.length-completed;
+ const cards=node('div','bd-grid');
+ for(const [symbol,value,label] of [['📝',assignmentsList.length,'Toplam ödev'],['🏅',completed,'Tamamlanan ödev'],['🎯',pending,'Bekleyen ödev'],['🧩',Math.max(0,Number(data.correct)||0),'Doğru cevap']]){const card=node('article','bd-card');card.append(node('span','bd-icon',symbol),node('strong','bd-number',String(value)),node('span','bd-label',label));cards.append(card)}view.append(cards);
+ const main=node('div','bd-main');const left=node('div');const actions=node('section','bd-panel');actions.append(node('h3','','🚀 Bugün ne yapmak istersin?'));
+ const buttons=node('div','bd-actions');for(const [symbol,label,key] of [['📝','Ödevlerim','assignments'],['🧩','Bulmaca çöz','tactics'],['♟️','Satranç tahtası','home'],['📚','Derslerim','courses'],['🎯','Antrenman','practice'],['📈','İlerlemem','progress']]){const b=button('',()=>showSection(key),'bd-action');b.append(node('span','bd-action-icon',symbol),node('span','',label));buttons.append(b)}actions.append(buttons);left.append(actions);
+ const list=node('section','bd-panel');list.style.marginTop='18px';list.append(node('h3','','📋 Ödevlerim'));
+ if(!assignmentsList.length)list.append(node('p','bd-muted','Henüz atanmış ödevin bulunmuyor. Öğretmenin yeni bir ödev verdiğinde burada göreceksin.'));
+ assignmentsList.slice(0,5).forEach(a=>{const row=node('div','bd-assignment');const text=node('div');const title=String(a.title||'Satranç ödevi');text.append(node('strong','',title));let done=false,detail='';if(a.kind==='puzzle'){let count=0;try{count=assignmentProgress(a)}catch{}const goal=Math.max(1,Number(a.target)||5);done=count>=goal;detail=count+' / '+goal+' soru'}else{done=Array.isArray(data.completed)&&data.completed.includes(a.lesson);detail='Ders ödevi'}text.append(node('small','',detail));row.append(text,node('span','bd-pill'+(done?' done':''),done?'✓ Tamamlandı':'Devam ediyor'));list.append(row)});
+ if(assignmentsList.length>5)list.append(button('Tüm ödevlerimi gör →',()=>showSection('assignments'),'btn'));left.append(list);
+ const right=node('div');const profile=node('section','bd-panel');profile.append(node('h3','','🌟 Öğrenci kartım'));
+ for(const [label,value] of [['Ad Soyad',currentName()],['Satranç seviyesi',String(studentLevel(data))],['Bulmaca ratingi',String(studentRating(data))],['Tamamlanan ders',String(data.completed?.length||0)],['Çalışma süresi',duration(data.seconds||0)]]){const row=node('div','bd-profile-row');row.append(node('span','',label),node('strong','',value));profile.append(row)}right.append(profile);
+ const progress=node('section','bd-panel');progress.style.marginTop='18px';progress.append(node('h3','','🌈 Öğrenme yolculuğum'));const count=Array.isArray(data.completed)?data.completed.length:0;const total=lessons.length||1;progress.append(node('p','bd-muted',count+' / '+total+' ders tamamlandı'));const track=node('div','bd-progress-track');const fill=node('div','bd-progress-fill');fill.style.width=Math.max(0,Math.min(100,count/total*100))+'%';track.append(fill);progress.append(track,node('p','bd-muted','Küçük adımlarla büyük ustalığa! Her yeni ders yeni bir başarı.'));right.append(progress);main.append(left,right);view.append(main);
 }
+
 function home(){
  const view=$('view');view.classList.add('home-view');view.append(node('h2','','♟ Satranç Tahtası'));
  const shell=node('section','home-board-card');shell.style.cssText='width:100%;margin:0 auto;padding:0;background:transparent;border:0;box-shadow:none';
