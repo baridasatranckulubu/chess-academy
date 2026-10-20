@@ -182,3 +182,6 @@ input:disabled,button:disabled{opacity:.65}
 #view .sd-hero:has(>.barida-banner-image),#view .bd-hero:has(>.barida-banner-image){max-width:100%!important;overflow:visible!important}
 #view .sd-hero:has(>.barida-banner-image)>.barida-banner-crown,#view .bd-hero:has(>.barida-banner-image)>.barida-banner-crown{display:block!important;z-index:5!important}
 @media(max-width:700px){#view .sd-hero:has(>.barida-banner-image),#view .bd-hero:has(>.barida-banner-image){aspect-ratio:9/1!important;min-height:0!important;height:auto!important;margin-top:30px!important}#view .sd-hero>.barida-banner-image,#view .bd-hero>.barida-banner-image{object-fit:fill!important;width:100%!important;height:100%!important}#view .sd-hero>.barida-banner-crown,#view .bd-hero>.barida-banner-crown{top:-11px!important;clip-path:polygon(55% 0,74% 0,74% 24%,55% 24%)!important}}
+
+/* No duplicated floating crown overlay */
+#view .barida-banner-crown{display:none!important}
