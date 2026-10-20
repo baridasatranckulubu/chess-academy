@@ -223,3 +223,6 @@ input:disabled,button:disabled{opacity:.65}
 #view.barida-admin-home .sd-actions button:nth-child(2){border-color:#b8944f!important;background:linear-gradient(145deg,#403723,#2f3440)!important;color:#ffe4a3!important}
 #view.barida-admin-home .sd-panels{align-items:stretch!important}
 @media(max-width:520px){#view.barida-admin-home .sd-actions{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}#view.barida-admin-home .sd-actions button{min-height:74px!important;padding:11px 8px!important;font-size:12px!important}}
+
+/* Embedded chess activities use one page scrollbar, never an inner viewport */
+#view iframe.academy-puzzle-inline{display:block!important;width:100%!important;max-width:100%!important;min-height:0!important;border:0!important;border-radius:0!important;overflow:hidden!important;background:transparent!important;margin:12px 0!important;box-shadow:none!important}
