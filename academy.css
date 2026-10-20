@@ -119,3 +119,11 @@ body:has(#entry:not([hidden])) .entry-actions{margin:clamp(12px,2vh,22px) 0}
 
 /* Teacher enrollment */
 .student-dialog{background:#122531;color:#eef4f2;border:1px solid #caa76d;border-radius:18px;padding:24px;width:min(94vw,520px);max-height:90vh;overflow:auto;box-shadow:0 25px 80px #0008}.student-dialog::backdrop{background:#000b}.student-dialog form{display:grid;gap:14px}.student-dialog label{display:grid;gap:6px;font-weight:650}.student-dialog input,.student-dialog textarea{width:100%;padding:12px;border:1px solid #48616e;border-radius:10px;background:#091923;color:#fff;font:inherit}.student-dialog-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}#createStudentOpen{white-space:nowrap}#studentCreateMessage{min-height:20px;color:#cde7bf}
+
+/* BARIDA brand palette: forest green with soft pink accents */
+:root{--barida-green:#103a2c;--barida-green-deep:#09281e;--barida-pink:#f3c8d8;--barida-text:#f7faf7}
+body{background:var(--barida-green-deep);color:var(--barida-text)}
+.topbar{background:#103a2c;border-bottom-color:#315b49}
+.brand b,.brand:first-letter{color:var(--barida-pink)}
+.top-right select{background:#184b39;border-color:#5a836e;color:#fff}
+.entry-art{background:radial-gradient(circle at 50% 55%,#386e50,#174532 50%,#09281e 85%)}
