@@ -30,5 +30,18 @@ jobs:
           git add assets/avatars/
           if ! git diff --cached --quiet; then
             git commit -m "Recenter and crop 300 pawn avatar image files"
-            git push
+            for attempt in 1 2 3 4 5; do
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+              echo "Remote main changed; rebasing and retrying ($attempt/5)"
+              git fetch origin main
+              git rebase -X ours origin/main || {
+                git rebase --abort || true
+                exit 1
+              }
+              sleep 2
+            done
+            echo 'Could not push image changes after 5 attempts' >&2
+            exit 1
           fi
