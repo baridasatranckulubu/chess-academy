@@ -34,7 +34,7 @@ function pieceSVG(symbol,piece){
  const white=piece===piece.toUpperCase();
  const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
  const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-refined';
- return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:84%;height:84%;margin:8% auto;object-fit:contain;object-position:center;pointer-events:none;user-select:none" />';
+ return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:80%;height:80%;margin:10% auto;object-fit:contain;object-position:center;pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
@@ -52,7 +52,7 @@ function drawAnnotations(root,state){
  root.querySelectorAll('.ca-board-annotations').forEach(el=>el.remove());const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('class','ca-board-annotations');svg.setAttribute('aria-hidden','true');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;filter:none!important;box-shadow:none!important;opacity:1;transform:none!important';
  const xy=sq=>{const f='abcdefgh'.indexOf(sq[0]),rank=Number(sq[1]);return state.flipped?[(7-f)*100+50,(rank-1)*100+50]:[f*100+50,(8-rank)*100+50]};
  const el=(name,attrs)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n};
- for(const [sq,color] of state.marks){const [x,y]=xy(sq);svg.append(el('circle',{cx:x,cy:y,r:37,fill:'none',stroke:color,'stroke-width':4,opacity:1}))}
+ for(const [sq,color] of state.marks){const [x,y]=xy(sq);svg.append(el('circle',{cx:x,cy:y,r:48,fill:'none',stroke:color,'stroke-width':4,opacity:1}))}
  for(const {from,to,color} of state.arrows.values()){const [x1,y1]=xy(from),[x2,y2]=xy(to),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len,ex=x2-ux*25,ey=y2-uy*25,px=-uy,py=ux;svg.append(el('line',{x1,y1,x2:ex,y2:ey,stroke:color,'stroke-width':7,'stroke-linecap':'round',opacity:1}));svg.append(el('polygon',{points:[x2+','+y2,(ex-ux*15+px*13)+','+(ey-uy*15+py*13),(ex-ux*15-px*13)+','+(ey-uy*15-py*13)].join(' '),fill:color,opacity:1}))}
  root.append(svg)
 }
