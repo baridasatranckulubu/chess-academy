@@ -277,3 +277,19 @@ html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-ac
 #view .barida-roster-toolbar .barida-roster-add{width:auto!important;min-width:210px!important;min-height:45px!important;margin:0!important;flex:0 0 auto}
 #view .barida-pawn-avatar img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:50% 46%!important;transform:scale(1.22)!important;transform-origin:50% 46%!important}
 @media(max-width:560px){#view .barida-roster-toolbar{align-items:flex-start}#view .barida-roster-toolbar .barida-roster-add{min-width:0!important}}
+
+/* Compact weekly schedule editor, without stretching the entire student card. */
+#view .student-grid>.student-card{align-self:start!important;align-content:start!important}
+#view .student-card .ca-schedule-editor{box-sizing:border-box!important;position:static!important;display:flex!important;flex-direction:column!important;gap:9px!important;width:100%!important;min-width:0!important;max-width:none!important;height:auto!important;max-height:none!important;overflow:visible!important;padding:13px!important;margin:0!important;border-radius:12px!important}
+#view .student-card .ca-schedule-editor>strong{font-size:13px!important;line-height:1.35!important}
+#view .student-card .ca-schedule-days{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:7px!important;width:100%!important;margin:0!important}
+#view .student-card .ca-schedule-day{box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-width:0!important;width:100%!important;min-height:35px!important;margin:0!important;padding:5px 6px!important;font-size:11px!important;white-space:nowrap!important}
+#view .student-card .ca-schedule-day input{margin:0!important;width:15px!important;height:15px!important;flex:0 0 15px!important}
+#view .student-card .ca-schedule-editor>.btn{width:100%!important;min-height:34px!important;margin:0!important}
+@media(min-width:760px){
+ #view .student-grid>.student-card{grid-template-rows:auto auto auto auto!important}
+ #view .student-grid>.student-card>.ca-schedule-editor{grid-column:1/-1!important;grid-row:3!important}
+ #view .student-grid>.student-card>.btn.gold:nth-last-child(2){grid-row:4!important;margin-top:0!important}
+ #view .student-grid>.student-card>.btn.gold:last-child{grid-row:4!important}
+}
+@media(max-width:560px){#view .student-card .ca-schedule-days{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
