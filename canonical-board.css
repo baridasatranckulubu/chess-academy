@@ -36,4 +36,8 @@
 .ca-grid .board>.sq .piece img.barida-approved-piece{width:78%!important;height:78%!important;margin:0!important;max-width:78%!important;max-height:78%!important;object-fit:contain!important;object-position:center!important;transform:var(--barida-piece-scale,none)!important;filter:drop-shadow(0 2px 1px #100b0875) drop-shadow(1px 4px 2px #1d0e0980)!important}
 .ca-grid .board>.sq:hover .piece img.barida-approved-piece{transform:var(--barida-piece-scale,none)!important}
 
-.ca-grid .board>.sq .piece img.barida-approved-piece[src*="-bishop.png"],.ca-grid .board>.sq .piece img.barida-approved-piece[src*="-rook.png"]{--barida-piece-scale:scale(1.17)}
+.ca-grid .board>.sq .piece img.barida-approved-piece{--barida-piece-scale:none}
+
+/* Ensure identical square-centered image boxes for both colors and all piece types. */
+.ca-grid .board>.sq .piece.ca-canonical-piece{display:flex!important;align-items:center!important;justify-content:center!important}
+.ca-grid .board>.sq .piece img.barida-approved-piece{display:block!important;position:relative!important;inset:auto!important;flex:0 0 78%!important;width:78%!important;height:78%!important;margin:0!important;padding:0!important;transform:none!important;object-fit:contain!important;object-position:center center!important}
