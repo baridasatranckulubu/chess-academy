@@ -862,6 +862,40 @@ window.addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.typ
 window.addEventListener('message',e=>{if(e.origin!==location.origin||e.data?.type!=='chess-academy-assignment-result'||role!=='student')return;const m=e.data;if(!Number.isSafeInteger(m.assignmentId)||typeof m.puzzleId!=='string'||!/^[-a-zA-Z0-9]{1,32}$/.test(m.puzzleId))return;const a=data.assignments.find(x=>x.kind==='puzzle'&&x.id===m.assignmentId&&x.theme===m.theme);if(!a||!m.success)return;if(assignmentProgress(a)>=a.target)return;a.results[m.puzzleId]=true;data.puzzleRating=Math.min(3000,studentRating(data)+12);persist();const card=$('view');const label=card?.querySelector('#assignment-progress-live');if(label)label.textContent=assignmentProgress(a)+'/'+a.target+' tamamlandı';if(assignmentProgress(a)>=a.target&&label)label.textContent='🏆 Ödev tamamlandı: '+a.target+'/'+a.target;});
 
 let realRoster=[];
+
+function openStudentPasswordDialog(student,afterSave){
+ const previous=document.getElementById('baridaPasswordDialog');if(previous)previous.remove();
+ const overlay=node('div','barida-password-overlay');overlay.id='baridaPasswordDialog';
+ const dialog=node('section','barida-password-modal');dialog.setAttribute('role','dialog');dialog.setAttribute('aria-modal','true');dialog.setAttribute('aria-labelledby','baridaPasswordTitle');
+ const title=node('h2','','🔐 Yeni öğrenci şifresi');title.id='baridaPasswordTitle';
+ const subtitle=node('p','',student.name+' için en az 12 karakterli yeni bir şifre belirleyin.');
+ const form=node('form','barida-password-form'),label=node('label','','Yeni şifre');
+ const field=node('input');field.type='password';field.required=true;field.minLength=12;field.maxLength=128;field.autocomplete='new-password';field.placeholder='En az 12 karakter';label.append(field);
+ const feedback=node('p','barida-password-feedback');feedback.setAttribute('role','status');
+ const actions=node('div','barida-password-actions');
+ const save=button('💾 Kaydet',()=>{},'btn gold');save.type='submit';
+ const cancel=button('Vazgeç',()=>close(),'btn');cancel.type='button';
+ const close=()=>{document.removeEventListener('keydown',keyHandler);overlay.remove()};
+ const keyHandler=e=>{if(e.key==='Escape'){e.preventDefault();close()}};
+ document.addEventListener('keydown',keyHandler);
+ overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+ actions.append(cancel,save);form.append(label,feedback,actions);dialog.append(title,subtitle,form);overlay.append(dialog);document.body.append(overlay);
+ form.onsubmit=async e=>{
+  e.preventDefault();feedback.textContent='';
+  if(field.value.length<12||field.value.length>128){feedback.textContent='Şifre 12 ile 128 karakter arasında olmalıdır.';return}
+  save.disabled=true;cancel.disabled=true;field.disabled=true;save.textContent='Kaydediliyor…';
+  try{
+   await academyPasswordAction({action:'change',student_id:student.id,password:field.value});
+   field.value='';close();alert('Öğrenci şifresi başarıyla değiştirildi. Yeni şifreyi öğrenciye güvenli şekilde iletin.');
+   if(typeof afterSave==='function')afterSave();
+  }catch(error){
+   feedback.textContent=error.message||'Şifre değiştirilemedi. Lütfen yeniden deneyin.';
+   save.disabled=false;cancel.disabled=false;field.disabled=false;save.textContent='💾 Kaydet';field.focus()
+  }
+ };
+ field.focus();
+}
+
 async function academyPasswordAction(payload){
  const {data:{session}}=await authClient.auth.getSession();
  if(!session)throw Error('Oturum bulunamadı.');
@@ -905,12 +939,7 @@ function baridaPawnAvatar(studentId){
    const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',()=>{teacherStudent=st.id;showSection('student-detail')},'btn small');card.append(schedule);
    const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%36+10).padStart(3,'0');portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261021-curated36';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
    
-   card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',async()=>{
-    const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');
-    if(password===null)return;if(password.length<12){alert('Şifre en az 12 karakter olmalıdır.');return;}
-    if(!confirm(st.name+' adlı öğrencinin şifresi değiştirilsin mi?'))return;
-    try{await academyPasswordAction({action:'change',student_id:st.id,password});alert('Şifre değiştirildi. Yeni şifreyi öğrenciye güvenli şekilde iletin.');renderTeacherStudents()}catch(e){alert(e.message)}
-   },'btn gold'));
+   card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',()=>openStudentPasswordDialog(st,()=>renderTeacherStudents()),'btn gold'));
    grid.append(card);
   }view.append(grid);
  }catch(error){view.append(node('p','auth-error','Öğrenci listesi yüklenemedi: '+error.message))}
@@ -1001,7 +1030,7 @@ async function renderRealStudentDetail(){
  };
  const actionArea=node('div','barida-student-detail-bottom');
  actionArea.append(node('p','muted','🔒 Öğrenci mevcut şifresi görüntülenemez. Öğretmen yeni şifre belirleyebilir.'));
- details.append(button('🔑 Yeni şifre belirle',async()=>{const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');if(password===null)return;if(password.length<12)return alert('Şifre en az 12 karakter olmalıdır.');if(!confirm('Öğrenci şifresi değiştirilsin mi?'))return;try{await academyPasswordAction({action:'change',student_id:id,password});alert('Şifre değiştirildi. Yeni şifreyi güvenli şekilde iletin.')}catch(e){alert(e.message)}},'btn gold'));
+ details.append(button('🔑 Yeni şifre belirle',()=>openStudentPasswordDialog(st),'btn gold'));
  details.append(button('🗑 Öğrenci kaydını sil',async()=>{
   if(!confirm(st.name+' adlı öğrencinin hesabını ve kayıtlarını kalıcı olarak silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;
   const typed=prompt('Silme işlemini onaylamak için SİL yazın:');

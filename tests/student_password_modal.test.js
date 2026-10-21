@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),path=require('node:path');
+const js=fs.readFileSync(path.join(__dirname,'../academy.js'),'utf8'),html=fs.readFileSync(path.join(__dirname,'../academy.html'),'utf8'),css=fs.readFileSync(path.join(__dirname,'../academy.css'),'utf8');
+assert.doesNotThrow(()=>new vm.Script(js));
+assert(js.includes('function openStudentPasswordDialog('));
+assert(js.includes("setAttribute('aria-modal','true')"));
+assert(js.includes("field.type='password'"));
+assert(js.includes("form.onsubmit=async e=>"));
+assert(js.includes("openStudentPasswordDialog(st,()=>renderTeacherStudents())"));
+assert(js.includes("openStudentPasswordDialog(st)"));
+assert(!js.includes("prompt(st.name+' için yeni şifre"));
+assert(css.includes('backdrop-filter:blur(9px)'));
+assert(html.includes('barida-registration-gradient-frame'));
+console.log('PASS password modal and registration animated frame');
