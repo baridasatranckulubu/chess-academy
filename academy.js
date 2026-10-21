@@ -779,14 +779,14 @@ async function loadTeacherStudents(){
  realRoster=(profiles||[]).map(p=>({id:p.id,name:p.display_name,user:p.username,createdAt:p.created_at,progress:(progress||[]).find(x=>x.user_id===p.id)}));
 }
 async function renderTeacherStudents(){
- const view=$('view');view.replaceChildren(node('h2','','👥 Öğrencilerim'),node('p','muted','Yalnızca size atanmış gerçek öğrenci hesapları gösterilir.'));
+ const view=$('view');view.replaceChildren();const rosterToolbar=node('div','barida-roster-toolbar');rosterToolbar.append(node('h2','','👥 Öğrencilerim'),button('＋ Yeni öğrenci kaydı',()=>openStudentRegistration(),'btn gold barida-roster-add'));view.append(rosterToolbar,node('p','muted','Yalnızca size atanmış gerçek öğrenci hesapları gösterilir.'));
  try{
   await loadTeacherStudents();if(section!=='students')return;
   const {data:requests,error}=await authClient.from('student_password_requests').select('id,student_id,created_at').eq('teacher_id',realUser.id).eq('status','pending').order('created_at',{ascending:false});
   if(error)throw error;
   const pending=new Set((requests||[]).map(x=>x.student_id));
   if(pending.size)view.append(node('p','muted','🔔 '+pending.size+' öğrenciden şifre değişikliği isteği var.'));
-  if(!realRoster.length){view.append(node('p','muted','Henüz kayıtlı öğrenciniz yok.'));view.append(button('＋ Yeni öğrenci kaydı',()=>openStudentRegistration(),'btn gold'));return;}
+  if(!realRoster.length){view.append(node('p','muted','Henüz kayıtlı öğrenciniz yok.'));return;}
   
 /* 300 deterministic illustrated pawn portraits: 10 palettes x 10 outfits x 3 crowns. */
 function baridaPawnAvatar(studentId){
@@ -802,7 +802,7 @@ function baridaPawnAvatar(studentId){
   const grid=node('div','student-grid');
   for(const st of realRoster){
    const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',async()=>{const panel=node('section','ca-schedule-editor');panel.append(node('strong','','Haftalık ders günleri'));let existing=[];try{existing=await attendanceRPC('get_schedule',{p_student_id:st.id})||[]}catch{}const pick=schedulePicker(existing);panel.append(pick,button('💾 Günleri Kaydet',async()=>{try{await attendanceRPC('schedule',{p_student_id:st.id,p_weekdays:pickedSchedule(pick)});panel.remove();alert('Haftalık ders günleri kaydedildi.')}catch(e){alert(e.message)}},'btn gold'));card.append(panel)},'btn small');card.append(schedule);
-   const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%300+1).padStart(3,'0');portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261021-clean300';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
+   const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%90+1).padStart(3,'0');portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261021-centered90';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
    
    card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',async()=>{
     const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');
@@ -811,7 +811,7 @@ function baridaPawnAvatar(studentId){
     try{await academyPasswordAction({action:'change',student_id:st.id,password});alert('Şifre değiştirildi. Yeni şifreyi öğrenciye güvenli şekilde iletin.');renderTeacherStudents()}catch(e){alert(e.message)}
    },'btn gold'));
    grid.append(card);
-  }view.append(grid,button('＋ Yeni öğrenci kaydı',()=>openStudentRegistration(),'btn gold'));
+  }view.append(grid);
  }catch(error){view.append(node('p','auth-error','Öğrenci listesi yüklenemedi: '+error.message))}
 }
 
