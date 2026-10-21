@@ -28,6 +28,35 @@ function sound(type){
 }
 
 const baridaPremiumShapes={"p":"<circle cx=\"50\" cy=\"23\" r=\"13\"/><path d=\"M43 37 Q35 50 35 64 L65 64 Q65 50 57 37 Z\"/><path d=\"M32 64 H68 Q75 67 76 75 H24 Q25 67 32 64 Z\"/><path d=\"M23 76 H77 Q81 80 78 84 H22 Q19 80 23 76 Z\"/>","r":"<path d=\"M25 18 H36 V28 H45 V18 H55 V28 H64 V18 H75 V38 H69 L65 66 H35 L31 38 H25 Z\"/><path d=\"M31 66 H69 L74 75 H26 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>","n":"<path d=\"M26 74 L33 61 L25 53 Q20 49 25 44 L34 36 L32 26 L43 17 L49 23 L56 14 L62 23 Q75 30 77 45 L72 55 L65 49 Q59 60 67 74 Z\"/><path d=\"M23 75 H76 Q80 80 76 84 H24 Q20 80 23 75 Z\"/><path class=\"piece-detail\" d=\"M31 52 Q42 54 51 45 M57 29 Q64 32 68 37\"/><circle class=\"piece-eye\" cx=\"49\" cy=\"33\" r=\"2.6\"/>","b":"<circle cx=\"50\" cy=\"14\" r=\"6.5\"/><path d=\"M48 21 C28 29 27 48 38 61 Q42 65 37 71 L63 71 Q58 65 62 61 C74 46 68 28 53 21 Z\"/><path d=\"M31 71 H69 Q77 74 77 80 Q75 85 67 85 H33 Q25 85 23 80 Q23 74 31 71 Z\"/><path class=\"bishop-slit\" d=\"M63 27 Q65 37 55 44 Q43 52 39 60\"/>","q":"<circle cx=\"18\" cy=\"27\" r=\"5\"/><circle cx=\"34\" cy=\"20\" r=\"5\"/><circle cx=\"50\" cy=\"16\" r=\"5\"/><circle cx=\"66\" cy=\"20\" r=\"5\"/><circle cx=\"82\" cy=\"27\" r=\"5\"/><path d=\"M19 34 L31 67 H69 L81 34 L66 47 L50 30 L34 47 Z\"/><path d=\"M29 67 H71 L75 76 H25 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>","k":"<path d=\"M47 10 H53 V19 H62 V25 H53 V35 H47 V25 H38 V19 H47 Z\"/><path d=\"M45 36 Q50 31 55 36 L58 43 Q70 38 77 50 Q79 61 69 68 H31 Q21 61 23 50 Q30 38 42 43 Z\"/><path d=\"M30 67 H70 L75 76 H25 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>"};
+const baridaPieceOptics=new Map();
+function baridaNormalizePiece(img){
+ if(!img||!img.naturalWidth)return;
+ const key=img.currentSrc||img.src;
+ let optical=baridaPieceOptics.get(key);
+ if(!optical){
+  try{
+   const c=document.createElement('canvas');c.width=128;c.height=128;
+   const ctx=c.getContext('2d',{willReadFrequently:true});
+   ctx.clearRect(0,0,128,128);ctx.drawImage(img,0,0,128,128);
+   const pixels=ctx.getImageData(0,0,128,128).data;
+   let left=128,right=-1,top=128,bottom=-1;
+   for(let y=0;y<128;y++)for(let x=0;x<128;x++){
+    if(pixels[(y*128+x)*4+3]>48){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
+   }
+   if(right<left)throw Error('Empty piece');
+   const pawn=img.dataset.pieceType==='pawn';
+   const target=pawn?.65:.72;
+   const visibleW=(right-left+1)/128,visibleH=(bottom-top+1)/128;
+   const scale=Math.min(2.7,target/(.78*Math.max(visibleW,visibleH)));
+   const dx=(63.5-(left+right)/2)/128*100;
+   const dy=(63.5-(top+bottom)/2)/128*100;
+   optical='translate('+dx.toFixed(3)+'%,'+dy.toFixed(3)+'%) scale('+scale.toFixed(4)+')';
+  }catch(e){optical='none'}
+  baridaPieceOptics.set(key,optical);
+ }
+ img.style.setProperty('--barida-optical-transform',optical);
+}
+window.baridaNormalizePiece=baridaNormalizePiece;
 let baridaPremiumPieceId=0;
 function pieceSVG(symbol,piece){
  if(!/^[KQRBNPkqrbnp]$/.test(piece))return '';
@@ -35,8 +64,8 @@ function pieceSVG(symbol,piece){
  const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
  const pieceName=names[piece.toLowerCase()];
  const pieceScale='none';
- const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-center-v4';
- return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:78%;height:78%;margin:0;object-fit:contain;object-position:center;transform:'+pieceScale+';pointer-events:none;user-select:none" />';
+ const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-optical-v5';
+ return '<img onload="window.baridaNormalizePiece(this)" data-piece-type="'+pieceName+'" class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:78%;height:78%;margin:0;object-fit:contain;object-position:center;transform:'+pieceScale+';pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
