@@ -31,16 +31,10 @@ const baridaPremiumShapes={"p":"<circle cx=\"50\" cy=\"23\" r=\"13\"/><path d=\"
 let baridaPremiumPieceId=0;
 function pieceSVG(symbol,piece){
  if(!/^[KQRBNPkqrbnp]$/.test(piece))return '';
- const white=piece===piece.toUpperCase(),id='barida-piece-2026-'+(++baridaPremiumPieceId);
- const stops=white?['#fffefa','#fff3d8','#eed3a3','#fff9e8','#cba77a']:['#71757b','#22252a','#030407','#34383d','#000000'];
- const edge=white?'#b58d58':'#9ba4aa';
- const shape=baridaPremiumShapes[piece.toLowerCase()];
- return '<svg class="piece-3d barida-premium-piece '+(white?'white':'black')+'" viewBox="0 0 100 100" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+
- '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="'+stops[0]+'"/><stop offset=".25" stop-color="'+stops[1]+'"/><stop offset=".56" stop-color="'+stops[2]+'"/><stop offset=".77" stop-color="'+stops[3]+'"/><stop offset="1" stop-color="'+stops[4]+'"/></linearGradient></defs>'+
- '<ellipse cx="51" cy="88" rx="31" ry="4" fill="#050505" opacity=".27"/>'+
- '<g fill="url(#'+id+')" stroke="'+edge+'" stroke-width="2" stroke-linejoin="round">'+shape+'</g>'+
- '<path d="M29 78 Q50 82 71 78" stroke="'+(white?'#fffdf3':'#81868a')+'" stroke-width="1.5" opacity=".8" fill="none"/>'+
- '</svg>';
+ const white=piece===piece.toUpperCase();
+ const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
+ const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png';
+ return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
