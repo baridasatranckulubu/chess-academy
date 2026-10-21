@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),path=require('node:path');
+const js=fs.readFileSync(path.join(__dirname,'../academy.js'),'utf8');
+const css=fs.readFileSync(path.join(__dirname,'../academy.css'),'utf8');
+assert.doesNotThrow(()=>new vm.Script(js));
+const detail=js.slice(js.indexOf('async function renderRealStudentDetail(){'),js.indexOf('\nfunction students(){'));
+assert(!detail.includes("line('Kullanıcı adı'"),'Student username should not be shown in detail');
+assert(detail.includes("line('Satranç lisansı'"),'License should replace username');
+assert(detail.includes("academy_teacher_save_student_details"),'Profile and weekdays must save together');
+assert(detail.includes("p_weekdays:pickedSchedule(picker)"),'Weekdays included in unified save');
+assert(detail.includes("form.append(actions)"),'Save/cancel at bottom of editor');
+assert(js.includes("teacherStudent=st.id;showSection('student-detail')"),'Roster schedule button should navigate to detail');
+assert(css.includes("grid-template-columns:repeat(7,minmax(0,1fr))"),'Seven day columns on desktop');
+assert(css.includes("overflow:visible!important"),'Weekday scrollbars should be removed');
+console.log('PASS student details and registration layout contracts');

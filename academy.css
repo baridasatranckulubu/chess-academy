@@ -352,3 +352,70 @@ html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-ac
 .barida-detail-editbar{display:flex!important;justify-content:flex-end!important;align-items:center!important;width:100%!important}
 .barida-student-edit-icon{width:36px!important;min-width:36px!important;height:36px!important;padding:0!important;display:grid!important;place-items:center!important;font-size:20px!important;background:#193742!important;color:#f3dba7!important;border:1px solid #78929b!important;border-radius:9px!important}
 @media(max-width:650px){.barida-admin-student-edit{grid-template-columns:1fr}.barida-admin-student-schedule .ca-schedule-days{grid-template-columns:repeat(7,minmax(75px,1fr))!important}}
+
+
+/* Registration page: prevent inherited white dialog and washed-out labels. */
+html body #view .student-registration-page,
+html body #view .student-registration-page #studentCreateForm,
+html body #view .student-registration-page .register-body,
+html body #view .student-registration-page .register-footer,
+html body #view .student-registration-page .register-head{
+ background:#142a36!important;color:#f4f8fb!important;border-color:#446171!important;
+}
+html body #view .student-registration-page .register-head{background:linear-gradient(135deg,#132c3b,#214453)!important}
+html body #view .student-registration-page .register-step,
+html body #view .student-registration-page .register-step span,
+html body #view .student-registration-page .register-body>label,
+html body #view .student-registration-page .register-hint,
+html body #view .student-registration-page .register-eyebrow,
+html body #view .student-registration-page .register-body label,
+html body #view .student-registration-page .register-body strong{color:#f0f7fa!important}
+html body #view .student-registration-page .register-note{background:#203d4e!important;color:#e4f2f7!important}
+html body #view .student-registration-page .register-segment label span{background:#244353!important;color:#f5f9fc!important;border:1px solid #78919e!important}
+html body #view .student-registration-page .register-segment input:checked+span{background:#12634e!important;color:#fff!important;border-color:#37d7a3!important}
+html body #view .student-registration-page .register-body input:not([type=checkbox]):not([type=radio]){background:#0c2532!important;color:#fff!important;border:1px solid #6b8795!important}
+html body #view .student-registration-page .register-body input::placeholder{color:#afc6d2!important;opacity:1!important}
+html body #view .student-registration-page .register-hidden-select{display:none!important}
+html body #view .student-registration-page #studentCreateSchedule.ca-schedule-days{
+ display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;
+ width:100%!important;max-width:none!important;min-width:0!important;
+ gap:9px!important;overflow:visible!important;margin:12px 0 25px!important;
+ padding:0!important;box-sizing:border-box!important
+}
+html body #view .student-registration-page #studentCreateSchedule>label{
+ min-width:0!important;width:100%!important;display:flex!important;align-items:center!important;
+ justify-content:center!important;gap:5px!important;white-space:normal!important;
+ overflow:visible!important;overflow-wrap:anywhere!important;word-break:normal!important;
+ padding:10px 5px!important;min-height:44px!important;margin:0!important;
+ font-size:clamp(10px,.9vw,12px)!important;line-height:1.2!important;
+ background:#234150!important;color:#f5f9fc!important;border:1px solid #64818f!important;
+ border-radius:9px!important;box-sizing:border-box!important
+}
+html body #view .student-registration-page #studentCreateSchedule>label input{
+ width:15px!important;height:15px!important;flex:0 0 15px!important;
+ margin:0!important;padding:0!important;accent-color:#27c996!important
+}
+html body #view .student-registration-page #studentCreateSchedule>label:has(input:checked){background:#165c4d!important;border-color:#38dca6!important}
+#view .barida-student-detail-card{background:#142c38!important;color:#f1f8fa!important}
+#view .barida-student-detail-line{color:#e1eef4!important}
+#view .barida-student-detail-line strong{color:#f8f9f5!important}
+#view .barida-student-detail-card .barida-detail-editform{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:15px!important;margin:12px 0!important}
+#view .barida-detail-editform>label{display:grid!important;gap:6px!important;color:#eaf4f8!important}
+#view .barida-detail-editform :is(input,select){width:100%!important;min-width:0!important;box-sizing:border-box!important;padding:11px!important;border-radius:9px!important;border:1px solid #688491!important;background:#0b2531!important;color:#f7fbfc!important}
+#view .barida-detail-editform .barida-detail-schedule{grid-column:1/-1!important}
+#view .barida-detail-editform .barida-detail-edit-actions{grid-column:1/-1!important;display:flex!important;justify-content:flex-end!important;gap:12px!important;margin-top:12px!important}
+#view .barida-detail-edit-actions .btn{min-width:145px!important}
+#view .barida-detail-schedule .ca-schedule-days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:7px!important;overflow:visible!important}
+#view .barida-detail-schedule .ca-schedule-day{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;padding:9px 4px!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:11px!important;background:#1b3a49!important;color:#f3f8fa!important}
+#view .barida-detail-schedule .ca-schedule-day input{flex:0 0 15px!important;width:15px!important;height:15px!important}
+#view .barida-schedule-readonly{color:#e4f1f5!important}
+#view .barida-student-detail-bottom{margin-top:22px!important;padding-top:16px!important;border-top:1px solid #466371!important}
+@media(max-width:720px){
+ html body #view .student-registration-page #studentCreateSchedule.ca-schedule-days{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ #view .barida-detail-schedule .ca-schedule-days{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+}
+@media(max-width:460px){
+ html body #view .student-registration-page #studentCreateSchedule.ca-schedule-days,
+ #view .barida-detail-schedule .ca-schedule-days{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #view .barida-student-detail-card .barida-detail-editform{grid-template-columns:1fr!important}
+}

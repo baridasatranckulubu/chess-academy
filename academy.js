@@ -902,7 +902,7 @@ function baridaPawnAvatar(studentId){
 
   const grid=node('div','student-grid');
   for(const st of realRoster){
-   const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',async()=>{if(card.querySelector('.ca-schedule-editor'))return;schedule.disabled=true;const panel=node('section','ca-schedule-editor');panel.append(node('strong','','Haftalık ders günleri'));card.append(panel);try{let existing=[];try{existing=await attendanceRPC('get_schedule',{p_student_id:st.id})||[]}catch{}if(!panel.isConnected)return;const pick=schedulePicker(existing);const save=button('💾 Günleri Kaydet',async()=>{save.disabled=true;try{await attendanceRPC('schedule',{p_student_id:st.id,p_weekdays:pickedSchedule(pick)});panel.remove();schedule.disabled=false;}catch(e){save.disabled=false;alert(e.message)}},'btn gold');panel.append(pick,save,button('Vazgeç',()=>{panel.remove();schedule.disabled=false},'btn small'));}catch(e){panel.remove();schedule.disabled=false;alert(e.message)}},'btn small');card.append(schedule);
+   const card=node('article','student-card'),d=st.progress||{};const schedule=button('📅 Ders günlerini ayarla',()=>{teacherStudent=st.id;showSection('student-detail')},'btn small');card.append(schedule);
    const avatar=node('div','avatar barida-pawn-avatar');const portrait=document.createElement('img');const avatarKey=String(st.id||'student');let avatarHash=2166136261;for(let ai=0;ai<avatarKey.length;ai++)avatarHash=Math.imul(avatarHash^avatarKey.charCodeAt(ai),16777619);const avatarNumber=String((avatarHash>>>0)%36+10).padStart(3,'0');portrait.src='assets/avatars/piyon-'+avatarNumber+'.webp?v=20261021-curated36';portrait.onerror=()=>{portrait.onerror=null;portrait.src=baridaPawnAvatar(st.id)};portrait.alt=st.name+' satranç piyonu avatarı';portrait.loading='lazy';avatar.append(portrait);const identity=node('div','barida-student-identity');identity.append(node('h3','',st.name),node('p','muted','✓ '+(d.completed_lessons?.length||0)+' ders · '+(d.questions_answered||0)+' soru'));if(pending.has(st.id))identity.append(node('p','barida-password-alert','🔔 Şifre sıfırlama isteği bekliyor'));const head=node('div','barida-student-head');head.append(avatar,identity);card.append(head);
    
    card.append(button('Öğrenci bilgilerini görüntüle →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));card.append(button('🔑 Şifreyi değiştir',async()=>{
@@ -935,20 +935,72 @@ function openStudentRegistration(){if(role!=='teacher'||!realUser)return;$('stud
 function renderStudentRegistration(){const view=$('view');view.replaceChildren();view.append(node('h2','','♟ Yeni Öğrenci Kaydı'),node('p','muted','Öğrenci bilgilerini ve giriş şifresini bu sayfada belirleyin.'));const wrap=node('section','student-registration-page');const form=$('studentCreateForm');wrap.append(form);view.append(wrap);$('studentCreateCancel').textContent='←';$('studentCreateCancel').setAttribute('aria-label','Öğrenci bilgilerine dön')}
 async function renderRealStudentDetail(){
  const view=$('view'),id=teacherStudent;
- view.replaceChildren(button('← Öğrenci Paneli',()=>showSection('students'),'btn'),node('h2','','♟ Öğrenci bilgileri'));
+ view.replaceChildren(button('← Öğrencilerim',()=>showSection('students'),'btn'),node('h2','','♟ Öğrenci bilgileri'));
  const st=realRoster.find(x=>x.id===id);
  if(!st){view.append(node('p','auth-error','Öğrenci bulunamadı.'));return}
- const details=node('article','student-card');
- const editBar=node('div','barida-detail-editbar');const editButton=button('✎',async()=>{if(details.querySelector('.barida-detail-editform'))return;const form=node('form','barida-detail-editform');const fields=[['Ad soyad','display_name',st.name],['Kullanıcı adı','username',st.user],['Telefon','phone',contactData?.phone||''],['Adres','home_address',contactData?.home_address||'']];const controls={};for(const [label,key,value] of fields){const row=node('label','',label);const input=node('input');input.value=value;input.maxLength=key==='home_address'?300:100;input.required=key==='display_name'||key==='username';controls[key]=input;row.append(input);form.append(row)}const save=button('💾 Değişiklikleri kaydet',()=>{},'btn gold');save.type='submit';const cancel=button('Vazgeç',()=>form.remove(),'btn');cancel.type='button';form.append(save,cancel);form.onsubmit=async e=>{e.preventDefault();save.disabled=true;try{const updates={display_name:controls.display_name.value.trim(),username:controls.username.value.trim()};const {error}=await authClient.rpc('academy_teacher_update_student',{p_student_id:id,p_name:updates.display_name,p_username:updates.username,p_phone:controls.phone.value.trim(),p_home_address:controls.home_address.value.trim()});if(error)throw error;st.name=updates.display_name;st.user=updates.username;alert('Öğrenci bilgileri kaydedildi.');renderRealStudentDetail()}catch(err){alert('Bilgiler kaydedilemedi: '+err.message)}finally{save.disabled=false}};editBar.after(form)},'btn small barida-student-edit-icon');editButton.setAttribute('aria-label','Öğrenci bilgilerini düzenle');editButton.title='Öğrenci bilgilerini düzenle';editBar.append(editButton);details.append(editBar);let contactData=null;
- const line=(label,value)=>details.append(node('p','',''+label+': '+(value||'Belirtilmemiş')));
- line('Ad soyad',st.name);line('Kullanıcı adı',st.user);line('Kayıt tarihi',st.createdAt?new Date(st.createdAt).toLocaleString('tr-TR'):'Belirtilmemiş');
+ const details=node('article','student-card barida-student-detail-card');
+ const editBar=node('div','barida-detail-editbar');
+ const editButton=button('✎',()=>{if(details.querySelector('.barida-detail-editform'))return;beginEdit()},'btn small barida-student-edit-icon');
+ editButton.title='Öğrenci bilgilerini ve ders günlerini düzenle';
+ editButton.setAttribute('aria-label','Öğrenci bilgilerini ve ders günlerini düzenle');
+ editBar.append(editButton);details.append(editBar);
+ const status=node('p','muted','Öğrenci bilgileri yükleniyor…');details.append(status);view.append(details);
+ let info;
  try{
-  const {data,error}=await authClient.from('profile_contact').select('phone,home_address').eq('user_id',id).maybeSingle();
+  const {data,error}=await authClient.rpc('academy_teacher_student_details',{p_student_id:id});
+  if(error)throw error;
   if(section!=='student-detail'||teacherStudent!==id)return;
-  contactData=data;if(error){line('İletişim bilgileri','Bu hesaba erişim izni bulunmuyor.')}else{line('Telefon',data?.phone);line('Adres',data?.home_address)}
- }catch{line('İletişim bilgileri','Yüklenemedi')}
- const scheduleSection=node('section','barida-detail-schedule');scheduleSection.append(node('h3','','📅 Haftalık ders günleri'));const scheduleStatus=node('p','muted','Ders günleri yükleniyor...');scheduleSection.append(scheduleStatus);details.append(scheduleSection);try{const assigned=await attendanceRPC('get_schedule',{p_student_id:id})||[];if(section!=='student-detail'||teacherStudent!==id)return;scheduleStatus.remove();const days=schedulePicker(assigned);scheduleSection.append(days);const saveDays=button('💾 Ders günlerini kaydet',async()=>{saveDays.disabled=true;try{await attendanceRPC('schedule',{p_student_id:id,p_weekdays:pickedSchedule(days)});saveDays.textContent='✓ Kaydedildi';setTimeout(()=>{if(saveDays.isConnected){saveDays.textContent='💾 Ders günlerini kaydet';saveDays.disabled=false}},1800)}catch(e){saveDays.disabled=false;alert('Ders günleri kaydedilemedi: '+e.message)}},'btn gold');scheduleSection.append(saveDays)}catch(e){scheduleStatus.textContent='Ders günleri yüklenemedi: '+e.message}
- line('Şifre','Mevcut şifre saklanmaz ve geri görüntülenemez. Öğretmen yeni şifre belirleyebilir.');
+  info=data||{};
+ }catch(e){status.textContent='Öğrenci bilgileri yüklenemedi: '+e.message;return}
+ status.remove();
+ const line=(label,value)=>{const p=node('p','barida-student-detail-line');p.append(node('strong','',label+': '),node('span','',value||'Belirtilmemiş'));details.append(p)};
+ const showInfo=()=>{
+  details.querySelectorAll('.barida-student-detail-line,.barida-detail-schedule,.barida-detail-editform').forEach(el=>el.remove());
+  line('Ad soyad',info.name||st.name);
+  line('Satranç lisansı',info.hasLicense===true?'✓ Var':info.hasLicense===false?'✕ Yok':'Belirtilmemiş');
+  line('Telefon',info.phone);
+  line('Adres',info.address);
+  line('Kayıt tarihi',st.createdAt?new Date(st.createdAt).toLocaleDateString('tr-TR'):'Belirtilmemiş');
+  const schedule=node('section','barida-detail-schedule');
+  schedule.append(node('h3','','📅 Haftalık ders günleri'));
+  const days=Array.isArray(info.weekdays)?info.weekdays:[];
+  schedule.append(node('p','barida-schedule-readonly',days.length?days.map(d=>attendanceDays[d]).filter(Boolean).join(' · '):'Henüz ders günü belirlenmedi.'));
+  details.insertBefore(schedule,actionArea);
+ };
+ const beginEdit=()=>{
+  details.querySelectorAll('.barida-student-detail-line,.barida-detail-schedule').forEach(el=>el.remove());
+  const form=node('form','barida-detail-editform');
+  const field=(label,value,type='text')=>{const wrapper=node('label','',label),input=node('input');input.type=type;input.value=value||'';wrapper.append(input);form.append(wrapper);return input};
+  const name=field('Ad soyad',info.name||st.name);name.required=true;name.maxLength=60;
+  const phone=field('Telefon (+90...)',info.phone,'tel');
+  const address=field('Adres (isteğe bağlı)',info.address);address.maxLength=500;
+  const licenseLabel=node('label','','Satranç lisansı');const license=node('select');
+  for(const [value,text] of [['','Belirtilmedi'],['yes','✓ Var'],['no','✕ Yok']]){const opt=node('option','',text);opt.value=value;license.append(opt)}
+  license.value=info.hasLicense===true?'yes':info.hasLicense===false?'no':'';
+  licenseLabel.append(license);form.append(licenseLabel);
+  const schedule=node('section','barida-detail-schedule');schedule.append(node('h3','','📅 Haftalık ders günleri'));
+  const picker=schedulePicker(Array.isArray(info.weekdays)?info.weekdays:[]);schedule.append(picker);form.append(schedule);
+  const actions=node('div','barida-detail-edit-actions');
+  const save=button('💾 Kaydet',()=>{},'btn gold');save.type='submit';
+  const cancel=button('Vazgeç',()=>showInfo(),'btn');cancel.type='button';
+  actions.append(save,cancel);form.append(actions);
+  form.onsubmit=async e=>{
+   e.preventDefault();save.disabled=true;cancel.disabled=true;
+   try{
+    const updates={p_student_id:id,p_name:name.value.trim(),p_phone:phone.value.trim(),
+      p_home_address:address.value.trim(),p_has_license:license.value===''?null:license.value==='yes',
+      p_weekdays:pickedSchedule(picker)};
+    const {error}=await authClient.rpc('academy_teacher_save_student_details',updates);
+    if(error)throw error;
+    info={...info,name:updates.p_name,phone:updates.p_phone,address:updates.p_home_address,
+      hasLicense:updates.p_has_license,weekdays:updates.p_weekdays};
+    st.name=updates.p_name;showInfo();
+   }catch(err){alert('Bilgiler kaydedilemedi: '+err.message);save.disabled=false;cancel.disabled=false}
+  };
+  details.insertBefore(form,actionArea);
+ };
+ const actionArea=node('div','barida-student-detail-bottom');
+ actionArea.append(node('p','muted','🔒 Öğrenci mevcut şifresi görüntülenemez. Öğretmen yeni şifre belirleyebilir.'));
  details.append(button('🔑 Yeni şifre belirle',async()=>{const password=prompt(st.name+' için yeni şifre (en az 12 karakter):');if(password===null)return;if(password.length<12)return alert('Şifre en az 12 karakter olmalıdır.');if(!confirm('Öğrenci şifresi değiştirilsin mi?'))return;try{await academyPasswordAction({action:'change',student_id:id,password});alert('Şifre değiştirildi. Yeni şifreyi güvenli şekilde iletin.')}catch(e){alert(e.message)}},'btn gold'));
  details.append(button('🗑 Öğrenci kaydını sil',async()=>{
   if(!confirm(st.name+' adlı öğrencinin hesabını ve kayıtlarını kalıcı olarak silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;
@@ -962,7 +1014,8 @@ async function renderRealStudentDetail(){
    realRoster=realRoster.filter(x=>x.id!==id);alert('Öğrenci kaydı silindi.');showSection('students');
   }catch(e){alert('Öğrenci silinemedi: '+e.message)}
  },'btn'));
- view.append(details);
+
+ details.append(actionArea);showInfo();
 }
 function students(){if(realUser){renderTeacherStudents();return}const view=$('view');view.append(node('h2','','Öğrenci listesi'),node('p','muted','Bu listedeki adlar örnek öğrencilerdir. Kayıtlar yalnızca aynı tarayıcıdaki deneme ortamında paylaşılır.'));const grid=node('div','student-grid');roster.forEach(st=>{const d=studentData(st.id),c=node('article','student-card');c.append(node('div','avatar',st.name.split(' ').map(x=>x[0]).join('')),node('h3','',st.name),node('p','muted','@'+st.user),node('p','','✓ '+d.completed.length+' ders · '+d.questions+' soru · '+duration(d.seconds)));c.append(button('Öğrenci dosyasını aç →',()=>{teacherStudent=st.id;showSection('student-detail')},'btn gold'));grid.append(c)});view.append(grid)}
 function studentDetail(){const view=$('view'),st=roster.find(x=>x.id===teacherStudent),d=studentData(st.id);view.append(button('← Öğrenci listesi',()=>showSection('students'),'btn'),node('h2','',st.name+' · Öğrenci dosyası'),node('p','muted','@'+st.user+' • Yerel demo verisi'));const stats=node('div','stat-grid');[[d.completed.length+'/48','Tamamlanan ders'],[d.questions,'Çözülen soru'],[d.correct,'Doğru cevap'],[duration(d.seconds),'Çalışma süresi'],[d.videos.length,'İzlendiği doğrulanan video'],[d.assignments.filter(a=>d.completed.includes(a.lesson)).length+'/'+d.assignments.length,'Tamamlanan ödev']].forEach(([n,label])=>{const c=node('div','stat');c.append(node('strong','',String(n)),node('span','',label));stats.append(c)});view.append(stats);const levelPanel=node('div','panel');levelPanel.append(node('h3','','🎓 Seviye ve erişim yönetimi'),node('p','muted','XP: '+studentXP(d)+' · Mevcut seviye: '+studentLevel(d)+' · Seviye 1-20. Bu cihazdaki demo verilerine uygulanır.'));const levelSelect=node('select');levelSelect.setAttribute('aria-label','Öğrenci seviyesini belirle');[['auto','Otomatik (XP)'],...Array.from({length:20},(_,i)=>[String(i+1),'Seviye '+(i+1)])].forEach(([v,l])=>{const o=node('option','',l);o.value=v;levelSelect.append(o)});levelSelect.value=d.levelOverride==null?'auto':String(d.levelOverride);levelSelect.onchange=()=>{d.levelOverride=levelSelect.value==='auto'?null:Number(levelSelect.value);persist();render()};levelPanel.append(levelSelect,node('p','muted','Öğretmen seçimi XP ile hesaplanan seviyeyi geçersiz kılar. Ders ve bulmaca kilitleri sonraki sürümlerde aynı erişim kuralına bağlanacaktır.'));view.append(levelPanel);view.append(node('h3','','Ödevler'));if(!d.assignments.length)view.append(node('p','muted','Bu öğrenciye henüz ödev atanmadı.'));d.assignments.forEach(a=>{const card=node('article','assignment');card.append(node('div','',a.title+' · '+name(a.lesson)),node('strong','',d.completed.includes(a.lesson)?'✓ Tamamlandı':'◷ Bekliyor'));view.append(card)});view.append(button('Bu öğrenciye ödev ver',()=>showSection('assignments'),'btn gold'));view.append(node('h3','','Tamamlanan dersler'));d.completed.forEach(i=>view.append(node('p','muted','✓ '+name(i))));view.append(node('h3','','Öğrenme etkinlikleri'));const events=d.activity||[];if(!events.length)view.append(node('p','muted','Henüz kaydedilmiş ders etkinliği yok.'));events.slice(0,40).forEach(ev=>{const label={quiz_correct:'✓ Doğru yanıt',quiz_wrong:'✕ Yanlış yanıt',lesson_complete:'★ Ders tamamlandı'}[ev.type]||ev.type;view.append(node('p','muted',new Date(ev.at).toLocaleString('tr-TR')+' · '+label+' · '+name(ev.lesson)))});view.append(button('⬇ Öğrenci raporu CSV',()=>downloadCSV('student-'+st.id+'.csv',[['Zaman','Etkinlik','Ders'],...events.map(ev=>[ev.at,ev.type,name(ev.lesson)])]),'btn gold'));view.append(node('h3','','Video izleme geçmişi'),node('p','muted','Henüz doğrulanmış video oynatma kaydı yok. Gerçek video oynatıcı entegrasyonu olmadan izlenmiş gibi gösterilmez.'))}
