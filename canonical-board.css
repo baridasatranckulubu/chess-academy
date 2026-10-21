@@ -33,5 +33,7 @@
 .ca-grid .board>.sq.last-move .piece,.ca-grid .board>.sq.last-move .piece-3d{position:relative;z-index:1}
 
 /* Approved BARIDA PRO PNG pieces: enforce actual 80% size over legacy SVG rules. */
-.ca-grid .board>.sq .piece img.barida-approved-piece{width:80%!important;height:80%!important;margin:0!important;max-width:80%!important;max-height:80%!important;object-fit:contain!important;object-position:center!important;transform:none!important;filter:drop-shadow(0 2px 1px #100b0875) drop-shadow(1px 4px 2px #1d0e0980)!important}
-.ca-grid .board>.sq:hover .piece img.barida-approved-piece{transform:none!important}
+.ca-grid .board>.sq .piece img.barida-approved-piece{width:78%!important;height:78%!important;margin:0!important;max-width:78%!important;max-height:78%!important;object-fit:contain!important;object-position:center!important;transform:var(--barida-piece-scale,none)!important;filter:drop-shadow(0 2px 1px #100b0875) drop-shadow(1px 4px 2px #1d0e0980)!important}
+.ca-grid .board>.sq:hover .piece img.barida-approved-piece{transform:var(--barida-piece-scale,none)!important}
+
+.ca-grid .board>.sq .piece img.barida-approved-piece[src*="-bishop.png"],.ca-grid .board>.sq .piece img.barida-approved-piece[src*="-rook.png"]{--barida-piece-scale:scale(1.17)}
