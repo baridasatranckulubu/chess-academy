@@ -1,0 +1,46 @@
+name: Install refined BARIDA chess piece set
+on:
+  push:
+    paths:
+      - 'barida-refined-2026-pieces.zip'
+      - '.github/workflows/install-refined-barida-pieces.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate transparent chess pieces and install
+        run: |
+          python3 - <<'PY'
+          import zipfile, pathlib, struct
+          path=pathlib.Path('barida-refined-2026-pieces.zip')
+          if not path.exists():
+              print('Awaiting refined piece archive; no changes made')
+              raise SystemExit(0)
+          expected={f'{color}-{name}.png' for color in ('white','black') for name in ('king','queen','rook','bishop','knight','pawn')}
+          with zipfile.ZipFile(path) as z:
+              names={pathlib.PurePosixPath(n).name:n for n in z.namelist() if n.endswith('.png')}
+              if set(names)!=expected: raise SystemExit('Expected exactly 12 chess pieces: '+str(sorted(expected-set(names))))
+              target=pathlib.Path('assets/barida-pieces')
+              target.mkdir(parents=True,exist_ok=True)
+              for name in sorted(expected):
+                  data=z.read(names[name])
+                  if data[:8]!=bytes([137,80,78,71,13,10,26,10]):raise SystemExit('Not PNG: '+name)
+                  w,h=struct.unpack('>II',data[16:24])
+                  if w<100 or h<100 or w>2048 or h>2048:raise SystemExit('Invalid dimensions: '+name)
+                  if data[25]!=6:raise SystemExit('Piece must be transparent RGBA: '+name)
+                  (target/name).write_bytes(data)
+              print('Installed 12 refined transparent chess pieces')
+          PY
+      - name: Commit refined chess pieces
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/barida-pieces
+          if ! git diff --cached --quiet; then
+            git commit -m "Install approved refined transparent chess piece set"
+            git push
+          fi
