@@ -293,3 +293,29 @@ html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-ac
  #view .student-grid>.student-card>.btn.gold:last-child{grid-row:4!important}
 }
 @media(max-width:560px){#view .student-card .ca-schedule-days{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+
+/* Registration: dark, legible surfaces and reliably aligned weekday choices. */
+#view .student-registration-page,#view .student-registration-page form,#view #studentCreateForm{color:#eaf3f8!important}
+#view .student-registration-page{background:#152b36!important;border:1px solid #39515d!important;border-radius:16px!important;padding:22px!important}
+#view #studentCreateForm{background:#152b36!important}
+#view #studentCreateForm label{color:#eaf3f8!important}
+#view #studentCreateForm .register-step{color:#d6f4e7!important}
+#view #studentCreateForm .register-note,#view #studentCreateForm .register-hint{color:#b7ccd5!important}
+#view #studentCreateForm input:not([type=checkbox]):not([type=radio]),#view #studentCreateForm select{background:#0d202b!important;color:#f1f7fa!important;border:1px solid #55717f!important}
+#view #studentCreateSchedule{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin:12px 0 22px!important}
+#view #studentCreateSchedule>label{display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:8px!important;box-sizing:border-box!important;min-width:0!important;width:100%!important;margin:0!important;padding:12px 10px!important;border-radius:10px!important;background:#203a47!important;border:1px solid #4a6978!important;color:#f1f7fa!important;white-space:normal!important;overflow-wrap:anywhere!important;font-size:13px!important;line-height:1.25!important}
+#view #studentCreateSchedule input[type=checkbox]{width:17px!important;height:17px!important;flex:0 0 17px!important;margin:0!important;accent-color:#22bb8a!important}
+#view .register-hidden-select{display:none!important}
+#view .register-segment{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;width:100%!important;margin:8px 0 15px!important}
+#view .register-segment>label{display:block!important;min-width:0!important;margin:0!important;cursor:pointer!important}
+#view .register-segment input[type=radio]{position:absolute!important;opacity:0!important;width:1px!important;height:1px!important}
+#view .register-segment label span{display:flex!important;align-items:center!important;justify-content:center!important;min-height:43px!important;padding:9px 8px!important;border-radius:10px!important;background:#203b49!important;border:1px solid #567481!important;color:#edf6fa!important;font-size:13px!important;font-weight:650!important;text-align:center!important;box-sizing:border-box!important}
+#view .register-segment input:checked+span{background:#075944!important;border-color:#1ce3a0!important;color:#fff!important;box-shadow:inset 0 0 0 1px #1ce3a0!important}
+#view .register-segment input:focus-visible+span{outline:3px solid #7be8ca!important;outline-offset:2px!important}
+#view .barida-detail-schedule{margin:18px 0;padding:16px;border:1px solid #405e6d;border-radius:12px;background:#10232e}
+#view .barida-detail-schedule h3{margin:0 0 10px;color:#f0f8fb}
+#view .barida-detail-schedule .ca-schedule-days{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:8px!important}
+#view .barida-detail-schedule .ca-schedule-day{margin:0!important;padding:10px!important;min-width:0!important;box-sizing:border-box!important}
+#view .barida-detail-schedule>.btn{width:auto!important;margin-top:8px!important}
+@media(max-width:700px){#view #studentCreateSchedule,#view .barida-detail-schedule .ca-schedule-days{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:430px){#view .register-segment{grid-template-columns:1fr!important}}
