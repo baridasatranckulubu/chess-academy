@@ -59,3 +59,11 @@
 .ca-board-annotations circle{stroke-width:5!important}
 .ca-board-annotations polygon{stroke:none!important}
 .ca-drag-ghost,.ca-drag-ghost svg{filter:none!important;opacity:1!important}
+
+/* Unify source square and drag-preview rendering: no hover displacement or color shifts. */
+.ca-grid .board>.sq .piece-3d,
+.ca-grid .board>.sq:hover .piece-3d,
+.board .sq .piece-3d,
+.board .sq:hover .piece-3d{transform:none!important;transition:none!important;filter:drop-shadow(0 2px 2px #16110d80)!important}
+.ca-drag-ghost .piece,.ca-drag-ghost .ca-canonical-piece{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;height:100%!important}
+.ca-drag-ghost .piece-3d{width:90%!important;height:90%!important;transform:none!important;filter:drop-shadow(0 2px 2px #16110d80)!important}

@@ -27,7 +27,7 @@ function sound(type){
  }catch(e){/* Sound is optional. */}
 }
 
-function pieceSVG(symbol,piece){const white=piece===piece.toUpperCase(),glyph=({k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'})[piece.toLowerCase()]||'♟',fill=white?'#ffffff':'#10151e',outline=white?'#202938':'#eef2f8';return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="82" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="'+(white?'2.7':'1.7')+'" stroke-linejoin="round" paint-order="stroke">'+glyph+'</text></svg>'}
+function pieceSVG(symbol,piece){const white=piece===piece.toUpperCase(),glyph=({k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'})[piece.toLowerCase()]||'♟',fill=white?'#efdfc1':'#3c4856',outline=white?'#765f44':'#b9c6ca';return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="82" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="'+(white?'2.7':'1.7')+'" stroke-linejoin="round" paint-order="stroke">'+glyph+'</text></svg>'}
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
  let state=annotationState.get(root);

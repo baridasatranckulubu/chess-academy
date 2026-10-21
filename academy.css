@@ -325,3 +325,30 @@ html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-ac
 #view #studentCreateSchedule>label,#view .barida-detail-schedule .ca-schedule-day,#view .student-card .ca-schedule-day{min-width:0!important;padding:9px 5px!important;font-size:clamp(10px,1vw,13px)!important;white-space:nowrap!important;overflow-wrap:normal!important;background:#203a47!important;color:#f3f7fa!important;border-color:#567481!important}
 #view .student-registration-page,#view .student-card .ca-schedule-editor,#view .barida-detail-schedule{background:#142b38!important;color:#f3f7fa!important}
 @media(max-width:700px){#view #studentCreateSchedule,#view .barida-detail-schedule .ca-schedule-days,#view .student-card .ca-schedule-days{grid-template-columns:repeat(7,minmax(75px,1fr))!important} }
+
+
+/* Admin student roster and compact pencil edit button */
+.barida-admin-student-controls{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:15px 0}
+.barida-admin-student-controls input,.barida-admin-student-controls select{background:#112733;color:#f0f6f8;border:1px solid #577080;border-radius:10px;padding:11px 13px;min-width:200px}
+.barida-admin-student-controls input{flex:1}
+.barida-admin-student-list{display:grid;gap:11px}
+.barida-admin-student-card{background:#142b38!important;border:1px solid #4c6675!important;color:#f0f7fa!important}
+.barida-admin-student-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;list-style:none}
+.barida-admin-student-summary::-webkit-details-marker{display:none}
+.barida-admin-student-person{display:grid;gap:3px;flex:1;min-width:0}
+.barida-admin-student-person strong{color:#f7f5ec;font-size:16px;overflow-wrap:anywhere}
+.barida-admin-student-person small{color:#c1d2db}
+.barida-admin-student-flag{padding:5px 10px;border-radius:999px;font-size:12px;font-weight:750;white-space:nowrap}
+.barida-admin-student-flag.is-active{background:#174839;color:#a5f4d3}
+.barida-admin-student-flag.is-passive{background:#4f3040;color:#ffbec9}
+.barida-admin-student-body{padding-top:16px;color:#d8e6ec}
+.barida-admin-student-body>.btn{margin:5px 8px 8px 0}
+.barida-admin-student-edit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border:1px solid #466574;background:#0d222d;border-radius:13px;padding:15px;margin:12px 0}
+.barida-admin-student-edit label{display:grid;gap:5px;color:#edf5f9;font-weight:600}
+.barida-admin-student-edit input{background:#091b25;color:#f7fafc;border:1px solid #658193;border-radius:8px;padding:10px;width:100%;min-width:0}
+.barida-admin-student-schedule{background:#0f2632;border:1px solid #385767;border-radius:12px;padding:15px;margin:14px 0}
+.barida-admin-student-schedule .ca-schedule-days{display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:6px!important;max-width:100%!important;overflow-x:auto!important}
+.barida-admin-student-schedule .ca-schedule-day{min-width:0!important;padding:8px 5px!important;white-space:nowrap!important;font-size:11px!important;color:#edf5fa!important;background:#203d4c!important}
+.barida-detail-editbar{display:flex!important;justify-content:flex-end!important;align-items:center!important;width:100%!important}
+.barida-student-edit-icon{width:36px!important;min-width:36px!important;height:36px!important;padding:0!important;display:grid!important;place-items:center!important;font-size:20px!important;background:#193742!important;color:#f3dba7!important;border:1px solid #78929b!important;border-radius:9px!important}
+@media(max-width:650px){.barida-admin-student-edit{grid-template-columns:1fr}.barida-admin-student-schedule .ca-schedule-days{grid-template-columns:repeat(7,minmax(75px,1fr))!important}}

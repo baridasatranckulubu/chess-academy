@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const read=p=>fs.readFileSync(require('node:path').join(__dirname,'..',p),'utf8');
+const academy=read('academy.js'),css=read('academy.css'),shared=read('shared-chess-board.js'),studio=read('custom-homework-board.js');
+for(const [name,source] of [['academy.js',academy],['shared-chess-board.js',shared],['custom-homework-board.js',studio]])assert.doesNotThrow(()=>new vm.Script(source,{filename:name}));
+assert(academy.includes("section==='admin-students'"),'admin student route missing');
+assert(academy.includes("academy_admin_student_action"),'admin student RPC missing');
+assert(academy.includes("academy_teacher_update_student"),'teacher scoped student editor RPC missing');
+assert(academy.includes("studentAccountActive"),'passive account access guard missing');
+assert(academy.includes("accountStatuses.get(st.id)"),'payment and account statuses must be distinguished');
+assert(studio.includes("shared.renderBoard("),'studio must render canonical pieces');
+assert(studio.includes("bindDrag($('board')"),'studio must support piece dragging');
+assert(studio.includes("choosePromotion("),'studio must offer 4-way promotion');
+assert(shared.includes("fill=white?'#efdfc1':'#3c4856'"),'shared chess piece colors must avoid pure white/black');
+assert(css.includes('.barida-admin-student-schedule'),'admin schedule must have editable layout');
+console.log('PASS BARIDA admin student management and canonical homework board contracts');
