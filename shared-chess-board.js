@@ -34,9 +34,9 @@ function pieceSVG(symbol,piece){
  const white=piece===piece.toUpperCase();
  const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
  const pieceName=names[piece.toLowerCase()];
- const pieceScale=(pieceName==='bishop'||pieceName==='rook')?'scale(1.17)':'none';
- const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-balanced-v3';
- return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:78%;height:78%;margin:11% auto;object-fit:contain;object-position:center;transform:'+pieceScale+';pointer-events:none;user-select:none" />';
+ const pieceScale='none';
+ const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-center-v4';
+ return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:78%;height:78%;margin:0;object-fit:contain;object-position:center;transform:'+pieceScale+';pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
