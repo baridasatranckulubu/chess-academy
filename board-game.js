@@ -171,11 +171,27 @@ function updateHistoryPanel(){const notation=historyNotation(),text=notation.map
 let editPiece=null,editUndo=[],capturedPieces=[];
 function editorSnapshot(){editUndo.push(game.board.slice());if(editUndo.length>150)editUndo.shift()}
 function editSquare(square){if(!editPiece)return false;const idx=window.ChessAcademyEngine.squareIndex?window.ChessAcademyEngine.squareIndex(square):(8-Number(square[1]))*8+'abcdefgh'.indexOf(square[0]);if(editPiece==='K'||editPiece==='k'){const existing=game.board.findIndex(p=>p===editPiece);if(existing!==-1&&existing!==idx){announce(editPiece==='K'?'Beyaz şah zaten tahtada. Önce mevcut şahı kaldırın.':'Siyah şah zaten tahtada. Önce mevcut şahı kaldırın.');return true}}editorSnapshot();game.board[idx]=editPiece==='erase'?null:editPiece;game.history=[];capturedPieces=[];lastMove=null;selected=null;sound('move');renderBoard();return true}
-function renderCaptured(){const white=document.getElementById('capturedWhite'),black=document.getElementById('capturedBlack');if(!white||!black)return;white.replaceChildren();black.replaceChildren();const rails=document.querySelector('.ca-captured-rails');if(rails)rails.classList.toggle('flipped',flipped);for(const p of capturedPieces){const el=document.createElement('span');el.textContent=unicode[p];el.title=p===p.toUpperCase()?'Beyaz taş':'Siyah taş';(p===p.toUpperCase()?white:black).append(el)}}
+function renderCaptured(){
+ const white=document.getElementById('capturedWhite'),black=document.getElementById('capturedBlack');
+ if(!white||!black)return;
+ white.replaceChildren();black.replaceChildren();
+ // Derive captures from move history so undo and en passant stay correct.
+ for(const entry of game.history||[]){
+  const move=entry?.move,snapshot=entry?.snapshot;
+  if(!move?.to||!snapshot?.board)continue;
+  const toIndex=(8-Number(move.to[1]))*8+'abcdefgh'.indexOf(move.to[0]);
+  const victim=snapshot.board[toIndex]||(move.enPassant?(snapshot.turn==='w'?'p':'P'):null);
+  if(!victim)continue;
+  const piece=document.createElement('span');piece.className='ca-captured-piece';
+  piece.innerHTML=window.ChessAcademySharedBoard.pieceSVG(unicode[victim],victim);
+  piece.title=victim===victim.toUpperCase()?'Siyahın aldığı beyaz taş':'Beyazın aldığı siyah taş';
+  (victim===victim.toUpperCase()?black:white).append(piece);
+ }
+}
 function setupBoardStudio(){
  const controls=document.getElementById('resetBoard')?.parentElement,board=document.getElementById('board');if(!controls||!board)return;
  const panel=document.createElement('section');panel.className='ca-editor';panel.innerHTML='<strong>♟ Sınırsız Taş Ekle / Konum Düzenleyici</strong><p class="mini">Bir taş seç, sonra tahtada istediğin karelere tıkla. Aynı taştan istediğin kadar ekleyebilirsin.</p><div class="ca-editor-tools"><select id="editorPiece" aria-label="Yerleştirilecek taş"><option value="">Normal hamle modu</option><option value="K">♔ Beyaz şah</option><option value="Q">♕ Beyaz vezir</option><option value="R">♖ Beyaz kale</option><option value="B">♗ Beyaz fil</option><option value="N">♘ Beyaz at</option><option value="P">♙ Beyaz piyon</option><option value="k">♚ Siyah şah</option><option value="q">♛ Siyah vezir</option><option value="r">♜ Siyah kale</option><option value="b">♝ Siyah fil</option><option value="n">♞ Siyah at</option><option value="p">♟ Siyah piyon</option><option value="erase">⌫ Kareyi boşalt</option></select><button type="button" id="editorUndo">↶ Son eklemeyi geri al</button><button type="button" id="editorClear">Bütün taşları kaldır</button><button type="button" id="editorReset">Taşları yeniden diz</button></div><p id="editorHint" class="mini">Sağ tıkla ve sürükle: ok çiz. Sağ tıkla: kareyi işaretle.</p><p id="capturedPieces" class="mini"></p>';
- controls.before(panel);panel.hidden=true;const capturePanel=document.createElement('div');capturePanel.className='ca-captured-rails';capturePanel.innerHTML='<div class="ca-captured-rail" aria-label="Yenilen siyah taşlar" id="capturedBlack"></div><div class="ca-captured-rail" aria-label="Yenilen beyaz taşlar" id="capturedWhite"></div>';board.closest('.chess-board-frame')?.append(capturePanel);const history=document.getElementById('caMovePanel');if(history)panel.after(history);
+ controls.before(panel);panel.hidden=true;const capturePanel=document.createElement('div');capturePanel.className='ca-captured-rails';capturePanel.innerHTML='<div class="ca-captured-rail" aria-label="Siyahın aldığı beyaz taşlar" id="capturedBlack"></div><div class="ca-captured-rail" aria-label="Beyazın aldığı siyah taşlar" id="capturedWhite"></div>';board.closest('.chess-board-frame')?.append(capturePanel);const history=document.getElementById('caMovePanel');if(history)panel.after(history);
  const picker=panel.querySelector('#editorPiece');
  const palette=document.createElement('div');palette.id='caPiecePalette';palette.className='ca-piece-palette';palette.hidden=true;
  const heading=document.createElement('strong');heading.textContent='Taş seç ve tahtaya yerleştir';palette.append(heading);

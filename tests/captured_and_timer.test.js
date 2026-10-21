@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm'),path=require('node:path');
+const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
+const board=read('board-game.js'),coordinates=read('coordinates.js'),html=read('board.html');
+assert.doesNotThrow(()=>new vm.Script(board,{filename:'board-game.js'}));
+assert.doesNotThrow(()=>new vm.Script(coordinates,{filename:'coordinates.js'}));
+assert(board.includes('snapshot.board[toIndex]'), 'captures must derive from engine move history');
+assert(board.includes('move.enPassant'), 'en passant must count captured pawn');
+assert(board.includes('(victim===victim.toUpperCase()?black:white)'), 'black captures top, white captures bottom');
+assert(html.includes('barida-captured-pieces-by-player-20261021'), 'captured rails must keep fixed player order');
+assert(coordinates.includes('applause()'), 'record should play short applause');
+assert(coordinates.includes('audioAllowed()'), 'coordinate sounds must honor user mute');
+assert(coordinates.includes('performance.now()'), 'timer should be based on elapsed time');
+assert(coordinates.includes('1300)'), 'timer should start after a short intro cue');
+console.log('PASS captured pieces and coordinate hunt sound/timer contracts');

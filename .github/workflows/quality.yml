@@ -36,6 +36,8 @@ jobs:
         run: node tests/board_shared.test.js
       - name: Öğrenci yönetimi ve ortak ödev tahtası
         run: node tests/admin_student_management.test.js
+      - name: Alınan taşlar ve Koordinat Avı testi
+        run: node tests/captured_and_timer.test.js
       - name: Premium tahta ve ses kontrolleri
         run: node tests/board_premium.test.js
       - name: Mat pozisyonları
