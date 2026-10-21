@@ -616,7 +616,7 @@ async function realAssignments(){
  try{
   if(role==='teacher'){
    await loadTeacherStudents();if(section!=='assignments')return;
-   const form=node('form','assignment-form');form.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:22px;border:1px solid #9573a0;border-radius:18px;background:#192338';
+   const studyLink=button('♟ Serbest Tahta Ödev Stüdyosu',()=>window.open('study.html?studio=1','_blank','noopener'),'btn gold');view.append(studyLink,node('p','muted','Serbest tahta üzerinde sınırsız taş ekleyip kaldırabilir, hazırladığınız konumu bağlantı olarak paylaşabilirsiniz. Otomatik öğrenci hesabına atama henüz bu araçta etkin değil.'));const form=node('form','assignment-form');form.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:22px;border:1px solid #9573a0;border-radius:18px;background:#192338';
    const label=(name,control)=>{const wrap=node('label','',name);wrap.style.cssText='display:grid;gap:7px;color:#fff';wrap.append(control);return wrap};
    const student=node('select');student.required=true;realRoster.forEach(st=>{const o=node('option','',st.name);o.value=st.id;student.append(o)});if(assignmentSelectedStudent&&realRoster.some(st=>st.id===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
    const groups=[
