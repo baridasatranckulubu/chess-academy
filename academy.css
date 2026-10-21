@@ -270,3 +270,10 @@ html[data-academy-theme="light"] #view iframe.academy-puzzle-inline,html[data-ac
 /* Student avatar collage-edge repair: crop neighboring portrait bleed inside each tile. */
 #view .student-grid .barida-pawn-avatar{position:relative!important;isolation:isolate!important;overflow:hidden!important;contain:paint!important;flex-shrink:0!important;border-radius:14px!important}
 #view .student-grid .barida-pawn-avatar>img{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:cover!important;object-position:center center!important;transform:none!important;border-radius:0!important}
+
+/* Student roster: registration action in top-right, tightly centered portraits. */
+#view .barida-roster-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+#view .barida-roster-toolbar h2{margin:0!important}
+#view .barida-roster-toolbar .barida-roster-add{width:auto!important;min-width:210px!important;min-height:45px!important;margin:0!important;flex:0 0 auto}
+#view .barida-pawn-avatar img{width:100%!important;height:100%!important;object-fit:cover!important;object-position:50% 46%!important;transform:scale(1.22)!important;transform-origin:50% 46%!important}
+@media(max-width:560px){#view .barida-roster-toolbar{align-items:flex-start}#view .barida-roster-toolbar .barida-roster-add{min-width:0!important}}
