@@ -41,3 +41,6 @@
 /* Ensure identical square-centered image boxes for both colors and all piece types. */
 .ca-grid .board>.sq .piece.ca-canonical-piece{display:flex!important;align-items:center!important;justify-content:center!important}
 .ca-grid .board>.sq .piece img.barida-approved-piece{display:block!important;position:relative!important;inset:auto!important;flex:0 0 78%!important;width:78%!important;height:78%!important;margin:0!important;padding:0!important;transform:none!important;object-fit:contain!important;object-position:center center!important}
+
+/* Alpha-bound optical normalization computed from each approved PNG on image load. */
+.ca-grid .board>.sq .piece img.barida-approved-piece,.ca-grid .board>.sq:hover .piece img.barida-approved-piece{transform:var(--barida-optical-transform,none)!important;transform-origin:center center!important}
