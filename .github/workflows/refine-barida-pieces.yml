@@ -1,0 +1,51 @@
+name: Refine BARIDA king queen knight images
+on:
+  push:
+    paths:
+      - '.github/workflows/refine-barida-pieces.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  refine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install pillow
+      - name: Repair clipped edges and center piece silhouettes
+        run: |
+          python3 - <<'PY'
+          from PIL import Image,ImageFilter
+          from pathlib import Path
+          import zipfile,io
+          source=zipfile.ZipFile('barida-approved-pieces.zip')
+          target=Path('assets/barida-pieces')
+          for color in ('white','black'):
+            for piece in ('queen','king','knight'):
+              name=f'{color}-{piece}.png'
+              original=Image.open(io.BytesIO(source.read(next(n for n in source.namelist() if n.endswith(name))))).convert('RGBA')
+              alpha=original.getchannel('A')
+              bbox=alpha.getbbox()
+              if not bbox: raise ValueError(name+' empty')
+              content=original.crop(bbox)
+              # Fit within padded transparent square with a balanced bottom margin.
+              size=(192,192)
+              maxw,maxh=153,158
+              scale=min(maxw/content.width,maxh/content.height)
+              fitted=content.resize((round(content.width*scale),round(content.height*scale)),Image.Resampling.LANCZOS)
+              canvas=Image.new('RGBA',size,(0,0,0,0))
+              x=(size[0]-fitted.width)//2
+              y=(size[1]-fitted.height)//2
+              canvas.alpha_composite(fitted,(x,y))
+              canvas.save(target/name,optimize=True)
+              print(name,canvas.size,'content',fitted.size)
+          PY
+      - name: Commit repaired pieces
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/barida-pieces
+          if ! git diff --cached --quiet; then
+            git commit -m "Recenter and pad queen king knight images without changing chessboards"
+            git push
+          fi
