@@ -33,7 +33,7 @@ function pieceSVG(symbol,piece){
  if(!/^[KQRBNPkqrbnp]$/.test(piece))return '';
  const white=piece===piece.toUpperCase();
  const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
- const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png';
+ const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-refined';
  return '<img class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:84%;height:84%;margin:8% auto;object-fit:contain;object-position:center;pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
