@@ -27,7 +27,21 @@ function sound(type){
  }catch(e){/* Sound is optional. */}
 }
 
-function pieceSVG(symbol,piece){const white=piece===piece.toUpperCase(),glyph=({k:'♚',q:'♛',r:'♜',b:'♝',n:'♞',p:'♟'})[piece.toLowerCase()]||'♟',fill=white?'#efdfc1':'#3c4856',outline=white?'#765f44':'#b9c6ca';return '<svg class="piece-3d" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><text x="50" y="50" dominant-baseline="central" text-anchor="middle" font-family="DejaVu Sans,Segoe UI Symbol,serif" font-size="82" font-weight="900" fill="'+fill+'" stroke="'+outline+'" stroke-width="'+(white?'2.7':'1.7')+'" stroke-linejoin="round" paint-order="stroke">'+glyph+'</text></svg>'}
+const baridaPremiumShapes={"p":"<circle cx=\"50\" cy=\"23\" r=\"13\"/><path d=\"M43 37 Q35 50 35 64 L65 64 Q65 50 57 37 Z\"/><path d=\"M32 64 H68 Q75 67 76 75 H24 Q25 67 32 64 Z\"/><path d=\"M23 76 H77 Q81 80 78 84 H22 Q19 80 23 76 Z\"/>","r":"<path d=\"M25 18 H36 V28 H45 V18 H55 V28 H64 V18 H75 V38 H69 L65 66 H35 L31 38 H25 Z\"/><path d=\"M31 66 H69 L74 75 H26 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>","n":"<path d=\"M26 74 L33 61 L25 53 Q20 49 25 44 L34 36 L32 26 L43 17 L49 23 L56 14 L62 23 Q75 30 77 45 L72 55 L65 49 Q59 60 67 74 Z\"/><path d=\"M23 75 H76 Q80 80 76 84 H24 Q20 80 23 75 Z\"/><path class=\"piece-detail\" d=\"M31 52 Q42 54 51 45 M57 29 Q64 32 68 37\"/><circle class=\"piece-eye\" cx=\"49\" cy=\"33\" r=\"2.6\"/>","b":"<circle cx=\"50\" cy=\"14\" r=\"6.5\"/><path d=\"M48 21 C28 29 27 48 38 61 Q42 65 37 71 L63 71 Q58 65 62 61 C74 46 68 28 53 21 Z\"/><path d=\"M31 71 H69 Q77 74 77 80 Q75 85 67 85 H33 Q25 85 23 80 Q23 74 31 71 Z\"/><path class=\"bishop-slit\" d=\"M63 27 Q65 37 55 44 Q43 52 39 60\"/>","q":"<circle cx=\"18\" cy=\"27\" r=\"5\"/><circle cx=\"34\" cy=\"20\" r=\"5\"/><circle cx=\"50\" cy=\"16\" r=\"5\"/><circle cx=\"66\" cy=\"20\" r=\"5\"/><circle cx=\"82\" cy=\"27\" r=\"5\"/><path d=\"M19 34 L31 67 H69 L81 34 L66 47 L50 30 L34 47 Z\"/><path d=\"M29 67 H71 L75 76 H25 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>","k":"<path d=\"M47 10 H53 V19 H62 V25 H53 V35 H47 V25 H38 V19 H47 Z\"/><path d=\"M45 36 Q50 31 55 36 L58 43 Q70 38 77 50 Q79 61 69 68 H31 Q21 61 23 50 Q30 38 42 43 Z\"/><path d=\"M30 67 H70 L75 76 H25 Z\"/><path d=\"M23 76 H77 Q81 80 77 84 H23 Q19 80 23 76 Z\"/>"};
+let baridaPremiumPieceId=0;
+function pieceSVG(symbol,piece){
+ if(!/^[KQRBNPkqrbnp]$/.test(piece))return '';
+ const white=piece===piece.toUpperCase(),id='barida-piece-2026-'+(++baridaPremiumPieceId);
+ const stops=white?['#fffefa','#fff3d8','#eed3a3','#fff9e8','#cba77a']:['#71757b','#22252a','#030407','#34383d','#000000'];
+ const edge=white?'#b58d58':'#9ba4aa';
+ const shape=baridaPremiumShapes[piece.toLowerCase()];
+ return '<svg class="piece-3d barida-premium-piece '+(white?'white':'black')+'" viewBox="0 0 100 100" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">'+
+ '<defs><linearGradient id="'+id+'" x1="0" y1="0" x2="0.9" y2="1"><stop offset="0" stop-color="'+stops[0]+'"/><stop offset=".25" stop-color="'+stops[1]+'"/><stop offset=".56" stop-color="'+stops[2]+'"/><stop offset=".77" stop-color="'+stops[3]+'"/><stop offset="1" stop-color="'+stops[4]+'"/></linearGradient></defs>'+
+ '<ellipse cx="51" cy="88" rx="31" ry="4" fill="#050505" opacity=".27"/>'+
+ '<g fill="url(#'+id+')" stroke="'+edge+'" stroke-width="2" stroke-linejoin="round">'+shape+'</g>'+
+ '<path d="M29 78 Q50 82 71 78" stroke="'+(white?'#fffdf3':'#81868a')+'" stroke-width="1.5" opacity=".8" fill="none"/>'+
+ '</svg>';
+}
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){
  let state=annotationState.get(root);
