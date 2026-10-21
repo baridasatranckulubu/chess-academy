@@ -94,7 +94,7 @@ function renderNotificationPanel(){
  const panel=$('caAdminBellPanel');if(!panel||panel.hidden)return;
  panel.replaceChildren();panel.append(node('h3','','🔔 Bildirimler'));
  if(!notificationCache.length)panel.append(node('p','muted','Henüz bildiriminiz yok.'));
- for(const n of notificationCache){const row=node('div','');row.style.cssText='padding:11px 0;border-bottom:1px solid #ffffff28;'+(!n.read_at?'border-left:3px solid #e9c27e;padding-left:9px;':'');row.append(node('strong','',n.title),node('p','',n.body),node('small','',new Date(n.created_at).toLocaleString('tr-TR')));if(n.category.startsWith('assignment'))row.append(button('📝 Ödevlere git',()=>{closeNotificationPanel();showSection('assignments')},'btn small'));panel.append(row)}
+ for(const n of notificationCache){const row=node('div','');row.style.cssText='padding:11px 0;border-bottom:1px solid #ffffff28;'+(!n.read_at?'border-left:3px solid #e9c27e;padding-left:9px;':'');row.append(node('strong','',n.title),node('p','',n.body),node('small','',new Date(n.created_at).toLocaleString('tr-TR')));if(n.category.startsWith('assignment'))row.append(button('📝 Ödevlere git',()=>{closeNotificationPanel();showSection('assignments')},'btn small'));if(n.category==='teacher_password_reset')row.append(button('🔑 Öğretmenlere git',()=>{closeNotificationPanel();showSection('admin-teacher-list')},'btn small'));panel.append(row)}
 }
 async function toggleNotificationPanel(){
  const panel=$('caAdminBellPanel'),bell=$('caAdminBell');if(!panel)return;
@@ -305,20 +305,24 @@ async function adminTeacherList(){
  const view=$('view');view.replaceChildren();
  if(realProfile?.role!=='admin'){view.append(node('p','','Yalnızca yönetici erişebilir.'));return}
  view.append(node('h2','','♛ Öğretmenler'),node('p','muted','Kayıtlı öğretmenlerin bilgilerini açıp kapatabilir, güncelleyebilir, şifrelerini değiştirebilir veya hesaplarını silebilirsiniz. Mevcut şifreler görüntülenmez.'));
- const requestsPanel=node('section','card barida-teacher-reset-requests');requestsPanel.append(node('h3','','🔐 Öğretmen şifre sıfırlama talepleri'));view.append(requestsPanel);
+ const requestsPanel=node('section','card barida-teacher-reset-requests');requestsPanel.append(node('h3','','🔐 Şifre yenileme talepleri'),node('p','muted','Öğretmenin kaydını açarak yeni şifresini belirleyin. Talep, şifre başarıyla değiştirildiğinde otomatik kapanır.'));view.append(requestsPanel);
+ let pendingResets=[];
  try{
   const {data:requests,error:reqError}=await authClient.rpc('academy_admin_teacher_password_requests');
   if(reqError)throw reqError;
-  if(!requests?.length)requestsPanel.append(node('p','muted','Bekleyen şifre sıfırlama talebi yok.'));
-  for(const request of requests||[]){
+  pendingResets=requests||[];
+  if(!pendingResets.length)requestsPanel.append(node('p','muted','Bekleyen şifre sıfırlama talebi yok.'));
+  for(const request of pendingResets){
    const line=node('div','barida-reset-request-line');
    line.append(node('strong','',request.teacher_name||'Öğretmen'),node('span','',new Date(request.created_at).toLocaleString('tr-TR')));
-   const done=button('✓ İşlendi',async()=>{
-    done.disabled=true;
-    const {error}=await authClient.rpc('academy_admin_resolve_teacher_password_request',{p_request:request.id});
-    if(error){alert(error.message);done.disabled=false;return}line.remove();
+   const open=button('🔑 Şifreyi değiştir',()=>{
+    const record=view.querySelector('[data-teacher-id="'+request.teacher_id+'"]');
+    if(!record){alert('Öğretmen kaydı bulunamadı.');return}
+    record.open=true;
+    record.scrollIntoView({behavior:'smooth',block:'center'});
+    record.querySelector('input[name="password"]')?.focus();
    },'btn small');
-   line.append(done);requestsPanel.append(line);
+   line.append(open);requestsPanel.append(line);
   }
  }catch(err){requestsPanel.append(node('p','auth-error','Talepler yüklenemedi: '+err.message))}
  const status=node('p','muted','Öğretmenler yükleniyor...');view.append(status);
@@ -327,9 +331,9 @@ async function adminTeacherList(){
  status.textContent=teachers.length?teachers.length+' öğretmen kayıtlı.':'Henüz öğretmen hesabı bulunmuyor.';
  for(const teacher of teachers){
   const details=document.createElement('details');details.className='card ca-teacher-record';
-  const summary=document.createElement('summary');summary.textContent='♛ '+(teacher.display_name||teacher.username)+' · @'+teacher.username;details.append(summary);
+  details.dataset.teacherId=teacher.id;const summary=document.createElement('summary');summary.textContent='♛ '+(teacher.display_name||teacher.username)+' · @'+teacher.username;details.append(summary);
   const edit=teacherForm(teacher);edit.classList.add('ca-teacher-edit');
-  edit.onsubmit=async event=>{event.preventDefault();const submit=edit.querySelector('[type="submit"]');submit.disabled=true;status.textContent='Değişiklikler kaydediliyor...';try{await adminTeacherAction({action:'update',id:teacher.id,...Object.fromEntries(new FormData(edit))});adminTeacherList()}catch(e){status.textContent=e.message;submit.disabled=false}};
+  edit.onsubmit=async event=>{event.preventDefault();const submit=edit.querySelector('[type="submit"]');submit.disabled=true;status.textContent='Değişiklikler kaydediliyor...';try{const values=Object.fromEntries(new FormData(edit));await adminTeacherAction({action:'update',id:teacher.id,...values});if(values.password?.trim()){for(const req of pendingResets.filter(r=>r.teacher_id===teacher.id)){const {error}=await authClient.rpc('academy_admin_resolve_teacher_password_request',{p_request:req.id});if(error)console.warn('Şifre yenileme talebi kapatılamadı:',error.message)}}adminTeacherList()}catch(e){status.textContent=e.message;submit.disabled=false}};
   const del=button('Öğretmen hesabını sil',async()=>{if(!confirm((teacher.display_name||teacher.username)+' öğretmen hesabını kalıcı olarak silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;del.disabled=true;status.textContent='Hesap siliniyor...';try{await adminTeacherAction({action:'delete',id:teacher.id});adminTeacherList()}catch(e){status.textContent=e.message;del.disabled=false}},'btn danger');
   details.append(edit,del);view.append(details);
  }
