@@ -22,7 +22,22 @@ jobs:
           with zipfile.ZipFile(path) as z:
               names={pathlib.PurePosixPath(n).name.lower():n for n in z.namelist() if n.lower().endswith('.png')}
               print('Archive PNG files:',sorted(names),flush=True)
-              if not expected.issubset(set(names)): raise SystemExit('Missing expected chess pieces: '+str(sorted(expected-set(names))))
+              aliases={
+                'white-king.png':'fildişi taçlı satranç şahı i̇konu.png',
+                'white-queen.png':'fildişi satranç veziri i̇konu.png',
+                'white-bishop.png':'a7cdd568-42ec-4539-a5ff-ca1d1b7dee1f.png',
+                'white-knight.png':'krem renkli parlak satranç atı.png',
+                'white-pawn.png':'parlak fildişi satranç piyonu.png',
+                'black-queen.png':'holografik siyah satranç veziri tacı.png',
+                'black-bishop.png':'parlak siyah satranç fili i̇konu.png',
+                'black-knight.png':'parlak siyah satranç atı.png',
+                'black-pawn.png':'parlak siyah satranç piyonu.png'
+              }
+              for target_name,source_name in aliases.items():
+                  if target_name not in names:
+                      if source_name not in names:raise SystemExit('Missing '+source_name)
+                      names[target_name]=names[source_name]
+              if not expected.issubset(set(names)): raise SystemExit('Missing pieces: '+str(sorted(expected-set(names))))
               target=pathlib.Path('assets/barida-pieces')
               target.mkdir(parents=True,exist_ok=True)
               for name in sorted(expected):
