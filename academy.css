@@ -432,3 +432,13 @@ html body #view .student-registration-page #studentCreateSchedule>label:has(inpu
 .barida-password-actions{display:flex;justify-content:flex-end;gap:12px}
 .barida-password-actions .btn{min-width:125px}
 @media(max-width:460px){.barida-password-modal{padding:20px}.barida-password-actions .btn{min-width:0;flex:1}}
+
+/* BARIDA: student academy and rating readability on dark backgrounds */
+#view .stat-grid .stat{background:#162b38!important;border-color:#395666!important;color:#f2f7ff!important}
+#view .stat-grid .stat>span{color:#e0eaf3!important;opacity:1!important;font-size:15px!important;font-weight:600!important;text-shadow:none!important}
+#view .stat-grid .stat>strong{font-weight:800!important;line-height:1.25}
+#view .stat-grid .stat>strong.br-tier-0,#view .stat-grid .stat>strong.br-tier-1{color:#e4ebf3!important}
+#view .barida-rating-board h3,#view .barida-rating-board .barida-rating-line{color:#f4f7ff!important}
+#view .barida-rating-board .barida-rating-line>strong:first-child{color:#f5f7ff!important}
+#view .barida-podium-place strong,#view .barida-podium-place span{opacity:1}
+#view .muted{color:#d0dae7!important}
