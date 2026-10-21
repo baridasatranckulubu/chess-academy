@@ -305,6 +305,22 @@ async function adminTeacherList(){
  const view=$('view');view.replaceChildren();
  if(realProfile?.role!=='admin'){view.append(node('p','','Yalnızca yönetici erişebilir.'));return}
  view.append(node('h2','','♛ Öğretmenler'),node('p','muted','Kayıtlı öğretmenlerin bilgilerini açıp kapatabilir, güncelleyebilir, şifrelerini değiştirebilir veya hesaplarını silebilirsiniz. Mevcut şifreler görüntülenmez.'));
+ const requestsPanel=node('section','card barida-teacher-reset-requests');requestsPanel.append(node('h3','','🔐 Öğretmen şifre sıfırlama talepleri'));view.append(requestsPanel);
+ try{
+  const {data:requests,error:reqError}=await authClient.rpc('academy_admin_teacher_password_requests');
+  if(reqError)throw reqError;
+  if(!requests?.length)requestsPanel.append(node('p','muted','Bekleyen şifre sıfırlama talebi yok.'));
+  for(const request of requests||[]){
+   const line=node('div','barida-reset-request-line');
+   line.append(node('strong','',request.teacher_name||'Öğretmen'),node('span','',new Date(request.created_at).toLocaleString('tr-TR')));
+   const done=button('✓ İşlendi',async()=>{
+    done.disabled=true;
+    const {error}=await authClient.rpc('academy_admin_resolve_teacher_password_request',{p_request:request.id});
+    if(error){alert(error.message);done.disabled=false;return}line.remove();
+   },'btn small');
+   line.append(done);requestsPanel.append(line);
+  }
+ }catch(err){requestsPanel.append(node('p','auth-error','Talepler yüklenemedi: '+err.message))}
  const status=node('p','muted','Öğretmenler yükleniyor...');view.append(status);
  try{
  const {teachers}=await adminTeacherAction({action:'list'});if(section!=='admin-teacher-list')return;
@@ -1057,7 +1073,20 @@ async function openRealSession(session){if(!session?.user)return;const {data:pro
 $('authPasswordToggle').onclick=()=>{const p=$('authPassword'),b=$('authPasswordToggle');p.type=p.type==='password'?'text':'password';b.textContent=p.type==='password'?'👁':'🙈';b.setAttribute('aria-pressed',String(p.type==='text'));b.setAttribute('aria-label',p.type==='password'?'Şifreyi göster':'Şifreyi gizle')};try{const saved=localStorage.getItem('chess-academy-identity');if(saved){$('authEmail').value=saved;$('authRemember').checked=true}else $('authRemember').checked=false}catch{}$('authRemember').onchange=()=>{if(!$('authRemember').checked)try{localStorage.removeItem('chess-academy-identity')}catch{}};
 $('authLoginTab').onclick=()=>{selectedLoginRole='student';setAuthMode('login');$('authLoginTab').classList.add('active');$('authTeacherTab')?.classList.remove('active');$('authEmail').placeholder='Öğrenci Adı ve Soyadı';$('authPassword').placeholder='Şifrenizi Giriniz';$('authReset').hidden=true};if($('authTeacherTab'))$('authTeacherTab').onclick=()=>{selectedLoginRole='teacher';setAuthMode('login');$('authLoginTab').classList.remove('active');$('authTeacherTab').classList.add('active');$('authEmail').placeholder='Kullanıcı Adı';$('authPassword').placeholder='Şifrenizi Giriniz';$('authReset').hidden=false};
 $('authForm').onsubmit=async e=>{e.preventDefault();if(!authClient)return authStatus('Giriş servisi yüklenemedi.',true);const submit=$('authSubmit');submit.disabled=true;authStatus('Giriş yapılıyor...');try{const identity=$('authEmail').value.trim().replace(/\\s+/g,' '),password=$('authPassword').value;let session;if(selectedLoginRole==='student'&&identity.includes('@'))throw Error('Öğrenci girişi için adınızı ve soyadınızı yazın.');if(selectedLoginRole==='teacher'&&!identity)throw Error('Lütfen kullanıcı adınızı giriniz.');if(identity.includes('@')||(selectedLoginRole==='teacher'&&identity.toLocaleLowerCase('tr')==='baridayönetim')){const loginEmail=identity.includes('@')?identity:'hskgsuygar32@gmail.com';const result=await authClient.auth.signInWithPassword({email:loginEmail,password});if(result.error)throw result.error;session=result.data.session}else if(selectedLoginRole==='teacher'){const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-teacher-login',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG'},body:JSON.stringify({username:identity,password})});const result=await response.json();if(!response.ok)throw Error(result.error||'Giriş başarısız');const applied=await authClient.auth.setSession({access_token:result.session.access_token,refresh_token:result.session.refresh_token});if(applied.error)throw applied.error;session=applied.data.session}else{const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-student-login',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG'},body:JSON.stringify({name:identity,password})});const result=await response.json();if(!response.ok)throw Error(result.error||'Giriş başarısız');const applied=await authClient.auth.setSession({access_token:result.session.access_token,refresh_token:result.session.refresh_token});if(applied.error)throw applied.error;session=applied.data.session}if(session){await openRealSession(session);if(realUser?.id===session.user.id){try{if($('authRemember').checked){localStorage.setItem('chess-academy-identity',identity);if('PasswordCredential' in window&&navigator.credentials?.store){const credential=new PasswordCredential({id:identity,password,name:identity});navigator.credentials.store(credential).catch(()=>{})}}else localStorage.removeItem('chess-academy-identity')}catch{}}}}catch(err){const message=String(err?.message||'');const friendly=/failed to fetch|networkerror|load failed/i.test(message)?'Giriş servisine şu anda ulaşılamıyor. İnternet bağlantınızı kontrol edip tekrar deneyin. Sorun sürerse kulüp yönetimiyle iletişime geçin.':/invalid login credentials|invalid credentials|email not confirmed/i.test(message)?'Kullanıcı adı veya şifre hatalı. Bilgilerinizi kontrol edip tekrar deneyin.':(message||'Giriş başarısız.');authStatus(friendly,true)}finally{submit.disabled=false}};
-$('authReset').onclick=async()=>{if(!authClient)return authStatus('Giriş servisi yüklenemedi.',true);const email=$('authEmail').value.trim();if(!email)return authStatus('Önce e-posta adresini veya öğrenci adını yaz.',true);if(!email.includes('@'))return authStatus('Öğrenci şifre sıfırlama isteği için öğretmeninize başvurun. Hesabınızla giriş yapabiliyorsanız öğrenci panelindeki Şifre Değişikliği İste butonunu kullanın.',true);const {error}=await authClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/reset-password.html'});authStatus(error?error.message:'Hesap mevcutsa sıfırlama e-postası gönderildi.',!!error)};
+$('authReset').onclick=async()=>{
+ const identity=$('authEmail').value.trim();
+ if(selectedLoginRole!=='teacher')return authStatus('Şifre sıfırlama isteği için lütfen öğretmeninize başvurunuz.',true);
+ if(!identity)return authStatus('Önce öğretmen kullanıcı adınızı giriniz.',true);
+ const btn=$('authReset');btn.disabled=true;authStatus('Talebiniz iletiliyor…');
+ try{
+  const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-teacher-password-request',{
+   method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG'},
+   body:JSON.stringify({username:identity})});
+  const result=await response.json();if(!response.ok)throw Error(result.error||'Talep iletilemedi.');
+  authStatus(result.message||'Şifre sıfırlama talebiniz yönetime iletildi.');
+ }catch(err){authStatus(/failed to fetch/i.test(err.message)?'Talep servisine ulaşılamıyor. Lütfen tekrar deneyin.':err.message,true)}
+ finally{btn.disabled=false}
+};
 if(authClient){authClient.auth.getSession().then(async({data})=>{try{if(data?.session&&!$('entry').hidden){selectedLoginRole=null;await openRealSession(data.session)}}finally{window.baridaFinishBoot?.()}}).catch(()=>window.baridaFinishBoot?.());authClient.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'&&realUser){realUser=null;realProfile=null;role='';$('createStudentOpen').hidden=true;$('entry').hidden=false;$('app').hidden=true;renderEntry()}})}
 function closeAcademyMenus(){
  document.querySelectorAll('#sidebar .nav-category[open]').forEach(menu=>{menu.open=false});
