@@ -31,26 +31,29 @@ const baridaPremiumShapes={"p":"<circle cx=\"50\" cy=\"23\" r=\"13\"/><path d=\"
 const baridaPieceOptics=new Map();
 function baridaNormalizePiece(img){
  if(!img||!img.naturalWidth)return;
- const key=img.currentSrc||img.src;
+ const key=(img.currentSrc||img.src)+'|'+img.dataset.pieceType;
  let optical=baridaPieceOptics.get(key);
  if(!optical){
   try{
-   const c=document.createElement('canvas');c.width=128;c.height=128;
+   const width=img.naturalWidth,height=img.naturalHeight;
+   const c=document.createElement('canvas');c.width=width;c.height=height;
    const ctx=c.getContext('2d',{willReadFrequently:true});
-   ctx.clearRect(0,0,128,128);ctx.drawImage(img,0,0,128,128);
-   const pixels=ctx.getImageData(0,0,128,128).data;
-   let left=128,right=-1,top=128,bottom=-1;
-   for(let y=0;y<128;y++)for(let x=0;x<128;x++){
-    if(pixels[(y*128+x)*4+3]>48){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
+   ctx.drawImage(img,0,0);
+   const pixels=ctx.getImageData(0,0,width,height).data;
+   let left=width,right=-1,top=height,bottom=-1;
+   for(let y=0;y<height;y++)for(let x=0;x<width;x++){
+    if(pixels[(y*width+x)*4+3]>48){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
    }
    if(right<left)throw Error('Empty piece');
    const pawn=img.dataset.pieceType==='pawn';
-   const target=pawn?.65:.72;
-   const visibleW=(right-left+1)/128,visibleH=(bottom-top+1)/128;
-   const scale=Math.min(2.7,target/(.78*Math.max(visibleW,visibleH)));
-   const dx=(63.5-(left+right)/2)/128*100;
-   const dy=(63.5-(top+bottom)/2)/128*100;
-   optical='translate('+dx.toFixed(3)+'%,'+dy.toFixed(3)+'%) scale('+scale.toFixed(4)+')';
+   const target=.72*(pawn?.93:1);
+   // object-fit:contain uses the longer native dimension inside the square image box.
+   const longest=Math.max(width,height),visibleH=(bottom-top+1)/longest;
+   const scale=target/(.78*visibleH);
+   const dx=((width-1)/2-(left+right)/2)/longest*100;
+   const dy=((height-1)/2-(top+bottom)/2)/longest*100;
+   // Scale the centering offset too, so the painted silhouette stays centered.
+   optical='scale('+scale.toFixed(5)+') translate('+dx.toFixed(5)+'%,'+dy.toFixed(5)+'%)';
   }catch(e){optical='none'}
   baridaPieceOptics.set(key,optical);
  }
@@ -63,9 +66,9 @@ function pieceSVG(symbol,piece){
  const white=piece===piece.toUpperCase();
  const names={k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'};
  const pieceName=names[piece.toLowerCase()];
- const pieceScale='none';
+ const pieceScale='var(--barida-optical-transform,none)';
  const path='assets/barida-pieces/'+(white?'white':'black')+'-'+names[piece.toLowerCase()]+'.png?v=20261022-optical-v5';
- return '<img onload="window.baridaNormalizePiece(this)" data-piece-type="'+pieceName+'" class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block;width:78%;height:78%;margin:0;object-fit:contain;object-position:center;transform:'+pieceScale+';pointer-events:none;user-select:none" />';
+ return '<img onload="window.baridaNormalizePiece(this)" data-piece-type="'+pieceName+'" class="piece-3d barida-approved-piece '+(white?'white':'black')+'" src="'+path+'" alt="" draggable="false" decoding="async" loading="eager" style="display:block!important;width:78%!important;height:78%!important;max-width:78%!important;max-height:78%!important;flex:0 0 78%!important;margin:0!important;object-fit:contain!important;object-position:center!important;transform-origin:center center!important;transform:'+pieceScale+'!important;pointer-events:none;user-select:none" />';
 }
 const annotationState=new WeakMap();
 function boardAnnotations(root,flipped){

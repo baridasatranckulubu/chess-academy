@@ -60,6 +60,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright beautifulsoup4
           python -m playwright install --with-deps chromium
+      - name: Taş boyutları ve yüzde 7 küçük piyonlar
+        run: python tests/browser_piece_sizes.py
       - name: Tarayıcı regresyon testi (v0.22+)
         run: |
           if [ -f tests/browser_v22_qa.py ]; then
