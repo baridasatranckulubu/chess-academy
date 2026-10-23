@@ -1,0 +1,45 @@
+name: Deploy Barida to Cloudflare Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: baridachess-pages-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      CLOUDFLARE_ACCOUNT_ID: 93c0e9ef9defdeb95adf4e052639a568
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare static site
+        shell: python
+        run: |
+          from pathlib import Path
+          import shutil
+          root = Path(".")
+          out = Path("_pages")
+          out.mkdir()
+          extensions = {".html", ".css", ".js", ".webp", ".png", ".ico", ".svg"}
+          for p in root.iterdir():
+              if p.is_file() and p.suffix in extensions:
+                  shutil.copy2(p, out / p.name)
+          for name in ["assets", "data", "puzzle-data", "engines", "i18n"]:
+              if (root / name).is_dir():
+                  shutil.copytree(root / name, out / name)
+          assert (out / "index.html").is_file()
+          assert (out / "academy.html").is_file()
+          assert all(p.stat().st_size < 25 * 1024 * 1024 for p in out.rglob("*") if p.is_file())
+      - name: Deploy production
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 93c0e9ef9defdeb95adf4e052639a568
+          command: pages deploy _pages --project-name=baridachess --branch=main
