@@ -43,17 +43,17 @@ try:
               for(let y=0;y<canvas.height;y++)for(let x=0;x<canvas.width;x++)if(d[(y*canvas.width+x)*4+3]>48){l=Math.min(l,x);r=Math.max(r,x);t=Math.min(t,y);b=Math.max(b,y)}
               const box=img.getBoundingClientRect(),sq=img.closest('.sq').getBoundingClientRect();
               const unit=Math.min(box.width/canvas.width,box.height/canvas.height);
-              return {name:img.src.split('/').pop(),pawn:img.dataset.pieceType==='pawn',
+              return {name:img.src.split('/').pop(),type:img.dataset.pieceType,
                 height:(b-t+1)*unit/sq.height,width:(r-l+1)*unit/sq.width,
                 cx:(box.x+box.width/2+((l+r+1)/2-canvas.width/2)*unit-(sq.x+sq.width/2))/sq.width,
                 cy:(box.y+box.height/2+((t+b+1)/2-canvas.height/2)*unit-(sq.y+sq.height/2))/sq.height};
             })''')
             for row in rows:
-                target = .72 * (.93 if row['pawn'] else 1)
+                target = .72 * {'bishop':1.02,'knight':.98,'rook':.98,'pawn':.93*.98}.get(row['type'],1)
                 assert abs(row['height'] - target) < .001, (size, row)
                 assert row['width'] < .76, (size, row)
                 assert abs(row['cx']) < .001 and abs(row['cy']) < .001, (size, row)
-            print(f'PASS {size}px: 10 pieces at 72% height, 2 pawns at 66.96%; centered, no overflow')
+            print(f'PASS {size}px: all 12 pieces match optical adjustments; centered, no overflow')
         assert not errors, errors
         browser.close()
 finally:

@@ -45,8 +45,8 @@ function baridaNormalizePiece(img){
     if(pixels[(y*width+x)*4+3]>48){left=Math.min(left,x);right=Math.max(right,x);top=Math.min(top,y);bottom=Math.max(bottom,y)}
    }
    if(right<left)throw Error('Empty piece');
-   const pawn=img.dataset.pieceType==='pawn';
-   const target=.72*(pawn?.93:1);
+   const adjustment={bishop:1.02,knight:.98,rook:.98,pawn:.93*.98}[img.dataset.pieceType]||1;
+   const target=.72*adjustment;
    // object-fit:contain uses the longer native dimension inside the square image box.
    const longest=Math.max(width,height),visibleH=(bottom-top+1)/longest;
    const scale=target/(.78*visibleH);
