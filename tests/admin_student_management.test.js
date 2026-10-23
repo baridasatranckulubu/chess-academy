@@ -11,6 +11,20 @@ assert(academy.includes("accountStatuses.get(st.id)"),'payment and account statu
 assert(studio.includes("shared.renderBoard("),'studio must render canonical pieces');
 assert(studio.includes("bindDrag($('board')"),'studio must support piece dragging');
 assert(studio.includes("choosePromotion("),'studio must offer 4-way promotion');
-assert(shared.includes("fill=white?'#efdfc1':'#3c4856'"),'shared chess piece colors must avoid pure white/black');
+// Execute the current renderer instead of matching the retired SVG palette.
+const context={window:{},document:{getElementById:()=>true}};
+vm.runInNewContext(shared,context);
+const renderer=context.window.ChessAcademySharedBoard.pieceSVG;
+for(const [code,name] of Object.entries({k:'king',q:'queen',r:'rook',b:'bishop',n:'knight',p:'pawn'})){
+ for(const [piece,color] of [[code,'black'],[code.toUpperCase(),'white']]){
+  const html=renderer('',piece);
+  assert.match(html,/^<img /,'approved pieces must render as images');
+  assert(html.includes('barida-approved-piece '+color),'piece side must be preserved');
+  const src=html.match(/src="([^"?]+)/)?.[1];
+  assert.equal(src,`assets/barida-pieces/${color}-${name}.png`);
+  assert(fs.existsSync(require('node:path').join(__dirname,'..',src)),`${src} missing`);
+ }
+}
+assert.equal(renderer('','invalid'),'','invalid pieces must not render');
 assert(css.includes('.barida-admin-student-schedule'),'admin schedule must have editable layout');
 console.log('PASS BARIDA admin student management and canonical homework board contracts');
