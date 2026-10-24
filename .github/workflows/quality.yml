@@ -64,6 +64,8 @@ jobs:
         run: python tests/browser_club_qa.py
       - name: Hamle Atölyesi, paylaşım ve tüm hamle geçmişi
         run: python tests/browser_workshop_qa.py
+      - name: Kulüp Arenası, müsabaka arşivi ve sonuç kuyruğu
+        run: python tests/browser_arena_qa.py
       - name: Mobil giriş, güvenli saklama ve gezinme
         run: python tests/browser_mobile_qa.py
       - name: Test ekran görüntüleri

@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'KULÜP ARENASI',title:'Tahtada buluşuyoruz',items:['Sporcu ve antrenörler arasında rastgele eşleşme.','Sunucuda doğrulanan hamleler, süreli müsabakalar ve kalıcı yönetici arşivi.','Galibiyet +30, mağlubiyet −10, beraberlik +5 rating.']},
 
   {tag:'HAMLE ATÖLYESİ',title:'Birlikte düşün, birlikte geliştir',items:['Sporcu ve antrenör için hesaba bağlı çalışma kaydı.','Antrenörden kendi sporcusuna tam hamle dizisi ve not paylaşımı.','İlk/son hamle, ileri–geri inceleme, antrenör takibi ve asıl diziyi koruyan varyantlar.']},
   {tag:'MOBİL UYGULAMA',title:'Cebindeki kulüp',items:['Android için paketlenmiş arayüz, yerel tahta kaynakları ve çevrimdışı durum bildirimi.','Android Keystore ile cihazda şifreli giriş bilgisi saklama.','Mobil güvenli ekran alanları, klavye uyumu ve Android geri tuşu desteği.']},
@@ -28,7 +29,7 @@
   const robot=el('section','club-robot');const photo=el('img');photo.src='assets/club/chess-robot.webp';photo.width=700;photo.height=700;photo.loading='lazy';photo.decoding='async';photo.alt='Kulüpte kullanılan beyaz satranç robotu ve elektronik tahtası';
   const text=el('div');text.append(el('p','club-eyebrow','ISPARTA’DA BARIDA FARKI'),el('h2','','Ekranın ötesinde, gerçek bir deneyim.'),el('p','','Satranç robotumuz Isparta’da yalnızca Barida Satranç Spor Kulübü’nde. Teknolojiyle gerçek tahta deneyimini birleştiren bu özel cihazı kulübümüzde yakından tanı.'),el('p','club-note','Robot deneyimi ve kulüp içi çalışma programı için antrenörünle görüş. Üstteki sahne, cihaz referansı kullanılarak hazırlanmış temsili bir görseldir.'));robot.append(photo,text);view.append(robot);
   const news=el('section','club-section');news.append(el('p','club-eyebrow','PLATFORMDA YENİ'),el('h2','','Aynı kulüp. Daha güçlü bir platform.'));
-  const highlights=el('div','club-highlights');for(const [title,body] of [['Kulüp rating yarışı','Çalış, puanını geliştir ve kulüp sıralamasındaki yerini takip et.'],['Sana eşlik eden antrenmanlar','Ödevler, uygulamalı çalışmalar ve gerçek hamlelerle düzenli gelişim.'],['Hamlelerini birlikte geliştir','Kendi açılışlarını kaydet, antrenörünle paylaş ve her hamlede yeni fikirler geliştir.']]){const c=el('article','club-card');c.append(el('h3','',title),el('p','',body));highlights.append(c)}news.append(highlights);view.append(news);
+  const highlights=el('div','club-highlights');for(const [title,body] of [['Kulüp rating yarışı','Çalış, puanını geliştir ve kulüp sıralamasındaki yerini takip et.'],['Sana eşlik eden antrenmanlar','Ödevler, uygulamalı çalışmalar ve gerçek hamlelerle düzenli gelişim.'],['Kulübün canlı rekabeti','Kulüp Arenası’nda rakibini bul, müsabakanı oyna ve rating sıralamasında yüksel.']]){const c=el('article','club-card');c.append(el('h3','',title),el('p','',body));highlights.append(c)}news.append(highlights);view.append(news);
   view.append(el('footer','club-footer','BARIDA SATRANÇ SPOR KULÜBÜ · Her hamlede daha ileri.'));
  }
  function updates(view){view.className='club-home club-updates';view.replaceChildren();view.append(el('p','club-eyebrow','YÖNETİM · GELİŞTİRME GÜNLÜĞÜ'),el('h1','','Site İçi Güncellemeler'),el('p','club-intro','Platformun şimdiye kadar kazandığı temel özellikler ve son geliştirmeler.'));

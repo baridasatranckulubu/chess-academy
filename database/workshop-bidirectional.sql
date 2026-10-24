@@ -12,7 +12,7 @@ begin
   from public.profiles p where
   (actor='admin' and p.role='student') or
   (actor='teacher' and p.role='student' and exists(select 1 from public.teacher_students t where t.teacher_id=uid and t.student_id=p.id)) or
-  (actor='student' and p.role in ('teacher','admin') and exists(select 1 from public.teacher_students t where t.student_id=uid and t.teacher_id=p.id));
+  (actor='student' and (p.role='teacher' or (p.role='admin' and exists(select 1 from public.teacher_students t where t.student_id=uid and t.teacher_id=p.id))));
   return result;
  end if;
  if p_action='list' then
@@ -41,7 +41,7 @@ begin
   if not exists(select 1 from public.profiles p where p.id=p_student and (
     (actor='admin' and p.role='student') or
     (actor='teacher' and p.role='student' and exists(select 1 from public.teacher_students t where t.teacher_id=uid and t.student_id=p.id)) or
-    (actor='student' and p.role in ('teacher','admin') and exists(select 1 from public.teacher_students t where t.student_id=uid and t.teacher_id=p.id))
+    (actor='student' and (p.role='teacher' or (p.role='admin' and exists(select 1 from public.teacher_students t where t.student_id=uid and t.teacher_id=p.id))))
   )) then raise exception 'Bu kişiye paylaşım yetkin yok';end if;
   if p_action='share' then insert into public.academy_workshop_shares(study_id,student_id,sender_id) values(p_id,p_student,uid) on conflict do nothing;
   else delete from public.academy_workshop_shares where study_id=p_id and student_id=p_student;end if;

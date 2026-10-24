@@ -1,0 +1,12 @@
+'use strict';const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const map=new Map(),events=[],storage={getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v)};let identity='one',fail=false,calls=0;
+const client={auth:{getSession:async()=>({data:{session:{user:{id:identity}}}})},rpc:async()=>{calls++;return{error:fail?{message:'offline'}:null}}};
+const context={localStorage:storage,navigator:{onLine:true},setInterval:()=>0,CustomEvent:class{constructor(type,init){this.type=type;this.detail=init?.detail}},window:{addEventListener(){},dispatchEvent:e=>events.push(e)}};
+vm.createContext(context);vm.runInContext(fs.readFileSync('result-sync.js','utf8'),context);
+(async()=>{const api=context.window.BaridaResultSync;
+ await api.push(client,'one','puzzle','first',true);assert.equal(JSON.parse(storage.getItem('barida-result-outbox:one')).length,0);assert.equal(calls,1);
+ fail=true;await api.push(client,'one','puzzle','second',false);assert.equal(JSON.parse(storage.getItem('barida-result-outbox:one')).length,1);assert.equal(events[0].type,'barida-result-sync-error');
+ identity='two';fail=false;const before=calls;await api.resume(client,'one');assert.equal(calls,before,'Previous account results leaked to another account');
+ identity='one';await api.resume(client,'one');assert.equal(JSON.parse(storage.getItem('barida-result-outbox:one')).length,0);
+ console.log('PASS result queue retry, no lost offline result, and account-session isolation');
+})().catch(e=>{console.error(e);process.exitCode=1});

@@ -71,6 +71,10 @@ try:
     assert page.evaluate("window.__workshopRows[1].owner_id==='athlete'&&window.__workshopRows[0].payload.moves.length===4")
     f.locator('#cloudShare').click();f.locator('#cloudStatus').filter(has_text='Çalışma gönderildi').wait_for()
     assert page.evaluate("window.__shares[0].p_student==='coach'")
+   # A capture must remain compact rather than inheriting board-sized images.
+   f.locator('body').evaluate("()=>window.BaridaStudy.load({title:'Capture sizing',fen:'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',moves:[{from:'e2',to:'e4'},{from:'d7',to:'d5'},{from:'e4',to:'d5'}],notes:''},3)")
+   f.locator('#capturedWhite img').wait_for()
+   assert f.locator('#capturedWhite img').evaluate('(el)=>el.getBoundingClientRect().height<40')
    page.set_viewport_size({'width':390,'height':850})
    assert f.locator('html').evaluate('(el)=>el.scrollWidth<=innerWidth+2')
    assert not errors,errors
