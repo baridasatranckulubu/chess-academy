@@ -781,7 +781,7 @@ async function realAssignments(){
  }catch(e){view.append(node('p','auth-error',e.message||'Ödevler yüklenemedi.'))}
 }
 function watchAssignmentUpdates(view){let busy=false;const refresh=async()=>{if(busy||section!=='assignments'||!view.isConnected)return;busy=true;try{await loadAssignmentCards(view)}catch(e){console.warn('Ödev güncellemesi:',e.message)}finally{busy=false}};
- const timer=setInterval(()=>{if(!document.hidden)refresh()},30000);let channel;if(authClient?.channel){const filter=(role==='teacher'?'teacher_id':'student_id')+'=eq.'+realUser.id;channel=authClient.channel('assignments-'+realUser.id+'-'+Date.now()).on('postgres_changes',{event:'*',schema:'public',table:'academy_assignments',filter},refresh).subscribe()}
+ const timer=setInterval(refresh,4000);let channel;if(authClient?.channel){const filter=(role==='teacher'?'teacher_id':'student_id')+'=eq.'+realUser.id;channel=authClient.channel('assignments-'+realUser.id+'-'+Date.now()).on('postgres_changes',{event:'*',schema:'public',table:'academy_assignments',filter},refresh).subscribe()}
  const leave=()=>{if(section==='assignments')return;clearInterval(timer);if(channel)authClient.removeChannel(channel);window.removeEventListener('barida-section',leave)};window.addEventListener('barida-section',leave);
 }
 async function customAssignmentEditor(){
