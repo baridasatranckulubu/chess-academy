@@ -27,7 +27,7 @@ try:
    if role=='teacher':
     page.evaluate("window.baridaNavigate('student-register')");page.locator('#studentCreateName').fill('Test Sporcu');page.locator('#studentCreatePassword').fill('Test-password-123');page.locator('#studentCreateSubmit').click();status=page.locator('#studentCreateMessage')
    else:
-    page.evaluate("window.baridaNavigate('admin-teachers')");page.locator('[name=username]').fill('testcoach');page.locator('[name=password]').fill('Test-password-123');page.locator('.ca-teacher-form [type=submit]').click();status=page.locator('#teacherCreateMessage')
+    page.evaluate("window.baridaNavigate('admin-teachers')");page.locator('.ca-teacher-form [name=username]').fill('testcoach');page.locator('.ca-teacher-form [name=password]').fill('Test-password-123');page.locator('.ca-teacher-form [type=submit]').click();status=page.locator('#teacherCreateMessage')
    status.filter(has_text='Kayıt kontrol hatası').wait_for();assert status.get_attribute('role')=='alert';assert status.get_attribute('data-state')=='error'
    for theme in ['dark','light']:
     page.evaluate("document.documentElement.dataset.academyTheme='"+theme+"'")
@@ -38,3 +38,4 @@ try:
    context.close();print('PASS readable registration failure and preserved inputs:',role)
   browser.close()
 finally:server.shutdown()
+
