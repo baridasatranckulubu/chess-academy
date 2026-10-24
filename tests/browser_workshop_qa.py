@@ -12,7 +12,7 @@ FEN='rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 RPC=r"""
 window.__workshopRows=SEED;window.__shares=[];
 window.__workshopRpc=async a=>{const uid=USER;const rows=window.__workshopRows;
- if(a.p_action==='context')return{data:{user:uid,role:ROLE,recipients:ROLE==='teacher'?[{id:'athlete',name:'Test Sporcu'}]:[]}};
+ if(a.p_action==='context')return{data:{user:uid,role:ROLE,recipients:ROLE==='teacher'?[{id:'athlete',name:'Test Sporcu'}]:[{id:'coach',name:'Test Antrenör'}]}};
  if(a.p_action==='list')return{data:rows.map(r=>({...r,title:r.payload.title}))};
  if(a.p_action==='get')return{data:rows.find(r=>r.id===a.p_id)};
  if(a.p_action==='save'){let row=rows.find(r=>r.id===a.p_id);if(!row){row={id:'study-'+rows.length,owner_id:uid,version:0};rows.push(row)}Object.assign(row,{payload:a.p_payload,cursor:a.p_cursor,version:row.version+1});return{data:row}};
@@ -54,7 +54,8 @@ try:
     assert f.locator('#chapters option').count()==2
     f.locator('#chapters').select_option('0');assert f.locator('#plyLabel').inner_text().startswith('4 / 4')
    else:
-    assert not f.locator('#coachShare').is_visible()
+    assert f.locator('#coachShare').is_visible()
+    assert not f.locator('#fen').is_visible()
     f.locator('#cloudList').select_option(seed[0]['id']);f.locator('#cloudOpen').click()
     f.locator('#cloudStatus').filter(has_text='Çalışma ilk konumda açıldı').wait_for()
     assert f.locator('#plyLabel').inner_text().startswith('0 / 4')
@@ -68,6 +69,8 @@ try:
     f.locator('#back').click();assert not f.locator('#cloudFollow').is_checked()
     f.locator('#cloudSave').click();f.locator('#cloudStatus').filter(has_text='kişisel kopyası').wait_for()
     assert page.evaluate("window.__workshopRows[1].owner_id==='athlete'&&window.__workshopRows[0].payload.moves.length===4")
+    f.locator('#cloudShare').click();f.locator('#cloudStatus').filter(has_text='Çalışma gönderildi').wait_for()
+    assert page.evaluate("window.__shares[0].p_student==='coach'")
    page.set_viewport_size({'width':390,'height':850})
    assert f.locator('html').evaluate('(el)=>el.scrollWidth<=innerWidth+2')
    assert not errors,errors
