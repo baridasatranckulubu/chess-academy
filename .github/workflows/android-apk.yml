@@ -1,58 +1,70 @@
-name: Android Debug APK
+name: Barida Android APK
 on:
-  workflow_dispatch:
   push:
+    branches: [main]
     paths:
-      - 'package.json'
+      - 'package*.json'
       - 'capacitor.config.json'
-      - 'android-web/**'
+      - 'native/**'
+      - 'tools/*android*'
+      - 'mobile.*'
       - '.github/workflows/android-apk.yml'
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '21'
-      - name: Verify preinstalled Android SDK
+      - run: npm ci --no-audit --no-fund
+      - name: Bundle application and generate Android project
         run: |
-          echo "ANDROID_HOME=$ANDROID_HOME"
-          test -d "$ANDROID_HOME/platforms" || exit 1
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --list_installed | head -40 || true
-      - name: Install JavaScript dependencies
-        run: npm install --no-audit --no-fund
-      - name: Generate native Android project
-        run: npx cap add android
-      - name: Set modern Android target and legacy-compatible minimum
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('android/variables.gradle')
-          s=p.read_text()
-          import re
-          s,n=re.subn(r'minSdkVersion\s*=\s*\d+', 'minSdkVersion = 23', s)
-          if n != 1:
-              raise SystemExit('Could not configure minSdkVersion')
-          p.write_text(s)
-          print('Android minimum API 23, universal APK for supported CPU architectures')
-          PY
-      - name: Sync Capacitor
-        run: npx cap sync android
-      - name: Build debug APK
+          python tools/prepare_android.py
+          npx cap add android
+          python tools/configure_android.py
+          npx cap sync android
+      - name: Build installable test APK and instrumentation
         working-directory: android
-        run: bash ./gradlew assembleDebug --no-daemon
-      - name: Upload installable APK
+        run: bash ./gradlew assembleDebug assembleDebugAndroidTest lintDebug --no-daemon
+      - name: Enable hardware acceleration for this runner
+        run: sudo chown "$(id -un)" /dev/kvm
+      - name: Verify Android Keystore and bundled login on emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 36
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            cd android && bash ./gradlew connectedDebugAndroidTest --no-daemon
+            adb shell am start -n com.baridasatranckulubu.academy/.MainActivity
+            sleep 8
+            adb shell screencap -p /sdcard/barida-login.png
+            adb pull /sdcard/barida-login.png "$GITHUB_WORKSPACE/barida-login.png"
+      - name: Upload tested installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: chess-academy-android-debug-apk
+          name: Barida-Satranc-1.0.0-test-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+          retention-days: 30
+      - name: Android test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Barida-Android-test-results
+          path: |
+            android/app/build/reports/
+            android/app/build/outputs/androidTest-results/
+            barida-login.png
           retention-days: 14

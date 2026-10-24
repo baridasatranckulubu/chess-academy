@@ -43,7 +43,7 @@ try:
    if role!='admin':assert 'academy_sync_payment_notifications' not in page.evaluate('window.__rpc')
    for theme in ['dark','light']:
     if theme=='light':page.locator('#caThemeToggle').click()
-    for width in [1440,390]:
+    for width in [1440,768,390,320]:
      page.set_viewport_size({'width':width,'height':1040})
      assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(role,theme,width,'horizontal overflow')
      if role=='admin':page.screenshot(path=str(OUT/f'club-{theme}-{width}.png'))

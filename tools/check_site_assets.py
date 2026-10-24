@@ -20,7 +20,7 @@ class Assets(HTMLParser):
             self.paths.append(a['href'])
 
 errors = []
-pages = list(ROOT.rglob('*.html'))
+pages = [p for p in ROOT.rglob('*.html') if not {'node_modules','android','android-web','qa-artifacts'}.intersection(p.relative_to(ROOT).parts)]
 for page in pages:
     parser = Assets()
     parser.feed(page.read_text(encoding='utf-8'))

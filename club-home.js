@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'MOBİL UYGULAMA',title:'Cebindeki kulüp',items:['Android için paketlenmiş arayüz, yerel tahta kaynakları ve çevrimdışı durum bildirimi.','Android Keystore ile cihazda şifreli giriş bilgisi saklama.','Mobil güvenli ekran alanları, klavye uyumu ve Android geri tuşu desteği.']},
   {tag:'24 EKİM 2026',title:'Yeni kulüp deneyimi',items:['Yönetim, antrenör ve sporcu için ortak ana sayfa.','Satranç robotu temalı yeni kulüp vitrini.','Sporcu / Antrenör adlandırması, okunabilir arayüz ve mobil düzen.']},
   {tag:'REKABET',title:'Her hamlede gelişim',items:['Kulüp rating sıralaması: sporcuların puanlarıyla birbirleriyle yarışması.','Doğru yanıta +5, yanlış yanıta −15 puan; beş kademeli gelişim.','Ayın ilk üç sporcusu ve yönetimden sıralama takibi.']},
   {tag:'ANTRENMAN',title:'Tek platform, çok yönlü çalışma',items:['Tema, Elo ve soru sayısına göre bulmaca ödevleri.','Antrenörün kendi konumunu oluşturabildiği ödev stüdyosu.','Yanlış hamle kaydı, soru incelemesi ve ödev ilerlemesi.','Stockfish analizi, hamle geçmişi, PGN ve konum çalışmaları.','Koordinat Avı: süre seçenekleri, sesler ve rekor takibi.']},

@@ -1,12 +1,1 @@
-{
-  "appId": "com.chessacademy.hskgsuygar32",
-  "appName": "Chess Academy",
-  "webDir": "android-web",
-  "server": {
-    "url": "https://chess-academy.hskgsuygar32.workers.dev/academy",
-    "cleartext": false
-  },
-  "android": {
-    "allowMixedContent": false
-  }
-}
+{"appId":"com.baridasatranckulubu.academy","appName":"Barida Satranç","webDir":"android-web","loggingBehavior":"none","android":{"allowMixedContent":false,"webContentsDebuggingEnabled":false,"backgroundColor":"#092119"}}
