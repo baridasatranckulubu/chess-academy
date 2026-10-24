@@ -34,6 +34,7 @@ try:
    page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
    page.goto(f'http://127.0.0.1:{server.server_port}/academy.html')
    page.locator('#club-title').wait_for()
+   page.locator('#baridaBoot').wait_for(state='hidden')
    page.wait_for_function("document.querySelector('.club-hero-art').complete && document.querySelector('.club-hero-art').naturalWidth>0")
    page.wait_for_function("document.querySelector('#caAdminBellCount').textContent.length>0")
    homes.append(page.locator('#view').inner_text())
@@ -46,8 +47,22 @@ try:
      page.set_viewport_size({'width':width,'height':1040})
      assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(role,theme,width,'horizontal overflow')
      if role=='admin':page.screenshot(path=str(OUT/f'club-{theme}-{width}.png'))
+   # Personal dashboards remain usable alongside the shared home.
+   page.set_viewport_size({'width':1440,'height':1040})
+   if role=='student':
+    page.get_by_text('📚 Eğitim',exact=True).click()
+    page.get_by_role('button',name='📈 Gelişim Merkezim',exact=True).click()
+    page.locator('.bd-hero').wait_for()
+   elif role=='teacher':
+    page.locator('summary').filter(has_text='♛ Antrenör Çalışma Alanı').hover()
+    page.get_by_role('button',name='♛ Antrenör Çalışma Alanı',exact=True).click()
+    page.locator('.teacher-landing-grid').wait_for()
    if role=='admin':
     page.set_viewport_size({'width':1440,'height':1040})
+    page.get_by_text('🛡️ Yönetim',exact=True).click()
+    page.get_by_role('button',name='🛡️ Kulüp Yönetim Merkezi',exact=True).click()
+    page.locator('.sd-hero').wait_for()
+    assert 'Kulüp Yönetim Merkezi' in page.locator('.sd-hero').inner_text()
     page.get_by_text('🛡️ Yönetim',exact=True).click()
     page.get_by_role('button',name='✨ Site İçi Güncellemeler',exact=True).click()
     assert page.locator('#view h1').inner_text()=='Site İçi Güncellemeler'
