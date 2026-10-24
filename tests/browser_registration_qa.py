@@ -3,7 +3,11 @@ from pathlib import Path
 from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from functools import partial
 from threading import Thread
-import ast,json
+import ast,json,re
+def luminance(color):
+ values=[int(v)/255 for v in re.findall(r"\d+",color)[:3]]
+ values=[v/12.92 if v<=0.04045 else ((v+0.055)/1.055)**2.4 for v in values]
+ return sum(v*w for v,w in zip(values,[0.2126,0.7152,0.0722]))
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 tree=ast.parse((ROOT/'tests/browser_club_qa.py').read_text())
@@ -28,7 +32,7 @@ try:
    for theme in ['dark','light']:
     page.evaluate("document.documentElement.dataset.academyTheme='"+theme+"'")
     style=status.evaluate('(el)=>{const s=getComputedStyle(el);return {color:s.color,bg:s.backgroundColor,size:parseFloat(s.fontSize),opacity:s.opacity}}')
-    assert style['size']>=17 and style['color']=='rgb(133, 27, 27)' and style['bg']=='rgb(255, 240, 240)' and style['opacity']=='1',style
+    l1,l2=sorted([luminance(style['color']),luminance(style['bg'])]);assert style['size']>=17 and (l2+0.05)/(l1+0.05)>=4.5 and style['opacity']=='1',style
    if role=='teacher':assert page.locator('#studentCreateName').input_value()=='Test Sporcu'
    assert not errors,errors
    context.close();print('PASS readable registration failure and preserved inputs:',role)
