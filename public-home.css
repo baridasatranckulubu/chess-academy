@@ -48,3 +48,8 @@
 @media(max-width:650px){.wordmark{font-size:17px;gap:8px}.wordmark small{font-size:7px}.brand-emblem{width:46px;height:50px;border-radius:10px}.brand-emblem img{width:244px;height:137px}.site-header{gap:7px;padding-inline:15px}.hero{height:auto;min-height:760px}.hero-content{padding-top:65px;padding-bottom:175px}.hero-robot-note{left:20px;right:auto;bottom:58px;max-width:calc(100% - 40px);padding:14px 17px}.hero-robot-note strong{font-size:13px}.hero-robot-note small{font-size:8px}.journey-strip{grid-template-columns:1fr;padding-block:27px;gap:23px}.journey-strip>div{gap:17px}.journey-strip strong{font-size:16px}.journey-strip small{font-size:12px}.about{gap:10px}.robot-section{gap:30px}.robot-copy .exclusive-label{font-size:11px}.robot-media{aspect-ratio:16/11;border-radius:14px}.media-label{font-size:7px;left:17px;bottom:24px}.contact{border-radius:16px}}
 
 @media(min-width:651px) and (max-width:950px){.hero{min-height:760px}.hero-content{padding-bottom:150px}}
+
+/* Pink outlines on the green actions and emblems. */
+.login-link,.button,.brand-emblem,.floating-contact{box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .18s,border-color .18s}
+.login-link:hover,.login-link:focus-visible,.button:hover,.button:focus-visible,.wordmark:hover .brand-emblem,.wordmark:focus-visible .brand-emblem,.floating-contact:hover,.floating-contact:focus-visible{box-shadow:inset 0 0 0 2px #ff79b9;border-color:#ff79b9}
+.hero-robot-note:hover,.hero-robot-note:focus-visible,#videoToggle:hover,#videoToggle:focus-visible,.robot-features span:hover,.exclusive-label:hover{border-color:#ff79b9;box-shadow:inset 0 0 0 1px #ff79b9}
