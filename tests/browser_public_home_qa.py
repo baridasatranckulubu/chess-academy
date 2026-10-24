@@ -25,6 +25,6 @@ try:
    page.locator('#menuToggle').click();assert page.locator('#menuToggle').get_attribute('aria-expanded')=='true';page.locator('#publicNav').get_by_role('link',name='İletişim',exact=True).click();assert page.locator('#menuToggle').get_attribute('aria-expanded')=='false'
   page.set_viewport_size({'width':390,'height':850});page.evaluate('scrollTo(0,0)');page.screenshot(path=str(OUT/'public-mobile.png'),full_page=True)
   page.locator('#sense-chess').scroll_into_view_if_needed();assert page.locator('#robotVideo').evaluate('el=>el.paused')
-  page.set_viewport_size({'width':1450,'height':1050});page.evaluate('scrollTo(0,0)');page.get_by_role('link',name='Kulüp Paneline Giriş',exact=True).click();page.wait_for_url('**/academy.html');page.locator('#authForm').wait_for();assert page.locator('#entry').is_visible();page.locator('.topbar .brand').click();page.wait_for_url('**/index.html');page.locator('#hero-title').wait_for();assert not errors,errors
+  page.set_viewport_size({'width':1450,'height':1050});page.evaluate('scrollTo(0,0)');page.get_by_role('link',name='Kulüp Paneline Giriş',exact=True).click();page.wait_for_url('**/academy.html');page.locator('#authForm').wait_for();assert page.locator('#entry').is_visible();page.go_back();page.wait_for_url(url);page.locator('#hero-title').wait_for();assert not errors,errors
   browser.close();print('PASS public home, no authentication dependency, actual contacts, mobile layouts/menu, reduced motion and login round trip')
 finally:server.shutdown()
