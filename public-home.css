@@ -109,3 +109,33 @@
 .message-panel-footer svg{width:13px;height:13px;flex:none}
 @media(max-width:950px){.contact-grid-buttons{grid-template-columns:1fr 1fr;gap:32px}.contact-grid-buttons .contact-main{grid-column:1/-1}.contact-grid-buttons .contact-main .contact-button-stack{grid-template-columns:1fr 1fr;max-width:600px}.contact .contact-caption{margin-bottom:0}}
 @media(max-width:650px){.contact-grid-buttons{grid-template-columns:minmax(0,1fr);gap:30px}.contact-grid-buttons .contact-main{grid-column:auto}.contact-grid-buttons .contact-main .contact-button-stack{grid-template-columns:1fr}.contact-grid-buttons .contact-social{display:flex}.contact-grid-buttons h3{margin-bottom:16px}.contact-phone-number{font-size:29px}.floating-contact.chat-launcher{right:16px;bottom:18px;height:54px;padding-right:16px}.club-message-panel{right:16px;bottom:87px}.message-panel-header strong{font-size:12px}}
+
+/* Shared grid rows keep every contact column and action precisely aligned. */
+.contact-grid-buttons .contact-action{justify-content:flex-start;text-align:left;gap:12px;padding-inline:15px}
+.contact-grid-buttons .contact-action svg{width:24px;height:21px;flex:0 0 24px}
+.contact-grid-buttons .social-button-copy{flex-direction:row;align-items:center;justify-content:space-between;gap:8px;flex:1}
+.contact-grid-buttons .social-button-copy strong{font-size:12px}
+.contact-grid-buttons .social-button-copy small{font-size:10px;white-space:nowrap}
+.contact-grid-buttons .social-button-icon{width:24px;height:24px;flex:0 0 24px;border-radius:0;background:transparent}
+.contact-grid-buttons .social-button-icon svg{width:21px;height:21px}
+.contact-grid-buttons .social-button{gap:12px}
+.contact-column-info{min-width:0}
+.contact-column-info .contact-phone-number{margin-bottom:10px}
+.contact-column-info .contact-caption{margin:0}
+.contact-grid-buttons .contact-social>.contact-caption{margin:0;color:#526b5b;font-size:12px;line-height:1.75}
+.chat-launcher-symbol{border:0;background:transparent;border-radius:0;width:31px;height:31px}
+.floating-contact.chat-launcher svg{width:25px;height:25px}
+.floating-contact.chat-launcher{padding-left:16px;gap:11px}
+@media(min-width:951px){
+ .contact-grid-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:auto minmax(112px,auto) 48px 48px 16px;column-gap:32px;row-gap:12px;align-items:stretch}
+ .contact-grid-buttons>.contact-main,.contact-grid-buttons>.contact-address,.contact-grid-buttons>.contact-social{display:grid;grid-row:span 5;grid-template-rows:subgrid;row-gap:12px;align-content:stretch}
+ .contact-grid-buttons h3,.contact-grid-buttons .contact-social h3{margin:0;grid-row:1;line-height:22px}
+ .contact-grid-buttons .contact-column-info{grid-row:2;margin:0;align-self:start}
+ .contact-grid-buttons .contact-button-stack{display:contents}
+ .contact-grid-buttons .contact-action,.contact-grid-buttons .contact-social .social-button{height:48px;min-height:48px;margin:0;padding:10px 15px;box-sizing:border-box;border-radius:11px}
+ .contact-grid-buttons .contact-button-stack>:first-child{grid-row:3}
+ .contact-grid-buttons .contact-button-stack>:last-child{grid-row:4}
+ .contact-grid-buttons .contact-social .social-button:nth-of-type(1){grid-row:3}
+ .contact-grid-buttons .contact-social .social-button:nth-of-type(2){grid-row:4}
+ .contact-grid-buttons .copy-feedback{grid-row:5;margin:0}
+}

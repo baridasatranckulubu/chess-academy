@@ -25,6 +25,11 @@ try:
   assert page.locator('.exclusive-label').inner_text()=='Isparta’da ilk ve tek'
   assert page.locator('.journey-strip>div').count()==3
   assert 'assets/club/senserobot-intro.mp4' in page.locator('#robotVideo source').get_attribute('src')
+  first=[page.locator(s).bounding_box() for s in ['.contact-main .contact-action-primary','.contact-address .contact-action:first-child','.contact-social .social-button:nth-of-type(1)']]
+  second=[page.locator(s).bounding_box() for s in ['.contact-main .phone-link','#copyClubAddress','.contact-social .social-button:nth-of-type(2)']]
+  for row in [first,second]:
+   assert max(b['y'] for b in row)-min(b['y'] for b in row)<=1,row
+   assert max(b['height'] for b in row)-min(b['height'] for b in row)<=1,row
   assert page.locator('#iletisim .contact-action').count()==4
   assert page.locator('#iletisim').evaluate("el=>!el.textContent.includes('↗')")
   launcher=page.locator('#clubMessageToggle');panel=page.locator('#clubMessagePanel')
