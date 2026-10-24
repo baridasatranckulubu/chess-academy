@@ -50,7 +50,7 @@ try:
    # Personal dashboards remain usable alongside the shared home.
    page.set_viewport_size({'width':1440,'height':1040})
    if role=='student':
-    page.get_by_text('📚 Eğitim',exact=True).click()
+    page.get_by_text('🎯 Antrenman',exact=True).click()
     page.get_by_role('button',name='📈 Gelişim Merkezim',exact=True).click()
     page.locator('.bd-hero').wait_for()
    elif role=='teacher':

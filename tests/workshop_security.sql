@@ -1,0 +1,40 @@
+begin;
+do $$
+declare coach uuid; athlete uuid; outsider uuid; saved jsonb; copy jsonb; study uuid; denied boolean;
+ payload jsonb:='{"title":"WORKSHOP TRANSACTION TEST","fen":"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1","moves":[{"from":"e2","to":"e4"}],"notes":"test"}';
+begin
+ select id into coach from public.profiles where role='teacher' limit 1;
+ select id into athlete from public.profiles where role='student' limit 1;
+ select id into outsider from public.profiles where role='student' and id<>athlete limit 1;
+ assert coach is not null and athlete is not null and outsider is not null,'Test actors unavailable';
+ -- Temporary relationship only; all rows and relationship changes roll back.
+ delete from public.teacher_students where teacher_id=coach and student_id=outsider;
+ insert into public.teacher_students(teacher_id,student_id) values(coach,athlete) on conflict do nothing;
+ perform set_config('request.jwt.claim.sub',coach::text,true);
+ saved:=public.academy_workshop('save',null,payload,null,1,null);study:=(saved->>'id')::uuid;
+ perform public.academy_workshop('share',study,null,athlete);
+ denied:=false;begin perform public.academy_workshop('share',study,null,outsider);exception when others then denied:=true;end;
+ assert denied,'Unassigned athlete received study';
+ perform set_config('request.jwt.claim.sub',athlete::text,true);
+ saved:=public.academy_workshop('get',study);assert saved->'payload'=payload;assert (saved->>'cursor')::int=1;
+ denied:=false;begin perform public.academy_workshop('save',study,payload,null,0,1);exception when others then denied:=true;end;
+ assert denied,'Recipient overwrote owner';
+ copy:=public.academy_workshop('save',null,payload,null,0,null);assert (copy->>'owner_id')::uuid=athlete;
+ denied:=false;begin perform public.academy_workshop('share',(copy->>'id')::uuid,null,outsider);exception when others then denied:=true;end;
+ assert denied,'Athlete shared as coach';
+ perform set_config('request.jwt.claim.sub',outsider::text,true);
+ denied:=false;begin perform public.academy_workshop('get',study);exception when others then denied:=true;end;
+ assert denied,'Unrelated account read study';
+ perform set_config('request.jwt.claim.sub',coach::text,true);
+ saved:=public.academy_workshop('save',study,payload,null,0,1);assert (saved->>'version')::int=2;
+ denied:=false;begin perform public.academy_workshop('save',study,payload,null,1,1);exception when others then denied:=true;end;
+ assert denied,'Stale save overwrote newer version';
+ perform public.academy_workshop('unshare',study,null,athlete);
+ perform set_config('request.jwt.claim.sub',athlete::text,true);
+ denied:=false;begin perform public.academy_workshop('get',study);exception when others then denied:=true;end;
+ assert denied,'Revoked recipient still accessed study';
+ assert not has_function_privilege('anon','public.academy_workshop(text,uuid,jsonb,uuid,integer,bigint)','EXECUTE');
+ assert not has_table_privilege('authenticated','public.academy_workshop_shares','INSERT');
+end $$;
+rollback;
+select 'PASS: full sequence, personal copies, role/relationship isolation, stale-write protection, revocation; all test data rolled back' as result;
