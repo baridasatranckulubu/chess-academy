@@ -10,5 +10,5 @@ async function select({theme,min,max,count,exclude=[],opening=null}){const idx=a
  const selected=[...found.values()];for(let i=selected.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[selected[i],selected[j]]=[selected[j],selected[i]]}if(selected.length<count)throw Error('Bu seçimde '+selected.length+' yeni soru var. Adedi azalt veya seviyeyi değiştir.');return selected.slice(0,count);
 }
 async function find(id){const m=await manifest();if(m.idPrefixLength)return(await shard('full/'+id.slice(0,m.idPrefixLength)+(m.shardSuffix||'.json'))).find(p=>p[0]===id);for(const file of m.shards){const p=(await shard(file)).find(p=>p[0]===id);if(p)return p}return null}
-window.BaridaAssignmentBank={select,find,manifest,index};
+window.BaridaAssignmentBank={select,find,manifest,index,shard};
 })();
