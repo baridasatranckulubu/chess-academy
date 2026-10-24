@@ -43,9 +43,9 @@ try:
   assert page.locator('#view iframe').count()>0
   assert page.evaluate('window.baridaHandleBack()') is True
   page.locator('#club-title').wait_for()
-  page.locator('#logout').click();page.locator('#authForget').click()
+  page.locator('#logout').click();assert page.locator('#authRecall, #authForget').count()==0
+  page.evaluate('window.BaridaLoginMemory.clear()')
   assert page.evaluate('window.__vault===null')
-  assert page.locator('#authPassword').input_value()==''
   assert not errors,errors
   print('PASS native restore/save/forget, coach role restoration, no plaintext web storage, 4 viewport sizes, bottom navigation and Android back')
   browser.close()

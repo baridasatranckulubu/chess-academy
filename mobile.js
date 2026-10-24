@@ -35,11 +35,6 @@
  };
  document.addEventListener('DOMContentLoaded',()=>{
   const form=document.getElementById('authForm');if(!form)return;
-  const recall=document.createElement('button');recall.type='button';recall.className='auth-link';recall.id='authRecall';recall.textContent='Kayıtlı giriş bilgilerimi doldur';
-  recall.onclick=async()=>{if(!await restore(true))message(native?'Bu cihazda kayıtlı giriş bilgisi yok.':'Tarayıcının şifre yöneticisinde bu site için kayıtlı bilgi bulunamadı. İlk başarılı girişten sonra kaydetme onayını ver.');};
-  form.append(recall);
-  const forget=document.createElement('button');forget.type='button';forget.className='auth-link';forget.id='authForget';forget.textContent='Bu cihazdaki kayıtlı bilgileri unut';
-  forget.onclick=async()=>{await window.BaridaLoginMemory.clear();document.getElementById('authPassword').value='';document.getElementById('authRemember').checked=false;message(native?'Bu uygulamadaki kayıtlı bilgiler silindi.':'Kayıtlı ad silindi. Şifreyi silmek için tarayıcının şifre yöneticisini kullanabilirsin.');};form.append(forget);
   const saved=localStorage.getItem('barida-login-role');if(saved==='teacher')document.getElementById('authTeacherTab')?.click();
   if(native){
    restore();const nav=document.createElement('nav');nav.id='nativeBottomNav';nav.setAttribute('aria-label','Uygulama gezinmesi');
