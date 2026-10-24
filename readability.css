@@ -1,0 +1,20 @@
+/* Shared readable surfaces. Board-square and piece colors are intentionally separate. */
+:root{color-scheme:dark;--barida-readable:#eef7f2;--barida-secondary:#bed0c6;--barida-panel:#122b24;--barida-border:#3c6553;--barida-field:#0b201a}
+html[data-academy-theme=light]{color-scheme:light;--barida-readable:#173c2c;--barida-secondary:#3e5e4d;--barida-panel:#f6fbf8;--barida-border:#9ebbab;--barida-field:#fff}
+html body #view:not(.club-home){color:var(--barida-readable)}
+html body #view:not(.club-home) :is(.card,.tile,.assignment,.sd-panel,.sd-stat,.bd-stat,.bd-panel,.ca-message-form,.ca-teacher-form,.student-info-card,.student-detail-card){background-color:var(--barida-panel)!important;color:var(--barida-readable)!important;border-color:var(--barida-border)!important}
+html body #view:not(.club-home) :is(.muted,.smallprint,.sd-stat span,.bd-stat span,.student-detail-label,.ca-message-hint){color:var(--barida-secondary)!important;opacity:1!important}
+html body #view:not(.club-home) :is(.card,.tile,.assignment,.sd-panel,.sd-stat,.bd-panel) :is(h2,h3,h4,strong,label){color:var(--barida-readable)!important}
+html body #view:not(.club-home) :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select){background:var(--barida-field)!important;color:var(--barida-readable)!important;border-color:var(--barida-border)!important;min-height:42px}
+html body #view:not(.club-home) :is(input,textarea)::placeholder{color:var(--barida-secondary)!important;opacity:1}
+html body #view:not(.club-home) :is(select option){background:var(--barida-field);color:var(--barida-readable)}
+html body #caAdminBellPanel{background:var(--barida-panel)!important;color:var(--barida-readable)!important;border:1px solid var(--barida-border)!important;box-shadow:0 18px 55px #0005}
+html body #caAdminBellPanel :is(p,small){color:var(--barida-secondary)!important}
+html body #view:not(.club-home) :is(.sd-line,.bd-row){border-color:var(--barida-border)!important}
+:where(button,a,input,select,textarea):focus-visible{outline:3px solid #ed85c8;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){html body .barida-boot-chess span,html body .student-registration-page{animation:none!important}}
+/* Embedded training pages share the same legible fields and panel palette. */
+body main :is(.panel,.lesson-card,.training-card,.sidebar,.toolbar,.study-panel,.info-card){background-color:var(--barida-panel)!important;color:var(--barida-readable)!important;border-color:var(--barida-border)!important}
+body main :is(.panel,.lesson-card,.training-card,.study-panel) :is(h2,h3,label,.muted){color:var(--barida-readable)!important}
+html[data-academy-theme=light] body.barida-seamless-inline{color:var(--barida-readable)!important}
+body main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select){background:var(--barida-field);color:var(--barida-readable);border-color:var(--barida-border)}

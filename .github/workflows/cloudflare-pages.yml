@@ -1,6 +1,8 @@
 name: Deploy Barida to Cloudflare Pages
 on:
-  push:
+  workflow_run:
+    workflows: ["Chess Academy | Quality Gate"]
+    types: [completed]
     branches: [main]
   workflow_dispatch:
 permissions:
@@ -10,12 +12,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
       CLOUDFLARE_ACCOUNT_ID: 93c0e9ef9defdeb95adf4e052639a568
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -34,7 +39,7 @@ jobs:
           out.mkdir()
           extensions = {".html", ".css", ".js", ".webp", ".png", ".ico", ".svg"}
           for p in root.iterdir():
-              if p.is_file() and p.suffix in extensions:
+              if p.is_file() and (p.suffix in extensions or p.name in {"_headers", "_redirects"}):
                   shutil.copy2(p, out / p.name)
           for name in ["assets", "data", "puzzle-data", "engines", "i18n"]:
               if (root / name).is_dir():

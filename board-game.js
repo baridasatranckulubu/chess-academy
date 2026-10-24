@@ -239,7 +239,7 @@ function refreshCarryGhost(){
  if(!piece||!source)return;
  const rect=source.getBoundingClientRect();
  carryGhost=document.createElement('div');carryGhost.className='ca-piece-carry';
- const original=source.querySelector('svg.piece-3d');
+ const original=source.querySelector('.piece-3d');
  carryGhost.append(original?original.cloneNode(true):document.createRange().createContextualFragment(pieceSVG(unicode[piece],piece)));
  carryGhost.setAttribute('aria-hidden','true');
  carryGhost.style.width=rect.width+'px';carryGhost.style.height=rect.height+'px';

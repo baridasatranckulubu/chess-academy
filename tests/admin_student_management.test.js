@@ -21,7 +21,7 @@ for(const [code,name] of Object.entries({k:'king',q:'queen',r:'rook',b:'bishop',
   assert.match(html,/^<img /,'approved pieces must render as images');
   assert(html.includes('barida-approved-piece '+color),'piece side must be preserved');
   const src=html.match(/src="([^"?]+)/)?.[1];
-  assert.equal(src,`assets/barida-pieces/${color}-${name}.png`);
+  assert.equal(src,`assets/barida-pieces/${color}-${name}.webp`);
   assert(fs.existsSync(require('node:path').join(__dirname,'..',src)),`${src} missing`);
  }
 }

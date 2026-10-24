@@ -60,6 +60,15 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright beautifulsoup4
           python -m playwright install --with-deps chromium
+      - name: Ortak ana sayfa, roller, bildirimler ve mobil görünüm
+        run: python tests/browser_club_qa.py
+      - name: Test ekran görüntüleri
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: barida-interface-checks
+          path: qa-artifacts/
+          retention-days: 7
       - name: Taş boyutları ve yüzde 7 küçük piyonlar
         run: python tests/browser_piece_sizes.py
       - name: Tarayıcı regresyon testi (v0.22+)

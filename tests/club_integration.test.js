@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
+const app=fs.readFileSync('academy.js','utf8'),home=fs.readFileSync('club-home.js','utf8');
+new vm.Script(app);new vm.Script(home);
+assert(app.includes("section='club-home'"));
+for(const route of ['pet-home','teacher-home','staff-home','site-updates'])assert(app.includes(route),route+' must remain available');
+assert(app.includes("realProfile?.role==='admin')window.BaridaClub.updates"));
+assert(app.includes(".eq('recipient_id',owner)"));
+assert(app.includes("realProfile?.role==='admin'&&Date.now()-paymentSyncTimer"));
+assert(!/öğrenci|öğretmen|öğretici/i.test(app+home+fs.readFileSync('academy.html','utf8')));
+assert(home.includes('robot-neon-hero.webp'));
+assert(fs.statSync('assets/club/robot-neon-hero.webp').size<200000);
+const deploy=fs.readFileSync('.github/workflows/cloudflare-pages.yml','utf8');
+assert(deploy.includes('github.event.workflow_run.head_sha'));
+assert(deploy.includes('"_headers"'));
+console.log('PASS common home, preserved personal routes, terminology, recipient scope and tested-commit deployment');
