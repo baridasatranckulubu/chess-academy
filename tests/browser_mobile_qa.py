@@ -11,7 +11,7 @@ MOCK=next(ast.literal_eval(n.value) for n in source.body if isinstance(n,ast.Ass
 MOCK=MOCK.replace('ROLE','"teacher"').replace('getSession:async()=>({data:{session}})','getSession:async()=>({data:{session:null}}),signInWithPassword:async()=>({data:{session},error:null})')
 NATIVE="""
 window.__vault={identity:'trainer@example.invalid',password:'test-only-password-123',role:'teacher'};window.__saved=0;
-window.Capacitor={isNativePlatform:()=>true,registerPlugin:name=>name==='SecureLogin'?{load:async()=>window.__vault||{},save:async data=>{window.__saved++;window.__vault=data},clear:async()=>{window.__vault=null}}:{addListener:()=>{},minimizeApp:()=>{}}};
+window.Capacitor={isNativePlatform:()=>true,Plugins:{SecureLogin:{load:async()=>window.__vault||{},save:async data=>{window.__saved++;window.__vault=data},clear:async()=>{window.__vault=null}},App:{addListener:()=>{},minimizeApp:()=>{}}}};
 """
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass

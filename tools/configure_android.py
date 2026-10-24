@@ -17,3 +17,7 @@ p=app/'res/values/ic_launcher_background.xml';p.write_text('<resources><color na
 for p in (app/'res').glob('drawable*/splash.png'):p.unlink()
 (app/'res/drawable/splash.xml').write_text('<layer-list xmlns:android="http://schemas.android.com/apk/res/android"><item android:drawable="@color/ic_launcher_background"/><item android:width="160dp" android:height="160dp" android:gravity="center" android:drawable="@drawable/ic_launcher_foreground"/></layer-list>')
 print('Configured Barida identity, encrypted login vault, backup exclusions and native tests')
+
+# Keep the generated package-context test aligned with the actual application ID.
+p=root/'android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java'
+if p.exists():p.write_text(p.read_text().replace('com.getcapacitor.app','com.baridasatranckulubu.academy'))

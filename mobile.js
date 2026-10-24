@@ -1,12 +1,12 @@
 /* Native features are optional: the same site continues to work in a browser. */
 (()=>{'use strict';
  const C=window.Capacitor,native=!!C?.isNativePlatform?.();
- const vault=native?C.registerPlugin('SecureLogin'):null;
+ const vault=native?(C.Plugins?.SecureLogin||C.registerPlugin?.('SecureLogin')):null;
  let savedRole='student';
  function message(text){let el=document.getElementById('mobileStatus');if(!el){el=document.createElement('p');el.id='mobileStatus';el.setAttribute('role','status');document.body.append(el)}el.textContent=text;el.hidden=!text;}
  function network(){message(navigator.onLine?'':'Çevrimdışısın. Giriş ve kayıt işlemleri için bağlantı gerekiyor. Açık çalışmalarını sürdürebilirsin.');}
  window.addEventListener('online',network);window.addEventListener('offline',network);network();
- if(native){document.documentElement.classList.add('barida-native');const App=C.registerPlugin('App');
+ if(native){document.documentElement.classList.add('barida-native');const App=C.Plugins?.App||C.registerPlugin?.('App');
   App.addListener('backButton',()=>{if(window.baridaHandleBack?.())return;App.minimizeApp();});
  }
  async function restore(explicit=false){
