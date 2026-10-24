@@ -34,12 +34,12 @@ try:
    context.add_init_script(script+mock)
    context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''))
    context.route('https://**.supabase.co/**',lambda r:r.abort())
-   page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
+   page=context.new_page();errors=[];page.on('pageerror',lambda e:(errors.append(str(e)),print('PAGE ERROR',e)))
    page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#club-title').wait_for();page.locator('#baridaBoot').wait_for(state='hidden')
    assert page.get_by_text('📚 Eğitim',exact=True).count()==0
    assert page.get_by_role('button',name='🌱 İlk Adım',exact=True).count()==0
    assert page.get_by_role('button',name='🎓 Uygulamalı Okul',exact=True).count()==0
-   assert page.get_by_role('button',name='♟ Hamle Atölyesi',exact=True).count()==(2 if role=='teacher' else 1)
+   assert page.locator('#sidebar .navitem').filter(has_text='♟ Hamle Atölyesi').count()==(2 if role=='teacher' else 1)
    page.evaluate("window.baridaNavigate('courses')")
    f=page.frame_locator('#studyFrame');f.locator('#cloudStatus').filter(has_text='Hesabına bağlı kayıtlar hazır').wait_for()
    if role=='teacher':

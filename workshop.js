@@ -27,7 +27,7 @@
  for(const id of ['title','notes'])$(id).addEventListener('input',changed);
  for(const id of ['new','chapters','remove'])$(id).addEventListener(id==='chapters'?'change':'click',()=>{current=null;$('cloudLive').checked=false;$('cloudFollow').checked=false;controls()});
  $('cloudLive').onchange=()=>{if($('cloudLive').checked)changed()};
- const poll=setInterval(async()=>{if(!context||!current||ownership()||!$('cloudFollow').checked||followBusy||document.hidden)return;followBusy=true;const id=current.id;try{const row=await rpc('get',{id});if(current?.id===id&&$('cloudFollow').checked){apply(row,row.cursor);status('Antrenör takip ediliyor · '+row.cursor+' / '+row.payload.moves.length+' yarım hamle')}}catch(e){$('cloudFollow').checked=false;status(e.message)}finally{followBusy=false}},3000);
+ const poll=setInterval(async()=>{if(!context||!current||ownership()||!$('cloudFollow').checked||followBusy||busy||document.hidden)return;followBusy=true;const id=current.id;try{const row=await rpc('get',{id});if(!busy&&current?.id===id&&$('cloudFollow').checked){apply(row,row.cursor);status('Antrenör takip ediliyor · '+row.cursor+' / '+row.payload.moves.length+' yarım hamle')}}catch(e){$('cloudFollow').checked=false;status(e.message)}finally{followBusy=false}},3000);
  window.addEventListener('pagehide',()=>{clearInterval(poll);clearTimeout(timer);for(const item of pending.values())clearTimeout(item.timeout)});
  rpc('context').then(async value=>{context=value;for(const st of context.recipients||[])$('cloudStudent').append(new Option(st.name,st.id));await refresh();status('Hesabına bağlı kayıtlar hazır. “Bölümü kaydet” tarayıcıya, “Hesabıma kaydet” hesabına kaydeder.')}).catch(e=>status(e.message));controls();
 })();

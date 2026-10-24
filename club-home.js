@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'HAMLE ATÖLYESİ',title:'Birlikte düşün, birlikte geliştir',items:['Sporcu ve antrenör için hesaba bağlı çalışma kaydı.','Antrenörden kendi sporcusuna tam hamle dizisi ve not paylaşımı.','İlk/son hamle, ileri–geri inceleme, antrenör takibi ve asıl diziyi koruyan varyantlar.']},
   {tag:'MOBİL UYGULAMA',title:'Cebindeki kulüp',items:['Android için paketlenmiş arayüz, yerel tahta kaynakları ve çevrimdışı durum bildirimi.','Android Keystore ile cihazda şifreli giriş bilgisi saklama.','Mobil güvenli ekran alanları, klavye uyumu ve Android geri tuşu desteği.']},
   {tag:'24 EKİM 2026',title:'Yeni kulüp deneyimi',items:['Yönetim, antrenör ve sporcu için ortak ana sayfa.','Satranç robotu temalı yeni kulüp vitrini.','Sporcu / Antrenör adlandırması, okunabilir arayüz ve mobil düzen.']},
   {tag:'REKABET',title:'Her hamlede gelişim',items:['Kulüp rating sıralaması: sporcuların puanlarıyla birbirleriyle yarışması.','Doğru yanıta +5, yanlış yanıta −15 puan; beş kademeli gelişim.','Ayın ilk üç sporcusu ve yönetimden sıralama takibi.']},
