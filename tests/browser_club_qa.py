@@ -62,7 +62,7 @@ try:
     page.get_by_text('🛡️ Yönetim',exact=True).click()
     page.get_by_role('button',name='🛡️ Kulüp Yönetim Merkezi',exact=True).click()
     page.locator('.sd-hero').wait_for()
-    assert 'Kulüp Yönetim Merkezi' in page.locator('.sd-hero').inner_text()
+    assert page.locator('.club-personal-title').inner_text()=='Kulüp Yönetim Merkezi'
     page.get_by_text('🛡️ Yönetim',exact=True).click()
     page.get_by_role('button',name='✨ Site İçi Güncellemeler',exact=True).click()
     assert page.locator('#view h1').inner_text()=='Site İçi Güncellemeler'

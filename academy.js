@@ -433,6 +433,7 @@ async function staffDashboard(){
  html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-panel h3,html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-line strong,html[data-academy-theme=dark] #view.barida-staff-dashboard .sd-stat strong{color:#f2efff!important}
  `;document.head.append(style)}
  if(!document.getElementById('barida-teacher-home-style')){const st=document.createElement('style');st.id='barida-teacher-home-style';st.textContent='#view.barida-teacher-home .sd-hero{background:linear-gradient(115deg,#311747,#683b8f 62%,#b46fae)!important;border:1px solid #ba7bd3!important}#view.barida-teacher-home .sd-kicker{color:#ffd2ff!important}#view.barida-teacher-home .sd-actions button{background:#efe1fb;border-color:#c7a4e5;color:#4d256d}#view.barida-admin-home .sd-hero{background:linear-gradient(115deg,#49300e,#956115 60%,#d6a646)!important;border:1px solid #d4a444!important}';document.head.append(st)}
+ view.append(node('h1','club-personal-title',admin?'Kulüp Yönetim Merkezi':'Antrenör Çalışma Alanı'));
  const hero=node('section','sd-hero');hero.append(node('div','sd-kicker','♟ BARIDA SATRANÇ KULÜBÜ · '+(admin?'YÖNETİM':'ANTRENÖR')+' PANELİ'),node('h2','',admin?'👑 Kulüp Yönetim Merkezi':'📚 Antrenör Çalışma Alanı'),node('p','',admin?'Antrenörlerini ve akademinin eğitim sonuçlarını tek yerden takip et.':'Sporcularını, derslerini ve sınıfının gelişimini buradan takip et.'));view.append(hero);baridaBanner(hero,admin?'admin':'teacher');
  if(!admin){hero.classList.add('sd-teacher-hero');const teacherBadge=node('div','sd-teacher-badge','♛ ANTRENÖRÜ ÇALIŞMA ALANI');hero.prepend(teacherBadge)}else{hero.classList.add('sd-admin-hero')}
  const status=node('p','sd-note','Güncel kayıtlar yükleniyor…');view.append(status);
@@ -511,6 +512,7 @@ function petAcademy(){
  html[data-academy-theme=dark] #view.barida-student-dashboard .bd-label,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-muted,html[data-academy-theme=dark] #view.barida-student-dashboard .bd-profile-row{color:#d0d8ec}
  `;document.head.append(css);
  }
+ view.append(node('h1','club-personal-title','Gelişim Merkezim'));
  const hero=node('section','bd-hero');const intro=node('div');intro.append(node('div','bd-eyebrow','✦ BARIDA SATRANÇ KULÜBÜ · SPORCU PANELİ'),node('h2','','Merhaba, '+currentName()+'! 👋'),node('p','','Bugün yeni hamleler öğrenmeye hazır mısın? Her soru seni daha güçlü bir satranç oyuncusu yapar.'));hero.append(intro);view.append(hero);baridaBanner(hero,'student-boy');if(authClient&&realUser){authClient.rpc('academy_my_student_gender').then(({data:gender,error})=>{if(!error&&hero.isConnected)baridaBanner(hero,gender==='female'?'student-girl':'student-boy')}).catch(()=>{});}
  const assignmentsList=Array.isArray(data.assignments)?data.assignments:[];
  const completed=assignmentsList.filter(a=>{if(a.kind==='puzzle'){try{return assignmentProgress(a)>=Math.max(1,Number(a.target)||5)}catch{return false}}return Array.isArray(data.completed)&&data.completed.includes(a.lesson)}).length;
