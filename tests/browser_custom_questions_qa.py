@@ -26,7 +26,7 @@ try:
   page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#baridaBoot').wait_for(state='hidden')
   page.wait_for_function("typeof window.baridaNavigate==='function' && !document.querySelector('#app').hidden")
   page.evaluate("window.baridaNavigate('assignments')");page.locator('#assignmentKind').select_option('position')
-  f=page.frame_locator('#customQuestionFrame');f.locator('#questionStudent option').wait_for()
+  f=page.frame_locator('#customQuestionFrame');f.locator('#questionStudent option').wait_for(state='attached')
   f.locator('#save').click();f.locator('#questionResult').filter(has_text='Önce doğru hamleyi').wait_for()
   f.locator('#questionTitle').fill('Test konumu');f.locator('#solution').click();f.locator('[data-square="e2"]').click();f.locator('[data-square="e4"]').click()
   f.locator('#save').click();f.locator('#questionResult').filter(has_text='hesabına kaydedildi').wait_for()
