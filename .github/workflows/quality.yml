@@ -30,6 +30,8 @@ jobs:
         run: node tests/puzzle_topics.test.js
       - name: Lichess tematik ödev regresyonu
         run: node tests/assignments_themes.test.js
+      - name: Tam arşiv sayısı, sıkıştırma ve seçmeli yükleme
+        run: node tests/full_catalog.test.js
       - name: Konuya özel hızlı soru yükleme
         run: node tests/puzzle_loading.test.js
       - name: Satranç motoru
