@@ -1,0 +1,442 @@
+{
+  "source": "https://lichess.org/training/themes",
+  "taxonomySource": "https://github.com/lichess-org/lila/blob/master/modules/puzzle/src/main/PuzzleTheme.scala",
+  "checkedAt": "2026-10-24",
+  "groups": [
+    {
+      "id": "recommended",
+      "name": "Karışık",
+      "themes": [
+        {
+          "id": "all",
+          "sourceId": "mix",
+          "name": "Karışık"
+        }
+      ]
+    },
+    {
+      "id": "phases",
+      "name": "Oyunun evreleri ve oyun sonları",
+      "themes": [
+        {
+          "id": "opening",
+          "sourceId": "opening",
+          "name": "Açılış"
+        },
+        {
+          "id": "middlegame",
+          "sourceId": "middlegame",
+          "name": "Oyunortası"
+        },
+        {
+          "id": "endgame",
+          "sourceId": "endgame",
+          "name": "Oyunsonu"
+        },
+        {
+          "id": "rookEndgame",
+          "sourceId": "rookEndgame",
+          "name": "Kale oyunsonu"
+        },
+        {
+          "id": "bishopEndgame",
+          "sourceId": "bishopEndgame",
+          "name": "Fil oyunsonu"
+        },
+        {
+          "id": "pawnEndgame",
+          "sourceId": "pawnEndgame",
+          "name": "Piyon oyunsonu"
+        },
+        {
+          "id": "knightEndgame",
+          "sourceId": "knightEndgame",
+          "name": "At oyunsonu"
+        },
+        {
+          "id": "queenEndgame",
+          "sourceId": "queenEndgame",
+          "name": "Vezir oyunsonu"
+        },
+        {
+          "id": "queenRookEndgame",
+          "sourceId": "queenRookEndgame",
+          "name": "Vezir ve kale oyunsonu"
+        }
+      ]
+    },
+    {
+      "id": "motifs",
+      "name": "Taktik motifleri",
+      "themes": [
+        {
+          "id": "advancedPawn",
+          "sourceId": "advancedPawn",
+          "name": "İlerlemiş piyon"
+        },
+        {
+          "id": "attackingF2F7",
+          "sourceId": "attackingF2F7",
+          "name": "f2 / f7 saldırısı"
+        },
+        {
+          "id": "capturingDefender",
+          "sourceId": "capturingDefender",
+          "name": "Savunucuyu ortadan kaldırma"
+        },
+        {
+          "id": "discoveredAttack",
+          "sourceId": "discoveredAttack",
+          "name": "Açarak saldırı"
+        },
+        {
+          "id": "doubleCheck",
+          "sourceId": "doubleCheck",
+          "name": "Çifte şah"
+        },
+        {
+          "id": "exposedKing",
+          "sourceId": "exposedKing",
+          "name": "Savunmasız şah"
+        },
+        {
+          "id": "fork",
+          "sourceId": "fork",
+          "name": "Çatal"
+        },
+        {
+          "id": "hangingPiece",
+          "sourceId": "hangingPiece",
+          "name": "Savunmasız taş"
+        },
+        {
+          "id": "kingsideAttack",
+          "sourceId": "kingsideAttack",
+          "name": "Şah kanadına saldırı"
+        },
+        {
+          "id": "pin",
+          "sourceId": "pin",
+          "name": "Açmaz"
+        },
+        {
+          "id": "queensideAttack",
+          "sourceId": "queensideAttack",
+          "name": "Vezir kanadına saldırı"
+        },
+        {
+          "id": "sacrifice",
+          "sourceId": "sacrifice",
+          "name": "Feda"
+        },
+        {
+          "id": "skewer",
+          "sourceId": "skewer",
+          "name": "Şiş"
+        },
+        {
+          "id": "trappedPiece",
+          "sourceId": "trappedPiece",
+          "name": "Hapsolmuş taş"
+        }
+      ]
+    },
+    {
+      "id": "advanced",
+      "name": "İleri düzey taktikler",
+      "themes": [
+        {
+          "id": "attraction",
+          "sourceId": "attraction",
+          "name": "Çekme"
+        },
+        {
+          "id": "clearance",
+          "sourceId": "clearance",
+          "name": "Hat / kare boşaltma"
+        },
+        {
+          "id": "collinearMove",
+          "sourceId": "collinearMove",
+          "name": "Doğrusal hamle"
+        },
+        {
+          "id": "discoveredCheck",
+          "sourceId": "discoveredCheck",
+          "name": "Açarak şah"
+        },
+        {
+          "id": "defensiveMove",
+          "sourceId": "defensiveMove",
+          "name": "Savunma hamlesi"
+        },
+        {
+          "id": "deflection",
+          "sourceId": "deflection",
+          "name": "Saptırma"
+        },
+        {
+          "id": "interference",
+          "sourceId": "interference",
+          "name": "Araya girme"
+        },
+        {
+          "id": "intermezzo",
+          "sourceId": "intermezzo",
+          "name": "Ara hamle"
+        },
+        {
+          "id": "quietMove",
+          "sourceId": "quietMove",
+          "name": "Sessiz hamle"
+        },
+        {
+          "id": "xRayAttack",
+          "sourceId": "xRayAttack",
+          "name": "X ışını saldırısı"
+        },
+        {
+          "id": "zugzwang",
+          "sourceId": "zugzwang",
+          "name": "Zugzwang"
+        }
+      ]
+    },
+    {
+      "id": "mates",
+      "name": "Mat ve hamle sayısı",
+      "themes": [
+        {
+          "id": "mate",
+          "sourceId": "mate",
+          "name": "Mat"
+        },
+        {
+          "id": "mateIn1",
+          "sourceId": "mateIn1",
+          "name": "1 Hamlede Mat"
+        },
+        {
+          "id": "mateIn2",
+          "sourceId": "mateIn2",
+          "name": "2 Hamlede Mat"
+        },
+        {
+          "id": "mateIn3",
+          "sourceId": "mateIn3",
+          "name": "3 Hamlede Mat"
+        },
+        {
+          "id": "mateIn4",
+          "sourceId": "mateIn4",
+          "name": "4 Hamlede Mat"
+        },
+        {
+          "id": "mateIn5",
+          "sourceId": "mateIn5",
+          "name": "5 ve daha çok hamlede mat"
+        }
+      ]
+    },
+    {
+      "id": "mateThemes",
+      "name": "Mat motifleri",
+      "themes": [
+        {
+          "id": "anastasiaMate",
+          "sourceId": "anastasiaMate",
+          "name": "Anastasia matı"
+        },
+        {
+          "id": "arabianMate",
+          "sourceId": "arabianMate",
+          "name": "Arap matı"
+        },
+        {
+          "id": "backRankMate",
+          "sourceId": "backRankMate",
+          "name": "Arka yatay / koridor matı"
+        },
+        {
+          "id": "balestraMate",
+          "sourceId": "balestraMate",
+          "name": "Balestra matı"
+        },
+        {
+          "id": "blindSwineMate",
+          "sourceId": "blindSwineMate",
+          "name": "Kör Dana matı"
+        },
+        {
+          "id": "bodenMate",
+          "sourceId": "bodenMate",
+          "name": "Boden matı"
+        },
+        {
+          "id": "cornerMate",
+          "sourceId": "cornerMate",
+          "name": "Köşe matı"
+        },
+        {
+          "id": "doubleBishopMate",
+          "sourceId": "doubleBishopMate",
+          "name": "Çift fil matı"
+        },
+        {
+          "id": "dovetailMate",
+          "sourceId": "dovetailMate",
+          "name": "Kurtağzı matı"
+        },
+        {
+          "id": "epauletteMate",
+          "sourceId": "epauletteMate",
+          "name": "Apolet matı"
+        },
+        {
+          "id": "hookMate",
+          "sourceId": "hookMate",
+          "name": "Kanca matı"
+        },
+        {
+          "id": "killBoxMate",
+          "sourceId": "killBoxMate",
+          "name": "Kafesleme matı"
+        },
+        {
+          "id": "pillsburysMate",
+          "sourceId": "pillsburysMate",
+          "name": "Pillsbury matı"
+        },
+        {
+          "id": "morphysMate",
+          "sourceId": "morphysMate",
+          "name": "Morphy matı"
+        },
+        {
+          "id": "operaMate",
+          "sourceId": "operaMate",
+          "name": "Opera matı"
+        },
+        {
+          "id": "swallowstailMate",
+          "sourceId": "swallowstailMate",
+          "name": "Kırlangıç kuyruğu matı"
+        },
+        {
+          "id": "triangleMate",
+          "sourceId": "triangleMate",
+          "name": "Üçgen matı"
+        },
+        {
+          "id": "vukovicMate",
+          "sourceId": "vukovicMate",
+          "name": "Vukovic matı"
+        },
+        {
+          "id": "smotheredMate",
+          "sourceId": "smotheredMate",
+          "name": "Boğmaca Matı"
+        }
+      ]
+    },
+    {
+      "id": "specialMoves",
+      "name": "Özel hamleler",
+      "themes": [
+        {
+          "id": "castling",
+          "sourceId": "castling",
+          "name": "Rok"
+        },
+        {
+          "id": "enPassant",
+          "sourceId": "enPassant",
+          "name": "Geçerken alma"
+        },
+        {
+          "id": "promotion",
+          "sourceId": "promotion",
+          "name": "Terfi"
+        },
+        {
+          "id": "underPromotion",
+          "sourceId": "underPromotion",
+          "name": "Vezir dışı terfi"
+        }
+      ]
+    },
+    {
+      "id": "goals",
+      "name": "Hedefler",
+      "themes": [
+        {
+          "id": "equality",
+          "sourceId": "equality",
+          "name": "Eşitlik"
+        },
+        {
+          "id": "advantage",
+          "sourceId": "advantage",
+          "name": "Avantaj"
+        },
+        {
+          "id": "crushing",
+          "sourceId": "crushing",
+          "name": "Ezici üstünlük"
+        },
+        {
+          "id": "mate",
+          "sourceId": "mate",
+          "name": "Mat"
+        }
+      ]
+    },
+    {
+      "id": "lengths",
+      "name": "Çözüm uzunluğu",
+      "themes": [
+        {
+          "id": "oneMove",
+          "sourceId": "oneMove",
+          "name": "Tek hamlelik bulmaca"
+        },
+        {
+          "id": "short",
+          "sourceId": "short",
+          "name": "Kısa bulmaca"
+        },
+        {
+          "id": "long",
+          "sourceId": "long",
+          "name": "Uzun bulmaca"
+        },
+        {
+          "id": "veryLong",
+          "sourceId": "veryLong",
+          "name": "Çok uzun bulmaca"
+        }
+      ]
+    },
+    {
+      "id": "origin",
+      "name": "Oyunun kaynağı",
+      "themes": [
+        {
+          "id": "master",
+          "sourceId": "master",
+          "name": "Ustaların oyunları"
+        },
+        {
+          "id": "masterVsMaster",
+          "sourceId": "masterVsMaster",
+          "name": "Ustaların ustalarla oynadığı oyunlar"
+        },
+        {
+          "id": "superGM",
+          "sourceId": "superGM",
+          "name": "Süper GM'lerin oyunları"
+        }
+      ]
+    }
+  ]
+}

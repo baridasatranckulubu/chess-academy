@@ -770,11 +770,11 @@ async function realAssignments(){
   const count=select('quickCount','Adet',[[1,'1'],[5,'5'],[10,'10'],[20,'20'],[50,'50']]);count.value='10';
   const send=button('⚡ Seç ve gönder',()=>{},'btn gold');send.id='quickSend';send.type='submit';send.disabled=!realRoster.length;form.append(send);const status=node('p','quick-assignment-status','');status.id='quickAssignmentStatus';status.setAttribute('role','status');
   form.onsubmit=async e=>{e.preventDefault();send.disabled=true;status.textContent='Sorular seçiliyor…';try{if(!student.value)throw Error('Sporcu seç.');const [min,max]=level.value.split('-').map(Number);const {data:used,error:usedError}=await authClient.rpc('academy_workshop',{p_action:'used_puzzles',p_student:student.value});if(usedError)throw usedError;
-   const items=await window.BaridaAssignmentBank.select({theme:theme.value,min,max,count:Number(count.value),exclude:used||[]});
-   const title=theme.options[theme.selectedIndex].textContent+' · '+items.length+' soru';const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title,kind:'puzzle',theme:theme.value,puzzle_count:items.length,min_rating:min,max_rating:max,instructions:'',puzzle_items:items});if(error)throw error;
+   const items=await window.BaridaAssignmentBank.select({theme:theme.value,min,max,count:Number(count.value),exclude:used||[],...topicPicker.state()});
+   const title=topicPicker.name().slice(0,105)+' · '+items.length+' soru';const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title,kind:'puzzle',theme:theme.value,puzzle_count:items.length,min_rating:min,max_rating:max,instructions:'',puzzle_items:items});if(error)throw error;
    assignmentSelectedStudent=student.value;status.textContent='✓ Gönderildi';assignmentTab='open';await loadAssignmentCards(view);
-  }catch(error){status.textContent=error.message||'Gönderilemedi.'}finally{send.disabled=!realRoster.length}};
-  view.append(form,status);
+  }catch(error){status.textContent=error.message||'Gönderilemedi.'}finally{topicPicker.refresh()}};
+  view.append(form,status);send.disabled=true;const topicPicker=await window.BaridaPuzzleTopics.mount({theme,level,count,form,send,canSend:()=>!!student.value});student.addEventListener('change',topicPicker.refresh);
   const custom=node('details','assignment-custom-tools');custom.id='assignmentCustomTools';custom.append(node('summary','','♟ Kendi sorum'));const body=node('div');body.id='assignmentCustomBody';custom.append(body);view.append(custom);await customAssignmentEditor();
  }
  await loadAssignmentCards(view);watchAssignmentUpdates(view);

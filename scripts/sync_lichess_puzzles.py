@@ -5,7 +5,7 @@ import zstandard as zstd
 from collections import defaultdict
 from pathlib import Path
 URL="https://database.lichess.org/lichess_db_puzzle.csv.zst"
-THEMES={"mateIn1","mateIn2","mateIn3","mateIn4","mateIn5","fork","discoveredAttack","advantage","sacrifice","pin","endgame","middlegame","opening","skewer","hangingPiece","trappedPiece","deflection","attraction","interference","quietMove","backRankMate","doubleCheck","exposedKing","crushing","equality","rookEndgame","pawnEndgame","bishopEndgame","knightEndgame","queenEndgame","promotion","underPromotion","zugzwang","clearance","intermezzo","xRayAttack"}
+THEMES={t['id'] for g in json.loads((Path(__file__).resolve().parents[1]/'data/lichess-themes.json').read_text())['groups'] for t in g['themes'] if t['id']!='all'}
 LIMIT=int(os.environ.get("CHESS_PUZZLES_PER_THEME","2000"))
 ROOT=Path(__file__).resolve().parents[1]/"puzzle-data"
 ROOT.mkdir(exist_ok=True)
@@ -21,7 +21,7 @@ with urllib.request.urlopen(urllib.request.Request(URL,headers={"User-Agent":"Ch
             if not themes:continue
             rating=int(row["Rating"])
             if rating<400 or rating>3000:continue
-            record=[row["PuzzleId"],row["FEN"],row["Moves"].split(),rating,row["Themes"].split()]
+            record=[row["PuzzleId"],row["FEN"],row["Moves"].split(),rating,row["Themes"].split(),row.get("OpeningTags", "").split()]
             if len(record[2])<2:continue
             for theme in themes:
                 seen[theme]+=1

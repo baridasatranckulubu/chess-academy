@@ -1,7 +1,7 @@
 {
   "source": "Lichess Open Database (CC0)",
   "source_url": "https://database.lichess.org/#puzzles",
-  "count": 70731,
+  "count": 75759,
   "scanned": "Lichess full source stream",
   "shards": [
     "part-beginner.json",
@@ -76,13 +76,23 @@
     "lichess-auto-0067.json",
     "lichess-auto-0068.json",
     "lichess-auto-0069.json",
-    "lichess-auto-0070.json"
+    "lichess-auto-0070.json",
+    "lichess-catalog-0000.json",
+    "lichess-catalog-0001.json",
+    "lichess-catalog-0002.json",
+    "lichess-catalog-0003.json",
+    "lichess-catalog-0004.json",
+    "lichess-catalog-0005.json"
   ],
   "schema": [
     "id",
     "fen_before_opponent_move",
     "uci_moves",
     "rating",
-    "themes"
-  ]
+    "themes",
+    "opening_tags"
+  ],
+  "catalog_source": "https://database.lichess.org/lichess_db_puzzle.csv.zst",
+  "catalog_rows_scanned": 6157341,
+  "opening_metadata": "opening-tags.json"
 }

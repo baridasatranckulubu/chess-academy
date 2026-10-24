@@ -1,0 +1,14 @@
+'use strict';const fs=require('fs'),assert=require('assert/strict'),vm=require('vm'),Engine=require('../engine.js').ChessEngine;
+const read=p=>JSON.parse(fs.readFileSync(p,'utf8')),catalog=read('data/lichess-themes.json'),official=read('tests/fixtures/lichess-visible-themes.json'),index=read('puzzle-data/topic-index.json'),manifest=read('puzzle-data/manifest.json'),metadata=read('puzzle-data/opening-tags.json');
+const themes=[...new Map(catalog.groups.flatMap(g=>g.themes.map(t=>[t.id,t]))).values()];assert.equal(catalog.groups.length,10);assert.deepEqual(themes.map(t=>t.sourceId).sort(),official.keys);assert(!themes.some(t=>['checkFirst','playerGames'].includes(t.sourceId)));
+const rows=new Map();for(const shard of manifest.shards.filter(s=>s.startsWith('lichess-')))for(const p of read('puzzle-data/'+shard))rows.set(p[0],p);
+assert.equal(rows.size,index.count);const count=(ids,a,b)=>ids.filter(id=>{const r=rows.get(id)[3];return r>=a&&r<=b}).length;
+for(const [key,item] of Object.entries(index.openings)){assert(item.ids.length>0);assert.equal(item.counts.all,item.ids.length);for(const id of item.ids){const p=rows.get(id);assert(p,'Missing opening puzzle '+id);assert((p[5]||metadata[id]||[]).includes(key),'Mislabelled opening '+key)}for(const [tier,a,b] of [['easy',400,1400],['medium',1200,1900],['hard',1800,3000]])assert.equal(item.counts[tier],count(item.ids,a,b))}
+const checked=new Set();function replay(p){if(checked.has(p[0]))return;checked.add(p[0]);const g=new Engine(p[1]);for(const u of p[2])assert(g.move(u.slice(0,2),u.slice(2,4),u[4]),'Illegal source solution '+p[0]+' '+u)}
+const context={window:{},fetch:async url=>({ok:true,json:async()=>read(url)})};vm.runInNewContext(fs.readFileSync('assignment-bank.js','utf8'),context);
+(async()=>{for(const theme of themes){assert(index.themes[theme.id]?.counts.all>=50,theme.id);for(const [min,max] of [[400,1400],[1200,1900],[1800,3000]]){const result=await context.window.BaridaAssignmentBank.select({theme:theme.id,min,max,count:1});assert.equal(result.length,1);if(theme.id!=='all')assert(result[0][4].includes(theme.id));replay(result[0])}}
+for(const [key,item] of Object.entries(index.openings))replay(rows.get(item.ids[0]));
+const opening=Object.keys(index.openings).find(k=>k.includes('Sicilian_Defense')&&index.openings[k].counts.all>=5);const selected=await context.window.BaridaAssignmentBank.select({theme:'opening',opening,min:400,max:3000,count:5});assert(selected.every(p=>index.openings[opening].ids.includes(p[0])));
+await assert.rejects(()=>context.window.BaridaAssignmentBank.select({theme:'not-a-real-theme',min:400,max:3000,count:1}),/Konu bulunamadı/);
+console.log(`PASS ${themes.length} official themes, ${Object.keys(index.openings).length} real opening labels, exact availability and ${checked.size} legally replayed representative solutions`)
+})().catch(e=>{console.error(e);process.exitCode=1});

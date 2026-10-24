@@ -15,13 +15,19 @@ jobs:
         with:
           python-version: '3.12'
       - run: python -m pip install zstandard
+      - name: Sync official public puzzle themes
+        run: python scripts/sync_puzzle_topics.py
       - name: Stream and curate official Lichess puzzles
         run: python scripts/sync_lichess_puzzles.py
+      - name: Enrich openings and rare themes, then rebuild availability
+        run: |
+          python scripts/enrich_lichess_catalog.py
+          python scripts/build_puzzle_catalog.py
       - name: Commit updated puzzle data
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add puzzle-data/
+          git add puzzle-data/ data/lichess-themes.json tests/fixtures/lichess-visible-themes.json
           if ! git diff --cached --quiet; then
             git commit -m "Refresh curated Lichess CC0 puzzle database"
             git push
