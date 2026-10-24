@@ -30,6 +30,8 @@ jobs:
         run: node tests/puzzle_topics.test.js
       - name: Lichess tematik ödev regresyonu
         run: node tests/assignments_themes.test.js
+      - name: Konuya özel hızlı soru yükleme
+        run: node tests/puzzle_loading.test.js
       - name: Satranç motoru
         run: node tests/engine.test.js
       - name: Tahta SVG ve 360 derece dönüş doğrulaması

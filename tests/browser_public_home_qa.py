@@ -14,10 +14,11 @@ try:
   context.route('https://cdn.shopify.com/**',lambda r:r.abort());context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''));context.route('https://**.supabase.co/**',lambda r:r.abort())
   page=context.new_page();errors=[];requests=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url));url=f'http://127.0.0.1:{server.server_port}/'
   page.goto(url);assert page.url==url;assert 'Barida' in page.title();assert page.locator('#authForm').count()==0
-  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','BAŞARILARIMIZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 1','@baridasatranc','@Baridasatranc']:assert page.get_by_text(text,exact=False).count()>0,text
+  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 1','@baridasatranc','@Baridasatranc']:assert page.get_by_text(text,exact=False).count()>0,text
   assert page.locator('a[href^="https://wa.me/905548998845"]').count()>=3
   assert page.locator('a[href="https://www.instagram.com/baridasatranc/"]').count()==1
   assert page.locator('a[href="https://www.youtube.com/@Baridasatranc"]').count()==1
+  assert page.locator('#basarilar').count()==0
   assert not any('supabase.co' in u for u in requests)
   page.locator('.hero-image').evaluate('el=>el.decode()');page.screenshot(path=str(OUT/'public-desktop.png'),full_page=True)
   for width in [390,320,768]:
