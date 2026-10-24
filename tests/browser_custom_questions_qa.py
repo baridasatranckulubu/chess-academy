@@ -25,7 +25,7 @@ try:
   page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#baridaBoot').wait_for(state='hidden')
   page.wait_for_function("typeof window.baridaNavigate==='function' && !document.querySelector('#app').hidden")
-  page.evaluate("window.baridaNavigate('assignments')");page.locator('#assignmentKind').select_option('position')
+  page.evaluate("window.baridaNavigate('assignments')");page.locator('#assignmentCustomTools summary').click()
   f=page.frame_locator('#customQuestionFrame');f.locator('#questionStudent option').wait_for(state='attached')
   f.locator('#save').click();f.locator('#questionResult').filter(has_text='Önce doğru hamleyi').wait_for()
   f.locator('#questionTitle').fill('Test konumu');f.locator('#solution').click();f.locator('[data-square="e2"]').click();f.locator('[data-square="e4"]').click()
@@ -34,7 +34,7 @@ try:
   f.locator('#sendQuestion').click();f.locator('#questionResult').filter(has_text='Ödevler bölümüne gönderildi').wait_for()
   assert page.evaluate("window.__sent.length===1&&window.__sent[0].student_id==='athlete'&&window.__sent[0].solution_uci==='e2e4'")
   page.evaluate("window.baridaNavigate('teacher-home')");page.get_by_role('button',name='Hazırladığım Sorular',exact=False).click()
-  page.locator('#preparedQuestions').get_by_role('button').click();f=page.frame_locator('#customQuestionFrame');f.locator('#questionResult').filter(has_text='Kaydedilmiş soru açıldı').wait_for()
+  page.locator('#assignmentCustomTools summary').click();page.locator('#preparedQuestions').get_by_role('button').click();f=page.frame_locator('#customQuestionFrame');f.locator('#questionResult').filter(has_text='Kaydedilmiş soru açıldı').wait_for()
   assert f.locator('#answer').inner_text()=='Beklenen hamle: e2e4'
   f.locator('#turn').select_option('b');f.locator('#sendQuestion').click();f.locator('#questionResult').filter(has_text='Önce doğru hamleyi').wait_for()
   assert page.evaluate('window.__sent.length')==1

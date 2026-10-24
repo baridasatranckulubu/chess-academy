@@ -70,6 +70,8 @@ jobs:
         run: python tests/browser_registration_qa.py
       - name: Serbest tahta soruları, kayıt ve sporcuya atama
         run: python tests/browser_custom_questions_qa.py
+      - name: Canlı ders, büyütme ve tek tuşla Lichess ödevi
+        run: python tests/browser_live_assignments_qa.py
       - name: İlk giriş bildirimi, sakin tahta ve kaldırılan arena
         run: python tests/browser_club_updates_qa.py
       - name: Mobil giriş, güvenli saklama ve gezinme
