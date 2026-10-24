@@ -871,7 +871,7 @@ async function loadAssignmentCards(view){
  const tabs=node('div','assignment-tabs');for(const [key,label] of [['open','Bekleyen'],['completed','Tamamlanan']]){const n=assignments.filter(a=>(a.status==='completed')===(key==='completed')).length;const tab=button(label+' ('+n+')',()=>{assignmentTab=key;loadAssignmentCards(view)},'btn'+(assignmentTab===key?' gold':''));tab.dataset.tab=key;tabs.append(tab)}list.append(tabs);
  const cards=node('div','assignment-list');list.append(cards);const empty=node('p','muted','');list.append(empty);
  const applyFilters=()=>{let n=0;for(const card of cards.children){card.hidden=(card.dataset.done==='true')!==(assignmentTab==='completed');if(!card.hidden)n++}empty.textContent=n?'':'Ödev yok.'};
- for(const a of assignments){const card=node('article','assignment');card.dataset.assignmentId=String(a.id);card.dataset.done=String(a.status==='completed');const st=realRoster.find(x=>x.id===a.student_id);card.append(node('h3','',a.title),node('p','muted',st?st.name:''));
+ for(const a of assignments){const card=node('article',role==='teacher'?'assignment teacher-assignment':'assignment');card.dataset.assignmentId=String(a.id);card.dataset.done=String(a.status==='completed');const st=realRoster.find(x=>x.id===a.student_id);card.append(node('h3','',a.title),node('p','muted',st?st.name:''));
   if(role==='teacher'&&a.kind==='puzzle'){
    card.append(button('İncele',async()=>{
     const previous=view.querySelector('#academy-teacher-review');previous?.remove();
