@@ -29,29 +29,6 @@ jobs:
           for test in tests/*.test.js; do node "$test" || exit 1; done
           node tools/check-i18n.js --strict
           python tools/check_site_assets.py
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - uses: actions/cache@v4
-        id: full-puzzles
-        with:
-          path: full-puzzle-cache
-          key: lichess-complete-2026-10-05-${{ hashFiles('scripts/build_full_lichess.py') }}
-      - name: Import complete official Lichess archive (no sampling)
-        if: steps.full-puzzles.outputs.cache-hit != 'true'
-        run: |
-          python -m pip install zstandard
-          rm -rf full-puzzle-cache
-          python scripts/build_full_lichess.py --out full-puzzle-cache
-      - name: Verify complete puzzle catalog
-        shell: python
-        run: |
-          import json
-          from pathlib import Path
-          m = json.loads(Path('full-puzzle-cache/manifest.json').read_text())
-          assert m['complete'] and m['count'] >= 6_000_000, m
-          assert all((Path('full-puzzle-cache') / p).is_file() for p in m['shards'])
-          print('Verified full archive:', m['count'], 'puzzles')
       - name: Prepare static site
         shell: python
         run: |
@@ -64,10 +41,9 @@ jobs:
           for p in root.iterdir():
               if p.is_file() and (p.suffix in extensions or p.name in {"_headers", "_redirects"}):
                   shutil.copy2(p, out / p.name)
-          for name in ["assets", "data", "puzzle-data", "engines", "i18n"]:
+          for name in ["assets", "data", "puzzle-data", "puzzle-full", "engines", "i18n"]:
               if (root / name).is_dir():
                   shutil.copytree(root / name, out / name)
-          shutil.copytree("full-puzzle-cache", out / "puzzle-data", dirs_exist_ok=True)
           assert sum(1 for p in out.rglob("*") if p.is_file()) < 20000
           assert (out / "index.html").is_file()
           assert (out / "academy.html").is_file()

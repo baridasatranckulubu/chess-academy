@@ -9,3 +9,12 @@
   Cache-Control: public, max-age=86400
 /engines/*
   Cache-Control: public, max-age=604800
+
+/puzzle-full/full/*
+  Cache-Control: public, max-age=86400
+/puzzle-full/topics/*
+  Cache-Control: public, max-age=86400
+/puzzle-full/topic-summary.json
+  Cache-Control: public, max-age=300
+/puzzle-data/lichess-*.json
+  Cache-Control: public, max-age=3600

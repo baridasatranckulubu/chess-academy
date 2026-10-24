@@ -1,0 +1,57 @@
+name: Import ALL Lichess puzzles
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["scripts/build_full_lichess.py", ".github/workflows/full-puzzle-archive.yml"]
+permissions:
+  contents: write
+  actions: write
+  pages: write
+concurrency:
+  group: lichess-complete-import
+  cancel-in-progress: false
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install zstandard
+      - name: Verify complete archive builder
+        run: python tests/full_lichess_import_test.py
+      - name: Stream every official puzzle into compressed indexed shards
+        run: |
+          rm -rf puzzle-full
+          python scripts/build_full_lichess.py --out puzzle-full --gzip
+      - name: Verify archive fits both existing hosts
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+          root = Path('puzzle-full')
+          m = json.loads((root / 'manifest.json').read_text())
+          assert m['complete'] and m['count'] >= 6_000_000
+          assert all((root / p).is_file() for p in m['shards'])
+          size = sum(p.stat().st_size for p in root.rglob('*') if p.is_file())
+          assert size < 850_000_000, size
+          print('Complete archive:', m['count'], 'puzzles;', size, 'bytes')
+      - name: Save complete archive to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add puzzle-full/
+          git commit -m "Import complete indexed Lichess CC0 archive (all source rows)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Validate and publish the imported commit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run quality.yml --ref main
+          gh api --method POST repos/${{ github.repository }}/pages/builds
