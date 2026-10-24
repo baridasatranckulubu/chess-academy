@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 const root=path.resolve(__dirname,'..'),read=f=>fs.readFileSync(path.join(root,f),'utf8');
 const board=read('board-game.js');
-for(const file of ['board.html','index.html']){
+for(const file of ['board.html']){
  const html=read(file);
  assert(html.includes('chess-premium-board-v23'),file+' missing premium board style');
  assert(html.includes('chess-board-coordinate-fix-v24'),file+' missing coordinate layout fix');

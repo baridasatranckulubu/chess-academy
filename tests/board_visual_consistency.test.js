@@ -10,7 +10,6 @@ const classroom = read('classroom.js');
 const tactics = read('puzzles.js');
 const standalone = read('board-game.js');
 const boardPage = read('board.html');
-const homePage = read('index.html');
 
 for (const [name, source] of Object.entries({
   'premium-board.js': shared,
@@ -29,7 +28,7 @@ assert.match(css, /rotate\(360deg\)/, 'shared board stylesheet must support full
 assert.match(classroom, /getBoundingClientRect\(\)/, 'analysis arrows must use measured coordinates');
 assert(classroom.includes("stroke:'#ffffff'"), 'analysis arrow must retain white contrast');
 
-for (const [name, html] of [['board.html', boardPage], ['index.html', homePage]]) {
+for (const [name, html] of [['board.html', boardPage]]) {
   assert.match(html, /id=["']ca-standalone-spin-style["']/, name + ' must include spin styles');
   assert.match(html, /@keyframes\s+ca-standalone-spin/, name + ' must define the animation');
   assert.match(html, /\.board\.ca-standalone-spin/, name + ' must target the board');

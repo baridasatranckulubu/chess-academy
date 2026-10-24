@@ -6,13 +6,13 @@ from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(SimpleHTTPRequestHandler,directory=str(root)))
 Thread(target=server.serve_forever,daemon=True).start()
-url=f'http://127.0.0.1:{server.server_port}/index.html'
+url=f'http://127.0.0.1:{server.server_port}/board.html'
 with sync_playwright() as p:
  browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox','--disable-dev-shm-usage'])
  page=browser.new_page(viewport={'width':1365,'height':900})
  errors=[]
  page.on('pageerror',lambda e:errors.append(str(e)))
- html=(root/'index.html').read_text()
+ html=(root/'board.html').read_text()
  for name in ['engine.js','translations.js','board-game.js']:
   html=html.replace(f'<script src="{name}"></script>',f'<script>{(root/name).read_text()}</script>')
  html=html.replace('<head>',"<head><script>Object.defineProperty(window,'localStorage',{configurable:true,value:(()=>{const d={};return {getItem:k=>d[k]??null,setItem:(k,v)=>d[k]=String(v),removeItem:k=>delete d[k]}})()});</script>",1)

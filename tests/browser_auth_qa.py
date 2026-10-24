@@ -2,7 +2,7 @@
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
-html=(root/'index.html').read_text()
+html=(root/'board.html').read_text()
 for name in ['auth-config.js','auth-i18n.js','auth.js','engine.js','translations.js','board-game.js']:
     html=html.replace(f'<script src="{name}"></script>',f'<script>\n{(root/name).read_text()}\n</script>')
 html=html.replace('window.CHESS_AUTH_CONFIG = {supabaseUrl:\'\',supabaseAnonKey:\'\'};',"window.CHESS_AUTH_CONFIG = {supabaseUrl:'https://test-project.supabase.co',supabaseAnonKey:'test-public-anon-key-123456'};")

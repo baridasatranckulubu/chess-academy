@@ -62,6 +62,8 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright beautifulsoup4
           python -m playwright install --with-deps chromium
+      - name: Herkese açık ana sayfa, iletişim ve giriş bağlantısı
+        run: python tests/browser_public_home_qa.py
       - name: Ortak ana sayfa, roller, bildirimler ve mobil görünüm
         run: python tests/browser_club_qa.py
       - name: Hamle Atölyesi, paylaşım ve tüm hamle geçmişi

@@ -1,7 +1,7 @@
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 root=Path(__file__).resolve().parents[1]
-html=(root/'index.html').read_text()
+html=(root/'board.html').read_text()
 for name in ['auth-config.js','auth-i18n.js','auth.js','engine.js','translations.js','board-game.js','cloud-progress.js','learning.js']:
  html=html.replace(f'<script src="{name}"></script>',f'<script>\n{(root/name).read_text()}\n</script>')
 with sync_playwright() as p:
@@ -28,7 +28,7 @@ with sync_playwright() as p:
 with sync_playwright() as p:
  b=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox','--disable-dev-shm-usage'])
  page=b.new_page()
- page.route('https://academy.test/**',lambda route: route.fulfill(body=(root/(route.request.url.split('/')[-1] or 'index.html')).read_text(),content_type='text/html' if route.request.url.endswith('/') else 'application/javascript'))
+ page.route('https://academy.test/**',lambda route: route.fulfill(body=(root/(route.request.url.split('/')[-1] or 'board.html')).read_text(),content_type='text/html' if route.request.url.endswith('/') else 'application/javascript'))
  page.goto('https://academy.test/')
  page.evaluate("window.ChessAcademyAuth={hasVerifiedProfile:()=>true,role:()=> 'student',credentials:()=>({userId:'test-uuid'})};window.ChessLearning.render()")
  page.locator('#classroomNav').click()
