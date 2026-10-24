@@ -47,6 +47,7 @@ jobs:
           disable-animations: true
           script: |
             cd android && bash ./gradlew :app:connectedDebugAndroidTest --no-daemon
+            adb install -r android/app/build/outputs/apk/debug/app-debug.apk
             adb shell am start -n com.baridasatranckulubu.academy/.MainActivity
             sleep 8
             adb shell screencap -p /sdcard/barida-login.png
