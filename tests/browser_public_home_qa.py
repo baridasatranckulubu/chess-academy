@@ -19,6 +19,11 @@ try:
   assert page.locator('a[href="https://www.instagram.com/baridasatranc/"]').count()==1
   assert page.locator('a[href="https://www.youtube.com/@Baridasatranc"]').count()==1
   assert page.locator('#basarilar').count()==0
+  assert page.locator('.brand-emblem img').get_attribute('src')=='barida-hero-club-v4.webp'
+  assert page.locator('.brand-emblem img').evaluate("el=>getComputedStyle(el).animationName")=='none'
+  assert page.locator('.exclusive-label').inner_text()=='Isparta’da ilk ve tek'
+  assert page.locator('.journey-strip>div').count()==3
+  assert 'assets/club/senserobot-intro.mp4' in page.locator('#robotVideo source').get_attribute('src')
   assert not any('supabase.co' in u for u in requests)
   page.locator('.hero-image').evaluate('el=>el.decode()');page.screenshot(path=str(OUT/'public-desktop.png'),full_page=True)
   for width in [390,320,768]:
