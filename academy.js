@@ -864,6 +864,19 @@ window.addEventListener('message',async e=>{
  const {data,error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:m.student,title,kind:'position',theme:'custom',puzzle_count:1,min_rating:400,max_rating:3000,fen:q.fen,solution_uci:q.solution,instructions:''}).select('id').single();if(error)throw error;reply({data});await loadAssignmentCards($('view'));
  }catch(error){reply({error:error.message||'Soru kaydedilemedi'})}
 });
+function confirmAssignmentDelete(){
+ if(document.querySelector('.assignment-delete-dialog[open]'))return Promise.resolve(false);
+ return new Promise(resolve=>{
+  const dialog=node('dialog','assignment-delete-dialog');dialog.setAttribute('aria-labelledby','assignment-delete-title');
+  const title=node('h2','','Ödev silinsin mi?');title.id='assignment-delete-title';
+  const actions=node('div','assignment-delete-actions');
+  const cancel=button('Vazgeç',()=>dialog.close('cancel'),'btn');cancel.autofocus=true;
+  const remove=button('Sil',()=>dialog.close('delete'),'btn danger');
+  actions.append(cancel,remove);dialog.append(title,actions);document.body.append(dialog);
+  dialog.addEventListener('close',()=>{const confirmed=dialog.returnValue==='delete';dialog.remove();resolve(confirmed)},{once:true});
+  dialog.showModal();cancel.focus();
+ });
+}
 async function loadAssignmentCards(view){
  const {data,error}=await authClient.from('academy_assignments').select('id,title,kind,theme,puzzle_count,min_rating,max_rating,fen,solution_uci,instructions,status,created_at,student_id').order('created_at',{ascending:false}).limit(100);
  if(error)throw error;const snapshot=JSON.stringify(data||[]),old=view.querySelector('#realAssignmentList');if(old?._snapshot===snapshot&&old.dataset.tab===assignmentTab)return;old?.remove();
@@ -900,7 +913,7 @@ async function loadAssignmentCards(view){
     }catch(err){summary.textContent='İnceleme yüklenemedi: '+err.message}
    },'btn small'));
   }
-    if(role==='teacher')card.append(button('×',async()=>{if(!confirm('Ödev silinsin mi?'))return;const {error}=await authClient.from('academy_assignments').delete().eq('id',a.id);if(error)alert(error.message);else loadAssignmentCards(view)},'btn small'));
+    if(role==='teacher')card.append(button('×',async()=>{if(!await confirmAssignmentDelete())return;const {error}=await authClient.from('academy_assignments').delete().eq('id',a.id);if(error)alert(error.message);else loadAssignmentCards(view)},'btn small'));
   else if(a.kind==='puzzle')card.append(button(a.status==='completed'?'✓ Tamamlandı':'▶ Çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const p=new URLSearchParams({assignment:String(a.id),theme:a.theme,target:String(a.puzzle_count),minRating:String(a.min_rating),maxRating:String(a.max_rating)});const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='puzzles.html?v=20261024-fast2&'+p;const payload=Promise.all([authClient.rpc('get_academy_assignment_progress',{p_assignment_id:a.id}),Array.isArray(a.puzzle_items)?Promise.resolve({data:{puzzle_items:a.puzzle_items}}):authClient.from('academy_assignments').select('puzzle_items').eq('id',a.id).single()]).then(async([pr,qr])=>{if(pr.error)throw pr.error;if(qr.error)throw qr.error;const puzzles=qr.data?.puzzle_items||[];const other=puzzles.length?{data:[]}:await authClient.rpc('get_academy_other_assignment_puzzles',{p_assignment_id:a.id});if(other.error)throw other.error;return{items:pr.data?.items||[],puzzles,otherIds:other.data||[]}});payload.catch(()=>{});const initialize=async()=>{try{const data=await payload;if(!frame.isConnected)return;frame.contentWindow?.postMessage({type:'chess-academy-assignment-progress-init',assignmentId:a.id,...data},location.origin);progress.textContent=data.items.filter(x=>x.finished!==false).length+'/'+a.puzzle_count}catch(err){progress.textContent='İlerleme yüklenemedi: '+err.message}};const ready=e=>{if(e.origin===location.origin&&e.source===frame.contentWindow&&e.data?.type==='barida-assignment-ready')initialize()};window.addEventListener('message',ready);frame.addEventListener('load',()=>{initialize();window.removeEventListener('message',ready)},{once:true});frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';frame.title=a.title;view.append(frame);const progress=node('p','muted','');progress.id='assignment-progress-live';view.append(progress);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
   else card.append(button('▶ Çöz',()=>{view.querySelector('#assignment-puzzle-frame')?.remove();const frame=node('iframe','academy-embed');frame.id='assignment-puzzle-frame';frame.src='custom-homework-board.html?mode=student';frame.title='Antrenör sorusu';frame.style.cssText='width:100%;min-height:800px;border:1px solid #b28b65;border-radius:14px';view.append(frame);frame.addEventListener('load',()=>frame.contentWindow.postMessage({type:'barida-load-custom-board',fen:a.fen},location.origin));const message=node('p','muted','Tahtada doğru hamleyi yap.');view.append(message);const handler=async e=>{if(!frame.isConnected){window.removeEventListener('message',handler);return}if(e.origin!==location.origin||e.source!==frame.contentWindow||e.data?.type!=='barida-custom-board-answer')return;try{const {data,error}=await authClient.rpc('submit_academy_custom_board_answer',{p_assignment_id:a.id,p_move:e.data.move});if(error)throw error;message.textContent=data?'✓ Tamamlandı':'Tekrar dene';if(data)loadAssignmentCards(view)}catch(err){message.textContent='Yanıt kaydedilemedi: '+err.message}};window.addEventListener('message',handler);frame.scrollIntoView({behavior:'smooth'})},'btn gold'));
   cards.append(card);
