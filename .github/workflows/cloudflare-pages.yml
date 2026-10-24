@@ -48,7 +48,17 @@ jobs:
           assert (out / "index.html").is_file()
           assert (out / "academy.html").is_file()
           assert all(p.stat().st_size < 25 * 1024 * 1024 for p in out.rglob("*") if p.is_file())
+      - name: Ensure the exact Barida Satranc address exists
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/ensure-pages-project.mjs
       - name: Deploy production
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: 93c0e9ef9defdeb95adf4e052639a568
+          command: pages deploy _pages --project-name=baridasatranc --branch=main
+      - name: Keep the previous address available
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
