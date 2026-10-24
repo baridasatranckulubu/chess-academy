@@ -6,6 +6,7 @@ assert(!read('mobile.js').match(/localStorage\.setItem\([^\n]*password/));
 assert(read('native/android/CredentialVault.java').includes('AndroidKeyStore'));
 assert(read('native/android/CredentialVault.java').includes('AES/GCM/NoPadding'));
 assert(read('tools/configure_android.py').includes('android:allowBackup="false"'));
-assert(read('mobile.js').includes("registerPlugin('App')"));
+assert(read('mobile.js').includes('C.Plugins?.App'));
+assert(read('mobile.js').includes('C.Plugins?.SecureLogin'));
 assert(read('mobile.css').includes('safe-area-inset-bottom'));
 console.log('PASS native identity, bundled origin, encrypted credential design and mobile controls');
