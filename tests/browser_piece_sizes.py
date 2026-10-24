@@ -60,6 +60,7 @@ try:
             page.goto(f'http://127.0.0.1:{server.server_port}/{filename}')
             page.locator('.board .sq img.barida-approved-piece').first.wait_for()
             page.wait_for_function("[...document.querySelectorAll('.board .sq img.barida-approved-piece')].every(i=>i.complete&&i.naturalWidth&&i.style.getPropertyValue('--barida-optical-transform'))")
+            page.wait_for_function(r"""()=>[...document.querySelectorAll('.board .sq img.barida-approved-piece')].every(i=>{const scale=Number(i.style.getPropertyValue('--barida-optical-transform').match(/scale\(([^)]+)/)?.[1]);return Math.abs(new DOMMatrix(getComputedStyle(i).transform).a-scale)<.0001})""")
             # The precomputed bounds are verified against the actual alpha pixels above.
             rows=page.evaluate(MEASURE)
             assert rows,filename
