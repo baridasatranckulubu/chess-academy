@@ -64,6 +64,10 @@ jobs:
         run: python tests/browser_club_qa.py
       - name: Hamle Atölyesi, paylaşım ve tüm hamle geçmişi
         run: python tests/browser_workshop_qa.py
+      - name: Kayıt servisi, doğrulama ve hesap temizliği
+        run: node tests/registration.test.js
+      - name: Sporcu ve antrenör kayıt mesajları
+        run: python tests/browser_registration_qa.py
       - name: Serbest tahta soruları, kayıt ve sporcuya atama
         run: python tests/browser_custom_questions_qa.py
       - name: Kulüp Arenası, müsabaka arşivi ve sonuç kuyruğu

@@ -442,3 +442,10 @@ html body #view .student-registration-page #studentCreateSchedule>label:has(inpu
 #view .barida-rating-board .barida-rating-line>strong:first-child{color:#f5f7ff!important}
 #view .barida-podium-place strong,#view .barida-podium-place span{opacity:1}
 #view .muted{color:#d0dae7!important}
+
+/* Registration progress and failures remain readable in both themes. */
+#studentCreateMessage.registration-status,.registration-status{font-size:17px!important;font-weight:750!important;line-height:1.6!important;padding:15px 18px!important;border:2px solid #d5a444!important;border-radius:12px!important;background:#fff3cd!important;color:#503600!important;opacity:1!important;grid-column:1/-1;overflow-wrap:anywhere;box-shadow:0 4px 16px #0002}
+.registration-status:empty{display:none!important}
+#studentCreateMessage.registration-status[data-state="error"],.registration-status[data-state="error"]{background:#fff0f0!important;color:#851b1b!important;border-color:#c63636!important}
+#studentCreateMessage.registration-status[data-state="success"],.registration-status[data-state="success"]{background:#e7f7eb!important;color:#154c26!important;border-color:#2b8146!important}
+.registration-status:focus{outline:3px solid #ffcb70;outline-offset:3px}

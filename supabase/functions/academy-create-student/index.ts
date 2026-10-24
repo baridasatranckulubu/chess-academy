@@ -28,12 +28,12 @@ Deno.serve(async (req) => {
  if(birth_date&&(!/^\d{4}-\d{2}-\d{2}$/.test(birth_date)||Number.isNaN(Date.parse(birth_date))))return reply({error:"Geçersiz doğum tarihi"},400);
  if(tc_identity_no&&!/^[0-9]{11}$/.test(tc_identity_no))return reply({error:"T.C. kimlik numarası 11 rakam olmalıdır"},400);
  const password=String(body.password||"");
- if(display_name.length<3||display_name.length>60||(phone&&!/^\+[1-9][0-9]{7,14}$/.test(phone))||password.length<12||password.length>128)return reply({error:"Invalid student information"},400);
+ if(display_name.length<3||display_name.length>60||(phone&&!/^\+[1-9][0-9]{7,14}$/.test(phone))||password.length<12||password.length>128)return reply({error:"Ad soyad en az 3, şifre en az 12 karakter olmalı. Telefon girildiğinde +90 ile başlayan geçerli bir numara kullanın."},400);
  const email="student-"+crypto.randomUUID()+"@students.invalid";
  const {data:created,error:creationError}=await privileged.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{display_name,phone}});
- if(creationError||!created.user)return reply({error:"Account creation failed"},500);
+ if(creationError||!created.user){console.error("student account creation failed",creationError?.code,creationError?.status);return reply({error:"Sporcu hesabı oluşturulamadı. Bilgileri kontrol edip yeniden deneyin."},500);}
  const {error:linkError}=await privileged.from("teacher_students").insert({teacher_id:user.id,student_id:created.user.id});
- if(linkError){await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Assignment failed"},500)}
+ if(linkError){await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Sporcu antrenöre bağlanamadı; hesap oluşturulmadı. Tekrar deneyin."},500)}
  const {error:detailsError}=await privileged.rpc("academy_save_student_details",{p_student_id:created.user.id,p_birth_date:birth_date,p_gender:gender,p_has_license:has_license,p_tc_identity_no:tc_identity_no});
  if(detailsError){await privileged.from("teacher_students").delete().eq("student_id",created.user.id);await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Öğrenci bilgileri güvenli şekilde kaydedilemedi"},500)}
  return reply({ok:true,student_id:created.user.id,display_name});
