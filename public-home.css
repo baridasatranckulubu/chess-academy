@@ -53,3 +53,59 @@
 .login-link,.button,.brand-emblem,.floating-contact{box-shadow:inset 0 0 0 1px transparent;transition:box-shadow .18s,border-color .18s}
 .login-link:hover,.login-link:focus-visible,.button:hover,.button:focus-visible,.wordmark:hover .brand-emblem,.wordmark:focus-visible .brand-emblem,.floating-contact:hover,.floating-contact:focus-visible{box-shadow:inset 0 0 0 2px #ff79b9;border-color:#ff79b9}
 .hero-robot-note:hover,.hero-robot-note:focus-visible,#videoToggle:hover,#videoToggle:focus-visible,.robot-features span:hover,.exclusive-label:hover{border-color:#ff79b9;box-shadow:inset 0 0 0 1px #ff79b9}
+
+/* Clear, tactile contact actions and a compact WhatsApp message launcher. */
+.contact-grid-buttons{grid-template-columns:1.08fr 1fr 1fr;gap:32px;align-items:start}
+.contact-grid-buttons h3{margin:0 0 21px;font-size:15px;font-weight:700;letter-spacing:-.02em}
+.contact-grid-buttons .contact-main{grid-column:auto}
+.contact-phone-number{display:inline-block;font-size:clamp(23px,2.2vw,30px);font-weight:650;letter-spacing:-.045em;white-space:nowrap;margin-bottom:12px}
+.contact .contact-caption{font-size:12px;line-height:1.75;color:#526b5b;margin:0 0 20px}
+.contact-button-stack{display:grid;gap:10px;margin-top:19px}
+.contact-grid-buttons .contact-action{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:46px;padding:12px 15px;margin:0;border:1px solid #244e3836;border-radius:11px;background:#ffffff59;color:#173c2a;font-family:inherit;font-size:12px;font-weight:600;line-height:1.5;text-align:center;text-decoration:none;transition:border-color .18s,background .18s,box-shadow .18s}
+.contact-action svg{width:18px;height:18px;flex:none}
+.contact-grid-buttons .contact-action-primary{background:#103e2a;border-color:#103e2a;color:#f0f8ef;box-shadow:0 5px 15px #123e2914}
+.contact-grid-buttons .contact-action-primary>span{color:inherit;font-size:12px}
+.contact-grid-buttons .contact-action:hover,.contact-grid-buttons .contact-action:focus-visible{border-color:#ff79b9;box-shadow:inset 0 0 0 1px #ff79b9;background:#d5e7da}
+.contact-grid-buttons .contact-action-primary:hover,.contact-grid-buttons .contact-action-primary:focus-visible{background:#164d35}
+.contact-copy{cursor:pointer}
+.copy-feedback{display:block;min-height:16px;margin-top:7px;color:#245c3c;font-size:10px}
+.contact-grid-buttons .contact-social{display:flex;flex-direction:column;gap:12px}
+.contact-grid-buttons .contact-social h3{margin-bottom:9px}
+.contact-grid-buttons .contact-social .social-button{display:flex;align-items:center;gap:13px;width:100%;min-height:73px;padding:13px 15px;margin:0;border:1px solid #244e3833;border-radius:13px;background:#ffffff59;transition:border-color .18s,box-shadow .18s,background .18s}
+.contact-grid-buttons .social-button-icon{display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;border-radius:10px;background:#173e2c0d;color:#234c35}
+.social-button-icon svg{display:block;width:23px;height:23px}
+.contact-grid-buttons .social-button-copy{display:flex;flex-direction:column;gap:3px;margin:0;min-width:0}
+.social-button-copy strong{font-size:13px;font-weight:650;color:#133b27}
+.social-button-copy small{font-size:11px;color:#56715e;overflow-wrap:anywhere}
+.contact-grid-buttons .social-button:hover,.contact-grid-buttons .social-button:focus-visible{border-color:#ff79b9;box-shadow:inset 0 0 0 1px #ff79b9;background:#ecf3e9}
+.floating-contact.chat-launcher{display:flex;align-items:center;gap:10px;width:auto;height:58px;padding:8px 18px 8px 9px;right:24px;bottom:24px;border:1px solid #a3d7b85c;border-radius:99px;background:linear-gradient(135deg,#18533b,#082f22);color:#f0f9f0;box-shadow:0 9px 32px #021b1647,0 2px 5px #021b1626;cursor:pointer}
+.floating-contact.chat-launcher:hover,.floating-contact.chat-launcher:focus-visible{transform:none;border-color:#ff79b9;box-shadow:0 9px 32px #021b1647,inset 0 0 0 1px #ff79b9}
+.chat-launcher-symbol{display:grid;place-items:center;width:39px;height:39px;flex:none;border:1px solid #d9f2df36;border-radius:50%;background:#c0f2d015}
+.chat-launcher-symbol>span{display:grid;place-items:center}
+.floating-contact.chat-launcher svg{display:block;width:23px;height:23px}
+.chat-launcher-label{font-size:13px;font-weight:650;letter-spacing:.01em}
+.chat-launcher .chat-symbol-close{display:none}
+.chat-launcher[aria-expanded=true] .chat-symbol-open{display:none}
+.chat-launcher[aria-expanded=true] .chat-symbol-close{display:grid}
+.club-message-panel{position:fixed;right:24px;bottom:98px;width:min(360px,calc(100vw - 32px));z-index:200;overflow:hidden;border:1px solid #a7cbb780;border-radius:20px;background:#f0f5ed;color:#113b29;box-shadow:0 20px 70px #021b165c}
+.message-panel-header{display:flex;align-items:center;gap:12px;padding:19px 16px;background:linear-gradient(125deg,#174b35,#0b3022);color:#f1f7ec}
+.message-panel-emblem{display:grid;place-items:center;width:40px;height:40px;flex:none;border:1px solid #c8e7ce45;border-radius:12px;background:#c8e7ce0d;font-size:27px;line-height:1}
+.message-panel-header>div{flex:1;min-width:0}
+.message-panel-header strong{display:block;font-size:13px;font-weight:650}
+.message-panel-header>div>span{display:block;margin-top:5px;font-size:10px;line-height:1.5;color:#c1d9c8}
+.message-panel-header button{display:grid;place-items:center;align-self:start;flex:none;width:29px;height:29px;padding:6px;border:1px solid #c8e7ce38;border-radius:8px;background:transparent;color:#d8eadd}
+.message-panel-header button:hover{border-color:#ff79b9}
+.message-panel-header svg{width:16px;height:16px}
+.message-panel-body{padding:22px 20px 20px}
+.message-panel-body>p{margin:0 0 7px;color:#163d2b;font-size:17px;font-weight:600;line-height:1.5;letter-spacing:-.025em}
+.message-panel-body>span{display:block;color:#58705f;font-size:11px;line-height:1.8}
+.message-quick-actions{display:grid;gap:10px;margin-top:20px}
+.message-quick-actions a{display:flex;align-items:center;gap:12px;min-height:50px;padding:12px 13px;border:1px solid #315d3c2e;border-radius:11px;background:#fff8;color:#204e34;font-size:12px;font-weight:600}
+.message-quick-actions svg{width:21px;height:21px;flex:none}
+.message-quick-actions a:hover,.message-quick-actions a:focus-visible{border-color:#ff79b9;background:#fff}
+.message-general-link{display:inline-block;margin-top:18px;padding-block:4px;border-bottom:1px solid #7897826b;color:#4f705a;font-size:10px}
+.message-general-link:hover{color:#153f2a;border-color:#ff79b9}
+.message-panel-footer{display:flex;align-items:center;justify-content:center;gap:7px;padding:12px 18px;border-top:1px solid #315d3c1a;background:#e2eddf;color:#5b7664;font-size:9px}
+.message-panel-footer svg{width:13px;height:13px;flex:none}
+@media(max-width:950px){.contact-grid-buttons{grid-template-columns:1fr 1fr;gap:32px}.contact-grid-buttons .contact-main{grid-column:1/-1}.contact-grid-buttons .contact-main .contact-button-stack{grid-template-columns:1fr 1fr;max-width:600px}.contact .contact-caption{margin-bottom:0}}
+@media(max-width:650px){.contact-grid-buttons{grid-template-columns:minmax(0,1fr);gap:30px}.contact-grid-buttons .contact-main{grid-column:auto}.contact-grid-buttons .contact-main .contact-button-stack{grid-template-columns:1fr}.contact-grid-buttons .contact-social{display:flex}.contact-grid-buttons h3{margin-bottom:16px}.contact-phone-number{font-size:29px}.floating-contact.chat-launcher{right:16px;bottom:18px;height:54px;padding-right:16px}.club-message-panel{right:16px;bottom:87px}.message-panel-header strong{font-size:12px}}
