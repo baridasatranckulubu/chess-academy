@@ -766,7 +766,7 @@ async function realAssignments(){
   const select=(id,label,options)=>{const wrap=node('label','',label),el=node('select');el.id=id;el.setAttribute('aria-label',label);for(const [value,text] of options){const opt=node('option','',text);opt.value=value;el.append(opt)}wrap.append(el);form.append(wrap);return el};
   const student=select('quickStudent','Sporcu',realRoster.map(s=>[s.id,s.name]));if(assignmentSelectedStudent)student.value=assignmentSelectedStudent;
   const theme=select('quickTheme','Konu',[['all','Karışık'],...PUZZLE_THEMES]);
-  const level=select('quickLevel','Seviye',[['400-1400','Kolay'],['1200-1900','Orta'],['1800-3000','Zor']]);
+  const level=select('quickLevel','Seviye',[['400-999','Çok kolay'],['400-1400','Kolay'],['1200-1900','Orta'],['1800-3000','Zor'],['2200-2599','Çok zor'],['2600-3000','Expert']]);
   const count=select('quickCount','Adet',[[1,'1'],[5,'5'],[10,'10'],[20,'20'],[50,'50']]);count.value='10';
   const send=button('⚡ Seç ve gönder',()=>{},'btn gold');send.id='quickSend';send.type='submit';send.disabled=!realRoster.length;form.append(send);const status=node('p','quick-assignment-status','');status.id='quickAssignmentStatus';status.setAttribute('role','status');
   form.onsubmit=async e=>{e.preventDefault();send.disabled=true;status.textContent='Sorular seçiliyor…';try{if(!student.value)throw Error('Sporcu seç.');const [min,max]=level.value.split('-').map(Number);const {data:used,error:usedError}=await authClient.rpc('academy_workshop',{p_action:'used_puzzles',p_student:student.value});if(usedError)throw usedError;

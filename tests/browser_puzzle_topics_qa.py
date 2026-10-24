@@ -21,12 +21,20 @@ try:
   context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''));context.route('https://**.supabase.co/**',lambda r:r.abort())
   page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#baridaBoot').wait_for(state='hidden');page.evaluate("window.baridaNavigate('assignments')");page.locator('#quickTheme[data-ready=true]').wait_for()
+  page.wait_for_function("!document.querySelector('#quickSend').disabled")
+  boxes=[page.locator(s).bounding_box() for s in ['#quickStudent','#quickTheme','#quickLevel','#quickCount','#quickSend']]
+  assert max(b['y'] for b in boxes)-min(b['y'] for b in boxes)<=2,boxes
+  for value,label in [('400-999','Çok kolay'),('2200-2599','Çok zor'),('2600-3000','Expert')]:
+   assert page.locator('#quickLevel option[value="'+value+'"]').inner_text()==label
+   page.locator('#quickLevel').select_option(value);page.wait_for_function("document.querySelector('#quickAvailability').textContent.includes('soru')")
+   assert page.locator('#quickLevel').input_value()==value
+  page.locator('#quickLevel').select_option('400-3000');page.wait_for_function("!document.querySelector('#quickSend').disabled")
   assert page.locator('#quickTheme optgroup').count()==10
   assert page.locator('#quickTheme').evaluate('el=>new Set([...el.options].map(o=>o.value)).size')==74
   for key in ['balestraMate','vukovicMate','enPassant','underPromotion','queenRookEndgame','oneMove','superGM','discoveredCheck']:assert page.locator('#quickTheme option[value="'+key+'"]').count()==1
   page.locator('#quickThemeSearch').fill('balestra');assert page.locator('#quickTheme option').count()==1;assert page.locator('#quickTheme').input_value()=='balestraMate';page.locator('#quickCount').select_option('1');page.locator('#quickSend').click();page.locator('#quickAssignmentStatus').filter(has_text='Gönderildi').wait_for();assert page.evaluate("window.__sent[0].puzzle_items.every(p=>p[4].includes('balestraMate'))")
   page.locator('#quickThemeSearch').fill('');page.locator('#quickTheme').select_option('opening');page.locator('#quickOpening').wait_for();page.locator('#quickOpeningSearch').fill('Sicilya');page.locator('#quickOpening').select_option('Sicilian_Defense');page.locator('#quickCount').select_option('1');page.locator('#quickSend').click();page.wait_for_function('window.__sent.length===2');assert page.evaluate("window.__sent[1].title.includes('Sicilya')")
-  page.locator('#quickThemeSearch').fill('xyz-no-topic');assert page.locator('#quickSend').is_disabled();page.locator('#quickThemeSearch').fill('');assert not page.locator('#quickSend').is_disabled()
+  page.locator('#quickThemeSearch').fill('xyz-no-topic');assert page.locator('#quickSend').is_disabled();page.locator('#quickThemeSearch').fill('');page.wait_for_function("!document.querySelector('#quickSend').disabled")
   page.set_viewport_size({'width':390,'height':850});assert page.locator('html').evaluate('el=>el.scrollWidth<=innerWidth+2')
   assert not errors,errors
   browser.close();print('PASS 74 searchable grouped themes, rare-theme delivery, opening delivery, no-results guard and mobile layout')

@@ -452,3 +452,15 @@ html body #view .student-registration-page #studentCreateSchedule>label:has(inpu
 .simple-assignment-form{display:grid;grid-template-columns:minmax(150px,1.5fr) repeat(3,minmax(100px,1fr)) auto;gap:12px;align-items:end;margin:18px 0}.simple-assignment-form label{display:grid;gap:7px;font-weight:650}.simple-assignment-form select{width:100%;min-height:46px;border-radius:10px;padding:10px;background:var(--panel,#132f27);color:inherit;border:1px solid #517b67}.assignment-tabs{display:flex;gap:10px;margin:18px 0}.assignment-custom-tools{margin:16px 0;border:1px solid #476c5a;border-radius:12px;padding:12px}.assignment-custom-tools summary{cursor:pointer;font-weight:700}.assignment-custom-tools:not([open])>#assignmentCustomBody{display:none}.quick-assignment-status:empty{display:none}.quick-assignment-status{font-weight:750;color:#6de8a1}#realAssignmentList .assignment h3{font-size:17px;margin:0}#realAssignmentList .assignment p:empty{display:none}#realAssignmentList .assignment{padding:14px;gap:12px;align-items:center}#realAssignmentList .assignment .btn{min-height:42px}@media(max-width:900px){.simple-assignment-form{grid-template-columns:repeat(2,minmax(0,1fr))}.simple-assignment-form>#quickSend{grid-column:1/-1}}
 
 #quickThemeSearch,#quickOpeningSearch{width:100%;padding:9px 10px;border:1px solid #517b67;border-radius:9px;background:var(--panel,#132f27);color:inherit;font:inherit}.simple-assignment-form label{min-width:0}#quickAvailability{font-size:12px;color:inherit;opacity:.8}.opening-picker{grid-column:1/-1}.opening-picker[hidden]{display:none!important}
+
+
+/* Keep homework labels, selectors and primary action on the same row. */
+#quickAssignmentForm{align-items:start}
+#quickAssignmentForm>label{min-width:0;grid-template-rows:20px 46px;align-content:start}
+#quickAssignmentForm>label>select{grid-row:2;min-width:0;height:46px;box-sizing:border-box}
+#quickAssignmentForm #quickThemeSearch,#quickAssignmentForm #quickOpeningSearch{grid-row:3;width:100%;min-width:0;height:40px;box-sizing:border-box;margin:0}
+#quickAssignmentForm #quickAvailability{grid-row:4;line-height:18px;min-height:18px}
+#quickAssignmentForm>#quickSend{align-self:start;height:46px;min-height:46px;box-sizing:border-box;margin-top:27px;white-space:nowrap}
+#quickAssignmentForm>.opening-picker{grid-template-rows:20px 46px 40px}
+@media(max-width:900px){#quickAssignmentForm>#quickSend{margin-top:0}}
+@media(max-width:540px){#quickAssignmentForm{grid-template-columns:minmax(0,1fr)}#quickAssignmentForm>#quickSend{width:100%}}
