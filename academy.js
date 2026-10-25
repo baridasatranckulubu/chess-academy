@@ -804,6 +804,16 @@ function editAssignmentDeadline(a){
  const actions=node('div','assignment-delete-actions'),cancel=button('Vazgeç',()=>dialog.close(),'btn'),save=button('Kaydet',async()=>{save.disabled=true;try{const due=input.value?new Date(input.value+'T23:59:59+03:00').toISOString():null;const {error}=await authClient.rpc('barida_assignment_deadline',{p_assignment:a.id,p_due:due});if(error)throw error;dialog.close();await loadAssignmentCards($('view'))}catch(e){status.textContent=e.message;save.disabled=false}},'btn gold');actions.append(cancel,save);dialog.append(label,status,actions);document.body.append(dialog);dialog.addEventListener('close',()=>dialog.remove(),{once:true});dialog.showModal();input.focus();
 }
 
+
+let assignmentBulkChoices=[];
+function assignmentTarget(value){if(value==='all')return{p_scope:'all',p_student:null,p_teacher:null,p_class:null};if(value?.startsWith('class:')){const parts=value.split(':');return{p_scope:'class',p_student:null,p_teacher:parts[1],p_class:decodeURIComponent(parts.slice(2).join(':'))}}return{p_scope:'single',p_student:value||null,p_teacher:null,p_class:null}}
+async function assignmentChoices(){const {data:context,error}=await authClient.rpc('barida_assignment_targets');if(error)throw error;const groups=Array.isArray(context?.groups)?context.groups:[];assignmentBulkChoices=groups.map(g=>({id:'class:'+g.teacher_id+':'+encodeURIComponent(g.class_name),name:(realProfile?.role==='admin'?g.teacher_name+' · ':'')+g.class_name+' sınıfı · '+g.recipient_count+' sporcu',count:Number(g.recipient_count)}));assignmentBulkChoices.push({id:'all',name:realProfile?.role==='admin'?'Tüm aktif sporcular · Kulübün tamamı':'Tüm sporcularım',count:Number(context?.total??realRoster.length)});return assignmentBulkChoices}
+async function sendClubAssignment(value,payload,request=crypto.randomUUID()){
+ const target=assignmentTarget(value);if(target.p_scope==='single'&&realProfile?.role!=='admin'){if(!realRoster.some(s=>s.id===value))throw Error('Sporcu seç.');const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:value,...payload});if(error)throw error;return{count:1}}
+ if(payload.kind==='puzzle'&&!payload.puzzle_items?.length){const {data:used,error}=await authClient.rpc('barida_assignment_used',target);if(error)throw error;const items=await window.BaridaAssignmentBank.select({theme:payload.theme,min:payload.min_rating,max:payload.max_rating,count:payload.puzzle_count,exclude:used||[]});payload={...payload,puzzle_items:items,puzzle_count:items.length}}
+ const {data:result,error}=await authClient.rpc('barida_assignment_batch',{p_request:request,...target,p_payload:payload});if(error)throw error;return result;
+}
+
 let assignmentSelectedStudent=null;
 let assignmentTab='open';
 async function realAssignments(){
@@ -812,18 +822,24 @@ async function realAssignments(){
   await loadTeacherStudents();if(section!=='assignments')return;
   const form=node('form','simple-assignment-form');form.id='quickAssignmentForm';
   const select=(id,label,options)=>{const wrap=node('label','',label),el=node('select');el.id=id;el.setAttribute('aria-label',label);for(const [value,text] of options){const opt=node('option','',text);opt.value=value;el.append(opt)}wrap.append(el);form.append(wrap);return el};
-  const student=select('quickStudent','Sporcu',realRoster.map(s=>[s.id,s.name]));if(assignmentSelectedStudent)student.value=assignmentSelectedStudent;
+  const student=select('quickStudent','Sporcu / Sınıf',realRoster.map(s=>[s.id,s.name]));
+  const choices=await assignmentChoices();if(section!=='assignments')return;const classes=node('optgroup');classes.label='Sınıfa toplu gönder';const everyone=node('optgroup');everyone.label='Genel gönderim';for(const choice of choices){const option=node('option','',choice.name);option.value=choice.id;option.dataset.count=String(choice.count);(choice.id==='all'?everyone:classes).append(option)}if(classes.children.length)student.append(classes);student.append(everyone);if(assignmentSelectedStudent&&[...student.options].some(o=>o.value===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
+  const recipientCount=node('small');recipientCount.id='quickRecipientCount';recipientCount.setAttribute('aria-live','polite');recipientCount.style.cssText='grid-row:3;font-size:12px';student.parentElement.append(recipientCount);const recipientPreview=()=>{const count=Number(student.selectedOptions[0]?.dataset.count??1);recipientCount.textContent=count+' sporcuya gönderilecek';};recipientPreview();student.addEventListener('change',recipientPreview);
+
   const theme=select('quickTheme','Konu',[['all','Karışık'],...PUZZLE_THEMES]);
   const level=select('quickLevel','Seviye',[['400-999','Çok kolay'],['400-1400','Kolay'],['1200-1900','Orta'],['1800-3000','Zor'],['2200-2599','Çok zor'],['2600-3000','Expert']]);
   const count=select('quickCount','Adet',[[1,'1'],[5,'5'],[10,'10'],[20,'20'],[50,'50']]);count.value='10';
   const due=node('input');due.type='date';due.id='quickDueDate';due.min=clubToday();due.value='';const dueLabel=node('label','','Son tarih (isteğe bağlı)');dueLabel.append(due);dueLabel.style.cssText='grid-column:1/-1;grid-row:3;max-width:240px';form.append(dueLabel);
   const send=button('⚡ Seç ve gönder',()=>{},'btn gold');send.id='quickSend';send.type='submit';send.disabled=!realRoster.length;form.append(send);const status=node('p','quick-assignment-status','');status.id='quickAssignmentStatus';status.setAttribute('role','status');
-  form.onsubmit=async e=>{e.preventDefault();send.disabled=true;status.textContent='Sorular seçiliyor…';try{if(!student.value)throw Error('Sporcu seç.');const [min,max]=level.value.split('-').map(Number);const {data:used,error:usedError}=await authClient.rpc('academy_workshop',{p_action:'used_puzzles',p_student:student.value});if(usedError)throw usedError;
-   const items=await window.BaridaAssignmentBank.select({theme:theme.value,min,max,count:Number(count.value),exclude:used||[],...topicPicker.state()});
-   const title=topicPicker.name().slice(0,105)+' · '+items.length+' soru';const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title,kind:'puzzle',theme:theme.value,puzzle_count:items.length,min_rating:min,max_rating:max,instructions:'',puzzle_items:items,due_at:assignmentDueValue()});if(error)throw error;
-   assignmentSelectedStudent=student.value;status.textContent='✓ Gönderildi';assignmentTab='open';await loadAssignmentCards(view);
+  let pendingSend=null;
+  form.onsubmit=async e=>{e.preventDefault();send.disabled=true;status.textContent='Sorular seçiliyor…';try{if(!student.value)throw Error('Sporcu veya sınıf seç.');const [min,max]=level.value.split('-').map(Number),target=assignmentTarget(student.value);const signature=JSON.stringify([student.value,theme.value,min,max,count.value,due.value,topicPicker.state()]);
+   if(!pendingSend||pendingSend.signature!==signature){const usedResult=target.p_scope==='single'&&realProfile?.role!=='admin'?await authClient.rpc('academy_workshop',{p_action:'used_puzzles',p_student:student.value}):await authClient.rpc('barida_assignment_used',target);if(usedResult.error)throw usedResult.error;
+    const items=await window.BaridaAssignmentBank.select({theme:theme.value,min,max,count:Number(count.value),exclude:usedResult.data||[],...topicPicker.state()});
+    const title=topicPicker.name().slice(0,105)+' · '+items.length+' soru';pendingSend={signature,request:crypto.randomUUID(),target:student.value,payload:{title,kind:'puzzle',theme:theme.value,puzzle_count:items.length,min_rating:min,max_rating:max,instructions:'',puzzle_items:items,due_at:assignmentDueValue()}};
+   }
+   const result=await sendClubAssignment(pendingSend.target,pendingSend.payload,pendingSend.request);assignmentSelectedStudent=student.value;pendingSend=null;status.textContent='✓ Gönderildi · '+result.count+' sporcu';assignmentTab='open';await loadAssignmentCards(view);
   }catch(error){status.textContent=error.message||'Gönderilemedi.'}finally{topicPicker.refresh()}};
-  view.append(form,status);send.disabled=true;const topicPicker=await window.BaridaPuzzleTopics.mount({theme,level,count,form,send,canSend:()=>!!student.value});student.addEventListener('change',topicPicker.refresh);
+  view.append(form,status);send.disabled=true;const topicPicker=await window.BaridaPuzzleTopics.mount({theme,level,count,form,send,canSend:()=>!!student.value&&student.selectedOptions[0]?.dataset.count!=='0'});student.addEventListener('change',topicPicker.refresh);
   const custom=node('details','assignment-custom-tools');custom.id='assignmentCustomTools';custom.append(node('summary','','♟ Kendi sorum'));const body=node('div');body.id='assignmentCustomBody';custom.append(body);view.append(custom);custom.addEventListener('toggle',()=>{if(custom.open&&!body.dataset.loaded){body.dataset.loaded='true';customAssignmentEditor()}});
  }
  await loadAssignmentCards(view);watchAssignmentUpdates(view);
@@ -840,7 +856,7 @@ async function customAssignmentEditor(){
    await loadTeacherStudents();if(section!=='assignments')return;
    await renderPreparedQuestions(view);const form=node('form','assignment-form');form.style.cssText='display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;padding:22px;border:1px solid #9573a0;border-radius:18px;background:#192338';
    const label=(name,control)=>{const wrap=node('label','',name);wrap.style.cssText='display:grid;gap:7px;color:#fff';wrap.append(control);return wrap};
-   const student=node('select');student.required=true;realRoster.forEach(st=>{const o=node('option','',st.name);o.value=st.id;student.append(o)});if(assignmentSelectedStudent&&realRoster.some(st=>st.id===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
+   const student=node('select');student.required=true;[...realRoster.map(st=>({id:st.id,name:st.name})),...await assignmentChoices()].forEach(st=>{const o=node('option','',st.name);o.value=st.id;student.append(o)});if(assignmentSelectedStudent&&realRoster.some(st=>st.id===assignmentSelectedStudent))student.value=assignmentSelectedStudent;
    const groups=[
     ['mat','👑 Mat Akademisi',['mateIn1','mateIn2','mateIn3','mateIn4','mateIn5','mate','backRankMate','smotheredMate','anastasiaMate','hookMate']],
     ['tactic','⚔ Taktik ve Kombinasyon',['fork','pin','skewer','discoveredAttack','sacrifice','deflection','attraction','interference','clearance','xRayAttack','doubleCheck','trappedPiece','hangingPiece','capturingDefender']],
@@ -884,8 +900,8 @@ async function customAssignmentEditor(){
     const [min_rating,max_rating]=difficulty.value.split('-').map(Number);
     const selectedTheme=theme.value;
     const generatedTitle=title.value.trim()||(themeNames.get(selectedTheme)||selectedTheme)+' · '+count.value+' konum';
-    if(assignmentKind.value==='position')manualPosition=manualFrame.contentWindow.BaridaCustomQuestion.read();const custom=assignmentKind.value==='position';const {error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:student.value,title:custom?(title.value.trim()||'Antrenörün özel satranç sorusu'):generatedTitle,kind:custom?'position':'puzzle',theme:custom?'custom':selectedTheme,puzzle_count:custom?1:Number(count.value),min_rating,max_rating,fen:custom?manualPosition.fen:null,solution_uci:custom?manualPosition.solution:null,instructions:instructions.value.trim(),due_at:assignmentDueValue()});
-    if(error)throw error;msg.textContent=custom?'✓ Serbest tahta sorusu sporcuya atandı.':'✓ '+count.value+' konumluk ödev sporcu hesabına atandı. Sorular çözüm sırasında seçilen tema ve seviyeden rastgele yüklenir.';assignmentSelectedStudent=student.value;await loadAssignmentCards($('view'))
+    if(assignmentKind.value==='position')manualPosition=manualFrame.contentWindow.BaridaCustomQuestion.read();const custom=assignmentKind.value==='position';await sendClubAssignment(student.value,{title:custom?(title.value.trim()||'Antrenörün özel satranç sorusu'):generatedTitle,kind:custom?'position':'puzzle',theme:custom?'custom':selectedTheme,puzzle_count:custom?1:Number(count.value),min_rating,max_rating,fen:custom?manualPosition.fen:null,solution_uci:custom?manualPosition.solution:null,instructions:instructions.value.trim(),due_at:assignmentDueValue()});
+    msg.textContent=custom?'✓ Serbest tahta sorusu sporcuya atandı.':'✓ '+count.value+' konumluk ödev sporcu hesabına atandı. Sorular çözüm sırasında seçilen tema ve seviyeden rastgele yüklenir.';assignmentSelectedStudent=student.value;await loadAssignmentCards($('view'))
    }catch(err){msg.textContent='Ödev oluşturulamadı: '+err.message}finally{submit.disabled=false}};
   }
   await loadAssignmentCards($('view'));
@@ -903,14 +919,14 @@ window.addEventListener('message',async e=>{
  const frame=$('customQuestionFrame'),m=e.data;if(e.origin!==location.origin||e.source!==frame?.contentWindow||m?.type!=='barida-question-request'||typeof m.request!=='string')return;
  const reply=value=>{if(frame.isConnected)frame.contentWindow.postMessage({type:'barida-question-response',request:m.request,...value},location.origin)};
  try{if(!realUser||!authClient||!['teacher','admin'].includes(realProfile?.role))throw Error('Antrenör oturumu gerekli.');
- if(m.action==='context'){await loadTeacherStudents();reply({data:realRoster.map(s=>({id:s.id,name:s.name}))});return}
+ if(m.action==='context'){await loadTeacherStudents();reply({data:[...realRoster.map(s=>({id:s.id,name:s.name})),...await assignmentChoices()]});return}
  if(!['save','send'].includes(m.action))throw Error('Geçersiz işlem');const q=m.question;
  if(!q||typeof q.fen!=='string'||!/^([a-h][1-8]){2}[qrbn]?$/.test(q.solution||''))throw Error('Önce konumu ve doğru hamleyi belirle.');
  const g=new frame.contentWindow.ChessAcademyEngine.ChessEngine(q.fen);if(!g.move({from:q.solution.slice(0,2),to:q.solution.slice(2,4),promotion:q.solution[4]}))throw Error('Çözüm hamlesi bu konumda geçerli değil.');
  const title=String(q.title||'Serbest tahta sorusu').trim().slice(0,100);const payload={title,fen:q.fen,moves:[],notes:'',kind:'custom-question',solution:q.solution};
  if(m.action==='save'){const {data,error}=await authClient.rpc('academy_workshop',{p_action:'save',p_id:q.id||null,p_payload:payload,p_cursor:0,p_version:q.version??null});if(error)throw error;reply({data});await renderPreparedQuestions($('view'));return}
- if(!realRoster.some(s=>s.id===m.student))throw Error('Listeden bir sporcu seç.');
- const {data,error}=await authClient.from('academy_assignments').insert({teacher_id:realUser.id,student_id:m.student,title,kind:'position',theme:'custom',puzzle_count:1,min_rating:400,max_rating:3000,fen:q.fen,solution_uci:q.solution,instructions:'',due_at:assignmentDueValue()}).select('id').single();if(error)throw error;reply({data});await loadAssignmentCards($('view'));
+ if(!realRoster.some(s=>s.id===m.student)&&!assignmentBulkChoices.some(s=>s.id===m.student))throw Error('Listeden bir sporcu veya sınıf seç.');
+ const result=await sendClubAssignment(m.student,{title,kind:'position',theme:'custom',puzzle_count:1,min_rating:400,max_rating:3000,fen:q.fen,solution_uci:q.solution,instructions:'',due_at:assignmentDueValue()});reply({data:result});await loadAssignmentCards($('view'));
  }catch(error){reply({error:error.message||'Soru kaydedilemedi'})}
 });
 function confirmAssignmentDelete(){
