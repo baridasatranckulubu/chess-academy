@@ -19,7 +19,7 @@ window.supabase={createClient:()=>{
  const from=table=>{const q={};for(const method of ['select','eq','order','limit','upsert','update','in','insert','delete','not','neq'])q[method]=()=>q;
  q.single=q.maybeSingle=async()=>({error:null,data:table==='profiles'?{role:ROLE,display_name:'Test Kullanıcısı',username:'test'}:table==='academy_student_status'?{active:true}:table==='student_progress'?{completed_lessons:[],correct_answers:0,questions_answered:0}:null});
  q.then=(resolve,reject)=>Promise.resolve({error:null,data:table==='academy_notifications'?notifications:[]}).then(resolve,reject);return q};
- return {from,auth:{getUser:async()=>({data:{user:session.user},error:null}),refreshSession:async()=>({data:{session},error:null}),getSession:async()=>({data:{session}}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),signOut:async()=>({error:null})},rpc:async name=>{window.__rpc.push(name);return{error:null,data:name==='barida_rating_dashboard'?{champions:[],solved:0,correct:0,assignments_total:0,assignments_done:0}:name==='academy_sync_payment_notifications'?0:[]}}};
+ return {from,auth:{getUser:async()=>({data:{user:session.user},error:null}),refreshSession:async()=>({data:{session},error:null}),getSession:async()=>({data:{session}}),onAuthStateChange:()=>({data:{subscription:{unsubscribe(){}}}}),signOut:async()=>({error:null})},rpc:async name=>{window.__rpc.push(name);return{error:null,data:name==='barida_puzzle_claim'?true:name==='barida_puzzle_history'?[]:name==='barida_rating_dashboard'?{champions:[],solved:0,correct:0,assignments_total:0,assignments_done:0}:name==='academy_sync_payment_notifications'?0:[]}}};
 }};
 """
 try:

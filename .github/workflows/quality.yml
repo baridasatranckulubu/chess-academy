@@ -32,6 +32,8 @@ jobs:
         run: node tests/assignments_themes.test.js
       - name: Tam arşiv sayısı, sıkıştırma ve seçmeli yükleme
         run: node tests/full_catalog.test.js
+      - name: Tam havuz zorunluluğu ve rastgele yeni soru seçimi
+        run: node tests/puzzle_history_selection.test.js
       - name: Konuya özel hızlı soru yükleme
         run: node tests/puzzle_loading.test.js
       - name: Satranç motoru
@@ -80,6 +82,8 @@ jobs:
         run: python tests/browser_integration_oct25_qa.py
       - name: Kayıt servisi, doğrulama ve hesap temizliği
         run: node tests/registration.test.js
+      - name: Hesaba bağlı bulmaca geçmişi ve tekrarsız soru seçimi
+        run: python tests/browser_puzzle_history_qa.py
       - name: Tek Rating, soru başına bir sonuç ve puana göre zorluk
         run: python tests/browser_unified_rating_qa.py
       - name: Buton seçimleri, geçersiz oturum, sınıf mesajları ve 9 kademe
