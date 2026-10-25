@@ -58,6 +58,10 @@ try:
    frame.wait_for_function("document.querySelector('.chess-board-frame').getBoundingClientRect().width>=innerWidth*.94")
    assert frame.locator('.ca-board-resize-hit').first.is_hidden()
    assert frame.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+  page.set_viewport_size({'width':844,'height':500})
+  assert frame.locator('.ca-board-resize-hit').first.is_hidden()
+  assert page.locator('.board-studio-resizer').evaluate('(el)=>Math.abs(el.getBoundingClientRect().width-el.parentElement.clientWidth)<2')
+  page.set_viewport_size({'width':412,'height':850})
   def boardmove(a,b):
    frame.locator('#board [data-square="'+a+'"]').click();frame.locator('#board [data-square="'+b+'"]').click()
   for a,b in [('e2','e4'),('d7','d5'),('e4','d5'),('d8','d5')]:boardmove(a,b)

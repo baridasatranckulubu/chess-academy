@@ -28,3 +28,5 @@ html.barida-native body #nativeBottomNav{backdrop-filter:none;background:#0b281f
  html body.embedded-studio .board .sq:hover .piece-3d{transform:var(--barida-optical-transform,none)!important}
  html body.embedded-studio .boardcontrols{gap:6px!important;margin:10px 0!important}
 }
+
+html.barida-native body.embedded-studio .ca-board-resize-hit{display:none!important;pointer-events:none!important}

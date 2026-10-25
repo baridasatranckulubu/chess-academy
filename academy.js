@@ -628,7 +628,7 @@ function home(){
 
 
  shell.append(wrapper);view.append(shell);
- const mobileBoard=()=>matchMedia('(max-width:640px)').matches;const apply=n=>{if(mobileBoard()){wrapper.style.width='100%';return}const available=Math.max(240,view.clientWidth-16),width=Math.min(available,Math.max(360,Math.min(1400,Math.round(n))));wrapper.style.width=width+'px';try{localStorage.setItem('barida-studio-layout-width-v2',String(width))}catch{}};
+ const mobileBoard=()=>!!window.Capacitor?.isNativePlatform?.()||matchMedia('(max-width:640px)').matches;const apply=n=>{if(mobileBoard()){wrapper.style.width='100%';return}const available=Math.max(240,view.clientWidth-16),width=Math.min(available,Math.max(360,Math.min(1400,Math.round(n))));wrapper.style.width=width+'px';try{localStorage.setItem('barida-studio-layout-width-v2',String(width))}catch{}};
  let stored=1060;try{stored=Number(localStorage.getItem('barida-studio-layout-width-v2'))||1060}catch{}apply(stored);new ResizeObserver(()=>{if(mobileBoard()){wrapper.style.width='100%';return}const available=Math.max(240,view.clientWidth-16);if(wrapper.getBoundingClientRect().width>available)apply(available)}).observe(view);
  // Corner hit targets live inside the iframe so they follow the actual board, not the iframe edges.
  window.addEventListener('message',e=>{if(e.source!==frame.contentWindow||e.origin!==location.origin||!e.data||e.data.type!=='barida-board-resize'||mobileBoard())return;apply(Number(e.data.startWidth||wrapper.getBoundingClientRect().width)+Number(e.data.delta||0))});

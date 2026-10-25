@@ -64,7 +64,7 @@ function setupReview(){
  const notice=document.createElement('p');notice.id='caMistakeNotice';notice.hidden=true;notice.className='ca-mistake-notice';board.closest('.chess-board-frame')?.after(notice);
  board.addEventListener('click',event=>{if(annotation){event.stopPropagation();event.preventDefault();clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
 }
-function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage(matchMedia('(max-width:640px)').matches?'go depth 18 movetime 1800':'go depth 24 movetime 10000');draw()}
+function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage((document.documentElement.classList.contains('barida-native')||matchMedia('(max-width:640px)').matches)?'go depth 18 movetime 1800':'go depth 24 movetime 10000');draw()}
 async function init(){
  if(worker||loading)return;
  loading=true;error='Motor dosyası indiriliyor…';draw();
