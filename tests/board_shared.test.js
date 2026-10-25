@@ -5,9 +5,9 @@ const shared=read('premium-board.js'),css=read('premium-board.css');
 for(const page of ['classroom.html','puzzles.html']){
  const html=read(page);
  assert(/href="premium-board\.css(?:\?[^\"]*)?"/.test(html),page+' CSS missing');
- assert(html.includes('src="premium-board.js"'),page+' JS missing');
+ const premiumScript=html.match(/src="premium-board\.js(?:\?[^\"]*)?"/);assert(premiumScript,page+' JS missing');
  const app=page==='classroom.html'?'classroom.js':'puzzles.js';
- assert(html.indexOf('src="premium-board.js"')<html.indexOf('src="'+app),'shared board must load before '+app);
+ assert(premiumScript.index<html.indexOf('src="'+app),'shared board must load before '+app);
  const code=read(app);
  assert(code.includes('ChessPremiumBoard?.init'),app+' premium init missing');
  assert(code.includes('premium?.coordinates(flipped)'),app+' coordinates missing');
