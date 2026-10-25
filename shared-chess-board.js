@@ -8,8 +8,8 @@ function sound(type){
   const ctx=audioContext,t=ctx.currentTime,rate=ctx.sampleRate;
   // Short filtered wood-on-wood transient, not a musical beep.
   const strike=(delay,body,brightness,volume)=>{
-   const duration=.115,len=Math.ceil(rate*duration),buffer=ctx.createBuffer(1,len,rate),data=buffer.getChannelData(0);
-   let low=0;for(let i=0;i<len;i++){const sec=i/rate,env=Math.exp(-sec*48);low=low*.72+(Math.random()*2-1)*.28;data[i]=low*env}
+   const duration=.085,len=Math.ceil(rate*duration),buffer=ctx.createBuffer(1,len,rate),data=buffer.getChannelData(0);
+   let low=0;for(let i=0;i<len;i++){const sec=i/rate,env=Math.exp(-sec*62);low=low*.72+(Math.random()*2-1)*.28;data[i]=low*env}
    const src=ctx.createBufferSource();src.buffer=buffer;
    const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=brightness;
    const gain=ctx.createGain();gain.gain.value=volume;
@@ -20,10 +20,10 @@ function sound(type){
    og.gain.exponentialRampToValueAtTime(.0001,t+delay+.075);
    osc.connect(og);og.connect(ctx.destination);osc.start(t+delay);osc.stop(t+delay+.08);
   };
-  if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,165,2100,.29);strike(.055,115,1100,.21)}
+  if(type==='time'){const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(880,t);osc.frequency.exponentialRampToValueAtTime(660,t+.08);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(g);g.connect(ctx.destination);osc.start(t);osc.stop(t+.13)}else if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,155,3200,.38);strike(.035,95,1800,.24)}
   else if(type==='mate'){strike(0,175,1800,.28);strike(.11,140,1400,.25);strike(.25,105,1050,.28)}
   else if(type==='check'){strike(0,195,2300,.23);strike(.085,170,1700,.15)}
-  else{strike(0,240,2600,.20);strike(.052,175,1600,.13)}
+  else{strike(0,280,3500,.25);strike(.025,170,1900,.10)}
  }catch(e){/* Sound is optional. */}
 }
 

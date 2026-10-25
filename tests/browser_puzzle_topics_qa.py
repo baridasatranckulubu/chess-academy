@@ -11,7 +11,7 @@ MOCK=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assig
 MOCK=MOCK.replace('ROLE',json.dumps('teacher'))
 MOCK=MOCK.replace('q[method]=()=>q',"q[method]=(...a)=>{if(method==='insert'&&table==='academy_assignments')window.__sent.push({...a[0],id:'00000000-0000-4000-8000-000000000003',status:'pending'});if(method==='delete'&&table==='academy_assignments')window.__deleteCalls++;return q}")
 MOCK=MOCK.replace("table==='academy_notifications'?notifications:[]", "table==='teacher_students'?[{student_id:'athlete'}]:table==='profiles'?[{id:'athlete',display_name:'Test Sporcu'}]:table==='academy_assignments'?window.__sent:table==='academy_notifications'?notifications:[]")
-MOCK=MOCK.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='academy_workshop'&&args.p_action==='used_puzzles')return{data:[]};")
+MOCK=MOCK.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='barida_club_roster')return{data:[{id:'00000000-0000-4000-8000-000000000002',name:'Test Sporcu',classes:[],progress:{},assignments_total:0,assignments_done:0}]};if(name==='academy_workshop'&&args.p_action==='used_puzzles')return{data:[]};")
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)));Thread(target=server.serve_forever,daemon=True).start()

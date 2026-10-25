@@ -49,18 +49,10 @@ try:
    mock=mock.replace("q.then=(resolve,reject)=>Promise.resolve(","q.then=(resolve,reject)=>{if(table==='academy_assignments')return window.testAssignments(q.inserted).then(data=>({data,error:null})).then(resolve,reject);return Promise.resolve(")
    mock=mock.replace("}).then(resolve,reject);return q", "}).then(resolve,reject)};return q")
    mock=mock.replace("table==='academy_notifications'?notifications:[]", "table==='teacher_students'?[{student_id:'"+ATHLETE+"'}]:table==='profiles'?[{id:'"+ATHLETE+"',display_name:'Test Sporcu'}]:table==='academy_notifications'?notifications:[]")
-   mock=mock.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='academy_workshop')return{data:await window.testWorkshop(args)};if(['get_academy_assignment_progress','get_academy_other_assignment_puzzles','claim_academy_assignment_puzzle','record_academy_assignment_attempt'].includes(name))return{data:await window.testProgress(name,args)};")
+   mock=mock.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='barida_club_roster')return{data:[{id:'"+ATHLETE+"',name:'Test Sporcu',classes:[],progress:{},assignments_total:0,assignments_done:0}]};if(name==='academy_workshop')return{data:await window.testWorkshop(args)};if(['get_academy_assignment_progress','get_academy_other_assignment_puzzles','claim_academy_assignment_puzzle','record_academy_assignment_attempt'].includes(name))return{data:await window.testProgress(name,args)};")
    context.add_init_script(mock);context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''));context.route('https://**.supabase.co/**',lambda r:r.abort())
-   page=context.new_page();page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#club-title').wait_for();page.locator('#baridaBoot').wait_for(state='hidden');page.evaluate("window.baridaNavigate('courses')");page.frame_locator('#studyFrame').locator('#cloudStatus').filter(has_text='Hesabına bağlı kayıtlar hazır').wait_for();pages.append(page)
-  teacher,student=pages;tf=teacher.frame_locator('#studyFrame');sf=student.frame_locator('#studyFrame')
-  assert sf.locator('#cloudStudent option[value="'+ATHLETE+'"]').count()==0
-  tf.locator('#cloudLive').check();tf.locator('#cloudStatus').filter(has_text='Sporcu tahtanı takip ediyor').wait_for();sf.locator('#cloudFollow').wait_for();sf.locator('#cloudStatus').filter(has_text='Antrenör takip ediliyor').wait_for()
-  teacher.bring_to_front();tf.locator('[data-square=e2]').click();tf.locator('[data-square=e4]').click();student.bring_to_front();sf.locator('#plyLabel').filter(has_text='1 / 1').wait_for(timeout=7000)
-  for size in [320,780]:
-   tf.locator('#zoom').evaluate('(el,size)=>{el.value=size;el.dispatchEvent(new Event("input",{bubbles:true}))}',str(size))
-   width=tf.locator('#board').evaluate('(el)=>el.getBoundingClientRect().width')
-   if size==320:small=width
-   else:assert width>small+100,(small,width)
+   page=context.new_page();page.goto(f'http://127.0.0.1:{server.server_port}/academy.html');page.locator('#club-title').wait_for();page.locator('#baridaBoot').wait_for(state='hidden');pages.append(page)
+  teacher,student=pages
   teacher.evaluate("window.baridaNavigate('assignments')");teacher.locator('#quickTheme').select_option('mateIn1');teacher.locator('#quickCount').select_option('1');teacher.locator('#quickSend').click();teacher.locator('#quickAssignmentStatus').filter(has_text='Gönderildi').wait_for(timeout=30000)
   assert len(state['assignments'][0]['puzzle_items'])==1
   student.evaluate("window.baridaNavigate('assignments')");student.get_by_role('button',name='▶ Çöz',exact=True).click();f=student.frame_locator('#assignment-puzzle-frame');f.locator('#status').filter(has_text='Sıra sende').wait_for()

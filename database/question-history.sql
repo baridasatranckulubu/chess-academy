@@ -1,0 +1,4 @@
+create function public.barida_question_history(p_student uuid) returns jsonb language plpgsql security definer set search_path='' as $$
+begin if auth.uid() is null or not (exists(select 1 from public.profiles where id=auth.uid() and role='admin') or exists(select 1 from public.teacher_students where teacher_id=auth.uid() and student_id=p_student)) then raise exception 'Yetkisiz';end if;
+return coalesce((select jsonb_agg(to_jsonb(x) order by x.at desc) from (select source,item_id item,success,created_at at from public.academy_training_attempts where user_id=p_student union all select 'assignment',puzzle_id,success,created_at from public.academy_assignment_attempts where student_id=p_student and finished order by at desc limit 200) x),'[]'::jsonb);end $$;
+revoke all on function public.barida_question_history(uuid) from public,anon;grant execute on function public.barida_question_history(uuid) to authenticated;

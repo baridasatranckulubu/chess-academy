@@ -72,8 +72,10 @@ jobs:
         run: python tests/browser_assignment_speed_qa.py
       - name: Ortak ana sayfa, roller, bildirimler ve mobil görünüm
         run: python tests/browser_club_qa.py
-      - name: Hamle Atölyesi, paylaşım ve tüm hamle geçmişi
+      - name: Kaldırılan Hamle Atölyesi rotaları
         run: python tests/browser_workshop_qa.py
+      - name: Merkezi istatistik, puan ve sınıf entegrasyonu
+        run: python tests/browser_integration_oct25_qa.py
       - name: Kayıt servisi, doğrulama ve hesap temizliği
         run: node tests/registration.test.js
       - name: Sporcu ve antrenör kayıt mesajları
@@ -82,7 +84,7 @@ jobs:
         run: python tests/browser_custom_questions_qa.py
       - name: Tüm konu grupları, arama ve açılış ödevi
         run: python tests/browser_puzzle_topics_qa.py
-      - name: Canlı ders, büyütme ve tek tuşla Lichess ödevi
+      - name: İki hesapta tek tuşla Lichess ödevi
         run: python tests/browser_live_assignments_qa.py
       - name: İlk giriş bildirimi, sakin tahta ve kaldırılan arena
         run: python tests/browser_club_updates_qa.py

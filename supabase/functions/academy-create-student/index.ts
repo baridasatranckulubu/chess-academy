@@ -18,6 +18,10 @@ Deno.serve(async (req) => {
  const {data:profile}=await privileged.from("profiles").select("role").eq("id",user.id).single();
  if(!["admin","teacher"].includes(profile?.role))return reply({error:"Forbidden"},403);
  const body=await req.json();
+const teacher_id=profile.role==="teacher"?user.id:String(body.teacher_id||"");
+ const class_name=String(body.class_name||"A").trim();
+ const {data:coach}=await privileged.from("profiles").select("id").eq("id",teacher_id).eq("role","teacher").maybeSingle();
+ if(!coach||!class_name||class_name.length>40)return reply({error:"Geçerli bir antrenör ve sınıf seçin."},400);
  const display_name=String(body.display_name||"").trim().replace(/\s+/g," ");
  const phone=String(body.phone||"").replace(/[\s()-]/g,"");
  const home_address="";
@@ -32,7 +36,7 @@ Deno.serve(async (req) => {
  const email="student-"+crypto.randomUUID()+"@students.invalid";
  const {data:created,error:creationError}=await privileged.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{display_name,phone}});
  if(creationError||!created.user){console.error("student account creation failed",creationError?.code,creationError?.status);return reply({error:"Sporcu hesabı oluşturulamadı. Bilgileri kontrol edip yeniden deneyin."},500);}
- const {error:linkError}=await privileged.from("teacher_students").insert({teacher_id:user.id,student_id:created.user.id});
+ const {error:linkError}=await privileged.from("teacher_students").insert({teacher_id,student_id:created.user.id,class_name});
  if(linkError){await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Sporcu antrenöre bağlanamadı; hesap oluşturulmadı. Tekrar deneyin."},500)}
  const {error:detailsError}=await privileged.rpc("academy_save_student_details",{p_student_id:created.user.id,p_birth_date:birth_date,p_gender:gender,p_has_license:has_license,p_tc_identity_no:tc_identity_no});
  if(detailsError){await privileged.from("teacher_students").delete().eq("student_id",created.user.id);await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Öğrenci bilgileri güvenli şekilde kaydedilemedi"},500)}

@@ -39,47 +39,9 @@ try:
    assert page.get_by_text('📚 Eğitim',exact=True).count()==0
    assert page.get_by_role('button',name='🌱 İlk Adım',exact=True).count()==0
    assert page.get_by_role('button',name='🎓 Uygulamalı Okul',exact=True).count()==0
-   assert page.locator('#sidebar .navitem').filter(has_text='♟ Hamle Atölyesi').count()==(2 if role=='teacher' else 1)
+   assert page.locator('#sidebar .navitem').filter(has_text='♟ Hamle Atölyesi').count()==0
    page.evaluate("window.baridaNavigate('courses')")
-   f=page.frame_locator('#studyFrame');f.locator('#cloudStatus').filter(has_text='Hesabına bağlı kayıtlar hazır').wait_for()
-   if role=='teacher':
-    for square in ['e2','e4','e7','e5','g1','f3','b8','c6']:f.locator('[data-square="'+square+'"]').click()
-    assert f.locator('#plyLabel').inner_text().startswith('4 / 4')
-    f.locator('#title').fill('Test açılışı');f.locator('#notes').fill('Merkez ve gelişim')
-    f.locator('#cloudShare').click();f.locator('#cloudStatus').filter(has_text='Çalışma gönderildi').wait_for()
-    seed=page.evaluate('window.__workshopRows');assert len(seed[0]['payload']['moves'])==4
-    assert page.evaluate('window.__shares[0].p_student')=='athlete'
-    # A new move from earlier history must preserve the entire original line.
-    f.locator('#reset').click();f.locator('[data-square="d2"]').click();f.locator('[data-square="d4"]').click()
-    assert f.locator('#chapters option').count()==2
-    f.locator('#chapters').select_option('0');assert f.locator('#plyLabel').inner_text().startswith('4 / 4')
-   else:
-    assert f.locator('#coachShare').is_visible()
-    assert not f.locator('#fen').is_visible()
-    f.locator('#cloudList').select_option(seed[0]['id']);f.locator('#cloudOpen').click()
-    f.locator('#cloudStatus').filter(has_text='Çalışma ilk konumda açıldı').wait_for()
-    assert f.locator('#plyLabel').inner_text().startswith('0 / 4')
-    assert f.locator('#notes').input_value()=='Merkez ve gelişim'
-    for i in range(1,5):f.locator('#forward').click();assert f.locator('#plyLabel').inner_text().startswith(f'{i} / 4')
-    f.locator('#reset').click();assert f.locator('#plyLabel').inner_text().startswith('0 / 4')
-    f.locator('#end').click();assert f.locator('#plyLabel').inner_text().startswith('4 / 4')
-    page.evaluate('window.__workshopRows[0].cursor=2');f.locator('#cloudFollow').check()
-    f.locator('#cloudStatus').filter(has_text='Antrenör takip ediliyor').wait_for()
-    assert f.locator('#plyLabel').inner_text().startswith('2 / 4')
-    f.locator('#back').click();assert not f.locator('#cloudFollow').is_checked()
-    f.locator('#cloudSave').click();f.locator('#cloudStatus').filter(has_text='kişisel kopyası').wait_for()
-    assert page.evaluate("window.__workshopRows[1].owner_id==='athlete'&&window.__workshopRows[0].payload.moves.length===4")
-    f.locator('#cloudShare').click();f.locator('#cloudStatus').filter(has_text='Çalışma gönderildi').wait_for()
-    assert page.evaluate("window.__shares[0].p_student==='coach'")
-   # A capture must remain compact rather than inheriting board-sized images.
-   f.locator('body').evaluate("()=>window.BaridaStudy.load({title:'Capture sizing',fen:'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',moves:[{from:'e2',to:'e4'},{from:'d7',to:'d5'},{from:'e4',to:'d5'}],notes:''},3)")
-   f.locator('#capturedWhite img').wait_for()
-   assert f.locator('#capturedWhite img').evaluate('(el)=>el.getBoundingClientRect().height<40')
-   page.set_viewport_size({'width':390,'height':850})
-   assert f.locator('html').evaluate('(el)=>el.scrollWidth<=innerWidth+2')
-   assert not errors,errors
-   page.locator('.topbar .brand').click();page.locator('#club-title').wait_for()
-   print('PASS workshop menu, board, history, sharing/copy, follow and brand home:',role)
-   context.close()
+   page.get_by_role('heading',name='Gelişim Merkezim',exact=True).wait_for()
+   assert page.locator('#studyFrame').count()==0
   browser.close()
 finally:server.shutdown()

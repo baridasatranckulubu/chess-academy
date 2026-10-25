@@ -12,7 +12,7 @@ MOCK=MOCK.replace('ROLE',json.dumps('teacher'))
 MOCK=MOCK.replace("q[method]=()=>q", "q[method]=(...a)=>{if(method==='insert'&&table==='academy_assignments')window.__sent.push(a[0]);return q}")
 MOCK=MOCK.replace("table==='profiles'?{role:", "table==='academy_assignments'?{id:'assignment-1'}:table==='profiles'?{role:")
 MOCK=MOCK.replace("table==='academy_notifications'?notifications:[]", "table==='teacher_students'?[{student_id:'athlete'}]:table==='profiles'?[{id:'athlete',display_name:'Test Sporcu'}]:table==='academy_workshop_studies'?window.__drafts:table==='academy_notifications'?notifications:[]")
-MOCK=MOCK.replace("rpc:async name=>{", "rpc:async (name,args)=>{if(name==='academy_workshop'&&args.p_action==='save'){const row={id:'draft-1',payload:args.p_payload,version:1,updated_at:new Date().toISOString()};window.__drafts=[row];return {data:row};}")
+MOCK=MOCK.replace("rpc:async name=>{", "rpc:async (name,args)=>{if(name==='barida_club_roster')return{data:[{id:'athlete',name:'Test Sporcu',classes:[],progress:{},assignments_total:0,assignments_done:0}]};if(name==='academy_workshop'&&args.p_action==='save'){const row={id:'draft-1',payload:args.p_payload,version:1,updated_at:new Date().toISOString()};window.__drafts=[row];return {data:row};}")
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)));Thread(target=server.serve_forever,daemon=True).start()
