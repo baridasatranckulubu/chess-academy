@@ -16,6 +16,7 @@ try:
   browser=p.chromium.launch(headless=True,args=['--no-sandbox']);ctx=browser.new_context(viewport={'width':1300,'height':1000});ctx.add_init_script(HOOK);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.route('https://lichess.org/api/cloud-eval?*',lambda r:r.fulfill(status=404,body='{}',content_type='application/json'))
   page.goto(f'http://127.0.0.1:{server.server_port}/board.html?embed=studio');page.locator('#caLiveEngineToggle').click();page.wait_for_function("document.querySelector('#caAnalysisDepth').textContent==='Derinlik 18'")
+  assert not page.locator('#promotionChoice').is_visible();assert not page.locator('#promotionLabel').is_visible()
   assert page.locator('#caAnalysisScore').inner_text()=='+0.42';assert 'e4' in page.locator('#caAnalysisPV').inner_text()
   move(page,'e2','e4');page.wait_for_function("document.querySelector('#caAnalysisScore').textContent==='-0.42'")
   assert page.locator('#caAnalysisDepth').inner_text()=='Derinlik 18';assert 'e5' in page.locator('#caAnalysisPV').inner_text();assert 'e4' in page.locator('#caNotationRows').inner_text()
