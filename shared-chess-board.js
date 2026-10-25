@@ -7,7 +7,7 @@ function loadSoundSample(name){if(!soundBuffers.has(name)){const ctx=soundContex
 function preloadSound(){if(!soundEnabled)return;try{if(!soundContext())return;for(const name of Object.values(soundSamples))loadSoundSample(name).catch(()=>{})}catch{}}
 function clockSound(type){try{const ctx=soundContext();if(!ctx)return;const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(type==='tick'?2400:1600,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.022,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.035);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.04)}catch{}}
 function sound(type){if(!soundEnabled)return;if(type==='tick'||type==='tock'||type==='time'){clockSound(type==='time'?'tick':type);return}const name=soundSamples[type];if(!name){fallbackSound(type);return}try{const ctx=soundContext();if(!ctx)return;loadSoundSample(name).then(buffer=>{if(!soundEnabled)return;const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=type==='start'?.42:type==='mate'?.35:.55;source.connect(gain);gain.connect(ctx.destination);source.start()}).catch(()=>fallbackSound(type))}catch{fallbackSound(type)}}
-document.addEventListener('pointerdown',preloadSound,{once:true,passive:true});document.addEventListener('keydown',preloadSound,{once:true,passive:true});
+document.addEventListener?.('pointerdown',preloadSound,{once:true,passive:true});document.addEventListener?.('keydown',preloadSound,{once:true,passive:true});
 function fallbackSound(type){
  if(!soundEnabled)return;
  try{
