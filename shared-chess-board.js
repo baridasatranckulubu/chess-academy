@@ -110,8 +110,47 @@ function drawAnnotations(root,state){
  for(const {from,to,color} of state.arrows.values()){const [x1,y1]=xy(from),[x2,y2]=xy(to),dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,ux=dx/len,uy=dy/len,ex=x2-ux*25,ey=y2-uy*25,px=-uy,py=ux;svg.append(el('line',{x1,y1,x2:ex,y2:ey,stroke:color,'stroke-width':7,'stroke-linecap':'round',opacity:1}));svg.append(el('polygon',{points:[x2+','+y2,(ex-ux*15+px*13)+','+(ey-uy*15+py*13),(ex-ux*15-px*13)+','+(ey-uy*15-py*13)].join(' '),fill:color,opacity:1}))}
  root.append(svg)
 }
+// A two-finger zoom is visual only: layout, positions and saved board size never change.
+const touchZoomBoards=new WeakSet();
+function enableTouchZoom(root){
+ if(!root||touchZoomBoards.has(root))return;touchZoomBoards.add(root);
+ let active=null,resetTimer=null,suppressUntil=0,restore=null;
+ const distance=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+ const center=t=>({x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2});
+ const properties=['transform','transform-origin','transition','will-change','z-index'];
+ function finish(){
+  if(!active)return;const old=active;active=null;suppressUntil=Date.now()+350;
+  old.overlay.remove();root.classList.remove('barida-touch-zooming');
+  root.style.setProperty('transition','transform 150ms ease-out','important');
+  const value=old.values.transform;value[0]?root.style.setProperty('transform',...value):root.style.removeProperty('transform');
+  restore=()=>{for(const [key,value] of Object.entries(old.values))value[0]?root.style.setProperty(key,...value):root.style.removeProperty(key);restore=null};
+  resetTimer=setTimeout(()=>restore?.(),170);
+ }
+ root.addEventListener('click',e=>{if(active||Date.now()<suppressUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
+ root.addEventListener('touchstart',e=>{
+  if(e.touches.length!==2||active||root.classList.contains('ca-spin'))return;
+  if(e.cancelable)e.preventDefault();clearTimeout(resetTimer);restore?.();
+  const rect=root.getBoundingClientRect(),mid=center(e.touches),values={};
+  for(const key of properties)values[key]=[root.style.getPropertyValue(key),root.style.getPropertyPriority(key)];
+  const overlay=document.createElement('div');overlay.className='barida-touch-zoom-feedback';overlay.style.cssText='position:fixed;inset:0;z-index:100000;pointer-events:none;overflow:hidden';
+  const rings=[0,1].map(i=>{const ring=document.createElement('span');ring.style.cssText='position:absolute;width:28px;height:28px;border:2px solid '+(i?'#ff51bf':'#6aff9c')+';border-radius:50%;box-shadow:0 0 12px '+(i?'#ff51bf88':'#6aff9c88')+';transform:translate(-50%,-50%)';overlay.append(ring);return ring});
+  const label=document.createElement('span');label.style.cssText='position:absolute;left:50%;top:12px;transform:translateX(-50%);border:1px solid #67bf84;border-radius:20px;padding:8px 13px;background:#0c3023ed;color:#ecfff2;font:600 12px system-ui;white-space:nowrap';overlay.append(label);document.body.append(overlay);
+  active={distance:Math.max(20,distance(e.touches)),mid,values,overlay,rings,label};
+  root.style.setProperty('transform-origin',(mid.x-rect.left)+'px '+(mid.y-rect.top)+'px','important');root.style.setProperty('transition','none','important');root.style.setProperty('will-change','transform');root.style.setProperty('z-index','100');root.classList.add('barida-touch-zooming');update(e);
+ },{passive:false});
+ function update(e){
+  if(!active)return;if(e.touches.length!==2){finish();return}if(e.cancelable)e.preventDefault();
+  const scale=Math.max(.8,Math.min(2.5,distance(e.touches)/active.distance)),mid=center(e.touches);
+  root.style.setProperty('transform','translate3d('+(mid.x-active.mid.x)+'px,'+(mid.y-active.mid.y)+'px,0) scale('+scale.toFixed(3)+')','important');
+  active.rings.forEach((ring,i)=>{ring.style.left=e.touches[i].clientX+'px';ring.style.top=e.touches[i].clientY+'px'});
+  active.label.textContent='×'+scale.toFixed(1)+' · Bırakınca ilk boyutuna döner';
+ }
+ root.addEventListener('touchmove',update,{passive:false});
+ root.addEventListener('touchend',finish,{passive:true});root.addEventListener('touchcancel',finish,{passive:true});
+}
 function renderBoard(opts){
  const {root,game,flipped=false,selected=null,lastMove=null,onSquare}=opts;
+ enableTouchZoom(root);
  const recorded=Array.isArray(game?.history)&&game.history.length?game.history[game.history.length-1]?.move:null;
  const moveSquares=recorded?.from&&recorded?.to?recorded:lastMove;
  const valid=selected?new Set(game.moves({square:selected}).map(m=>m.to)):new Set();
@@ -171,7 +210,7 @@ function choosePromotion(color='w'){return new Promise(resolve=>{
 .ca-drag-ghost svg.piece-3d{width:100%!important;height:100%!important;transform:none!important}
 .ca-drag-ghost svg.piece-3d text{font-size:82px!important;font-weight:900!important}
 `;document.head.append(st)})();
-window.ChessAcademySharedBoard={pieceSVG,sound,preloadSound,renderBoard,bindDrag,choosePromotion,setVolume,volumeLevel:readVolume,volumePercent(){return Math.round(volumeLevels[readVolume()-1]*100)},setSoundEnabled(value){soundEnabled=!!value;syncVolume();try{localStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}},soundEnabled(){return soundEnabled}};
+window.ChessAcademySharedBoard={pieceSVG,sound,preloadSound,renderBoard,bindDrag,enableTouchZoom,choosePromotion,setVolume,volumeLevel:readVolume,volumePercent(){return Math.round(volumeLevels[readVolume()-1]*100)},setSoundEnabled(value){soundEnabled=!!value;syncVolume();try{localStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}},soundEnabled(){return soundEnabled}};
 })();
 
 /* Soft mint move-trace on source and destination, placed behind all pieces. */

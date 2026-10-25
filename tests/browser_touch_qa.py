@@ -25,6 +25,20 @@ def swipe(page,board):
   client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*22}]});page.wait_for_timeout(20)
  client.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(200);client.detach()
  assert page.evaluate('scrollY')>before+40,'Vertical swipe starting on the chessboard must scroll the page'
+def pinch(page,board,frame=None):
+ board.scroll_into_view_if_needed();r=board.bounding_box();x=r['x']+r['width']*.5;y=min(r['y']+r['height']*.5,520)
+ client=page.context.new_cdp_session(page)
+ def points(gap):return [{'x':x-gap,'y':y-gap*.25,'id':1},{'x':x+gap,'y':y+gap*.25,'id':2}]
+ client.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':points(35)})
+ for gap in [45,55,65]:
+  client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':points(gap)});page.wait_for_timeout(30)
+ assert board.evaluate("el=>el.classList.contains('barida-touch-zooming') && new DOMMatrix(getComputedStyle(el).transform).a>1.4"),'Pinch must zoom live while both fingers are down'
+ scope=frame or page
+ assert scope.locator('.barida-touch-zoom-feedback span').count()==3,'Two finger rings plus zoom feedback'
+ client.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(220);client.detach()
+ assert board.evaluate("el=>!el.classList.contains('barida-touch-zooming') && getComputedStyle(el).transform==='none'"),'Releasing fingers must restore original board size'
+ assert scope.locator('.barida-touch-zoom-feedback').count()==0
+ assert page.evaluate('visualViewport.scale')==1,'Temporary board zoom must not leave the page browser-zoomed'
 try:
  with sync_playwright() as p:
   browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
@@ -40,6 +54,7 @@ try:
   page.locator('#nativeBottomNav').get_by_role('button',name='Analiz').tap()
   frame=page.locator('#view iframe').element_handle().content_frame();frame.locator('#board .sq').first.wait_for()
   fen=frame.evaluate('ChessAcademyDemo.analysisHistory().moves.length')
+  pinch(page,frame.locator('#board'),frame)
   swipe(page,frame.locator('#board'))
   assert frame.evaluate('ChessAcademyDemo.analysisHistory().moves.length')==fen,'Scrolling must not move a piece'
   frame.locator('#board [data-square="e2"]').tap();frame.locator('#board [data-square="e4"]').tap()
@@ -47,6 +62,7 @@ try:
   page.goto(f'http://127.0.0.1:{server.server_port}/puzzles.html');page.wait_for_function('document.getElementById("status").textContent==="Sıra sende"')
   page.wait_for_function('window.__selections===2')
   page.evaluate("()=>{window.__rank=document.querySelector('.ca-ranks span');window.__piece=document.querySelector('#board [data-square=\"b8\"] .piece');window.__mutations=0;new MutationObserver(items=>window.__mutations+=items.filter(i=>i.type==='childList').length).observe(document.getElementById('board'),{childList:true,subtree:true})}")
+  pinch(page,page.locator('#board'))
   swipe(page,page.locator('#board'))
   assert page.locator('#board [data-square="e7"]').get_attribute('data-piece')=='p'
   page.locator('#board [data-square="e7"]').tap()
@@ -58,6 +74,6 @@ try:
   page.locator('#next').tap();page.wait_for_function("document.getElementById('status').textContent==='Sıra sende'")
   assert page.evaluate('window.__selections')==2,'Next puzzle should use the single prepared candidate'
   assert not errors,errors
-  print('PASS touchscreen scrolling, legal taps, puzzle DOM reuse and prepared next question')
+  print('PASS temporary pinch/reset, touchscreen scrolling, legal taps, puzzle DOM reuse and prepared next question')
   browser.close()
 finally:server.shutdown()

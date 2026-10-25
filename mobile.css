@@ -1,7 +1,7 @@
 html{scroll-padding-top:95px;-webkit-text-size-adjust:100%}body{padding-bottom:env(safe-area-inset-bottom,0)}.barida-native body{padding-top:env(safe-area-inset-top,0)}
 #mobileStatus{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0));z-index:100001;background:#123d2c;color:#f3fff7;border:1px solid #8be4ae;padding:13px 16px;border-radius:12px;box-shadow:0 8px 28px #0005;font:14px/1.5 system-ui;max-width:680px;margin:0 auto}
 #authRecall,#authForget{display:block;width:100%;min-height:44px;margin-top:8px;font-size:13px}#authForget{opacity:.85}
-@media(max-width:640px){html body #view{max-width:100%;min-width:0}html body .topbar{padding-left:max(12px,env(safe-area-inset-left,0));padding-right:max(12px,env(safe-area-inset-right,0))}html body :is(input,select,textarea){font-size:16px!important}html body :is(.btn,.navitem,.auth-tab){min-height:44px}html body dialog{max-width:calc(100vw - 24px);max-height:calc(100dvh - 32px);overflow:auto}html body #view :is(table,.table-wrap){max-width:100%}html body .board-studio-resizer{max-width:100%!important}html body .board .sq{touch-action:pan-y pinch-zoom!important}html body .workspace{padding-left:0!important;padding-right:0!important}html body .home-board-frame{min-height:0!important}html body .ca-volume-panel{max-width:calc(100vw - 24px)}html body .club-hero .club-actions{gap:10px}}
+@media(max-width:640px){html body #view{max-width:100%;min-width:0}html body .topbar{padding-left:max(12px,env(safe-area-inset-left,0));padding-right:max(12px,env(safe-area-inset-right,0))}html body :is(input,select,textarea){font-size:16px!important}html body :is(.btn,.navitem,.auth-tab){min-height:44px}html body dialog{max-width:calc(100vw - 24px);max-height:calc(100dvh - 32px);overflow:auto}html body #view :is(table,.table-wrap){max-width:100%}html body .board-studio-resizer{max-width:100%!important}html body .board .sq{touch-action:pan-y!important}html body .workspace{padding-left:0!important;padding-right:0!important}html body .home-board-frame{min-height:0!important}html body .ca-volume-panel{max-width:calc(100vw - 24px)}html body .club-hero .club-actions{gap:10px}}
 @media(orientation:landscape) and (max-height:500px){html body .topbar{height:58px}html body .academy-topnav{position:relative!important}html body .entry{min-height:100dvh!important;padding-top:14px!important}}
 #nativeBottomNav{position:fixed;inset:auto 0 0;z-index:9998;display:grid;grid-template-columns:repeat(4,1fr);padding:6px 8px calc(6px + env(safe-area-inset-bottom,0));background:#0b281fee;border-top:1px solid #46765c;backdrop-filter:blur(14px)}#nativeBottomNav button{display:flex;flex-direction:column;gap:2px;align-items:center;justify-content:center;min-height:52px;background:transparent;border:0;border-radius:10px;color:#c8e2d4;font:inherit}#nativeBottomNav span{font-size:23px;line-height:1.2}#nativeBottomNav small{font-size:11px}#nativeBottomNav [aria-current=page]{color:#a6f2b6;background:#23553c}html.native-signed-in body{padding-bottom:calc(75px + env(safe-area-inset-bottom,0))}html.native-signed-in #mobileStatus{bottom:calc(82px + env(safe-area-inset-bottom,0))}
 
@@ -60,11 +60,13 @@ html.barida-native body.embedded-studio .ca-board-resize-hit{display:none!import
 @media(min-width:1800px){html.barida-native body .workspace{max-width:2200px!important;margin:0 auto}}
 
 /* Finger swipes scroll the page; chess moves use two taps on touchscreens. */
-@media(pointer:coarse){html body #board,html body #board .sq{touch-action:pan-y pinch-zoom!important}}
-html.barida-native body #board,html.barida-native body #board .sq{touch-action:pan-y pinch-zoom!important}
+@media(pointer:coarse){html body #board,html body #board .sq{touch-action:pan-y!important}}
+html.barida-native body #board,html.barida-native body #board .sq{touch-action:pan-y!important}
 @media(max-width:800px),(pointer:coarse){
  html body .ca-grid .board{box-shadow:0 0 0 2px #b18b53!important}
  html body .ca-grid .board::before{box-shadow:none!important}
  html body .ca-grid .board>.sq,html body .ca-grid .board>.sq .piece-3d{transition:none!important;filter:none!important}
  html body .ca-grid .board>.sq .piece img.barida-approved-piece{filter:none!important}
 }
+
+html body:has(.barida-touch-zooming){overflow-x:clip!important}
