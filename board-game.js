@@ -225,8 +225,8 @@ function renderBoard(){const root=$('board');window.ChessAcademyBoardFrame?.upda
 let performedDrag=false;
 let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
 const boardEl=$('board');
-window.ChessAcademySharedBoard?.enableTouchZoom(boardEl);
 boardEl.style.touchAction=matchMedia('(pointer:coarse)').matches?'pan-y':'none';
+window.ChessAcademySharedBoard?.enableTouchZoom(boardEl);
 let carryGhost=null,draggingPiece=false,lastPointerX=0,lastPointerY=0;
 function clearCarryGhost(){
  carryGhost?.remove();carryGhost=null;

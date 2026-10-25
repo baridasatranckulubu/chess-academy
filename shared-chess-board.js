@@ -114,12 +114,27 @@ function drawAnnotations(root,state){
 const touchZoomBoards=new WeakSet();
 function enableTouchZoom(root){
  if(!root||touchZoomBoards.has(root))return;touchZoomBoards.add(root);
- let active=null,resetTimer=null,suppressUntil=0,restore=null;
+ let active=null,resetTimer=null,suppressUntil=0,restore=null,pan=null,momentum=null;
+ const scrollHost=(()=>{try{return parent!==window&&parent.location.origin===location.origin?parent:null}catch{return null}})();
+ // Embedded boards hand a one-finger swipe to their outer page, avoiding iframe scroll traps.
+ if(scrollHost)root.style.setProperty('touch-action','none','important');
+ function movePan(e){
+  if(!pan||e.touches.length!==1)return;const t=e.touches[0],now=performance.now(),dy=pan.y-t.clientY;
+  if(!pan.moved&&Math.abs(t.clientY-pan.startY)>8){pan.moved=true;suppressUntil=Date.now()+350}
+  if(pan.moved){if(e.cancelable)e.preventDefault();scrollHost.scrollBy({top:dy,behavior:'instant'});pan.velocity=Math.max(-2.5,Math.min(2.5,dy/Math.max(8,now-pan.time)))}
+  pan.y=t.clientY;pan.time=now;
+ }
+ function endPan(){
+  if(!pan)return;const old=pan;pan=null;if(!old.moved)return;suppressUntil=Date.now()+350;
+  let v=performance.now()-old.time<100?old.velocity:0,last=performance.now();
+  const tick=now=>{const dt=Math.min(32,now-last);last=now;const before=scrollHost.scrollY;scrollHost.scrollBy({top:v*dt,behavior:'instant'});v*=Math.pow(.9,dt/16);if(Math.abs(v)>.06&&Math.abs(scrollHost.scrollY-before)>.1)momentum=requestAnimationFrame(tick);else momentum=null};
+  if(Math.abs(v)>.06)momentum=requestAnimationFrame(tick);
+ }
  const distance=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
  const center=t=>({x:(t[0].clientX+t[1].clientX)/2,y:(t[0].clientY+t[1].clientY)/2});
  const properties=['transform','transform-origin','transition','will-change','z-index'];
  function finish(){
-  if(!active)return;const old=active;active=null;suppressUntil=Date.now()+350;
+  if(!active){endPan();return}const old=active;active=null;suppressUntil=Date.now()+350;
   old.overlay.remove();root.classList.remove('barida-touch-zooming');
   root.style.setProperty('transition','transform 150ms ease-out','important');
   const value=old.values.transform;value[0]?root.style.setProperty('transform',...value):root.style.removeProperty('transform');
@@ -128,6 +143,10 @@ function enableTouchZoom(root){
  }
  root.addEventListener('click',e=>{if(active||Date.now()<suppressUntil){e.preventDefault();e.stopImmediatePropagation()}},true);
  root.addEventListener('touchstart',e=>{
+  if(momentum){cancelAnimationFrame(momentum);momentum=null}
+  if(e.touches.length===1)suppressUntil=0;
+  if(scrollHost&&e.touches.length===1){pan={y:e.touches[0].clientY,startY:e.touches[0].clientY,time:performance.now(),velocity:0,moved:false};return}
+  pan=null;
   if(e.touches.length!==2||active||root.classList.contains('ca-spin'))return;
   if(e.cancelable)e.preventDefault();clearTimeout(resetTimer);restore?.();
   const rect=root.getBoundingClientRect(),mid=center(e.touches),values={};
@@ -139,7 +158,7 @@ function enableTouchZoom(root){
   root.style.setProperty('transform-origin',(mid.x-rect.left)+'px '+(mid.y-rect.top)+'px','important');root.style.setProperty('transition','none','important');root.style.setProperty('will-change','transform');root.style.setProperty('z-index','100');root.classList.add('barida-touch-zooming');update(e);
  },{passive:false});
  function update(e){
-  if(!active)return;if(e.touches.length!==2){finish();return}if(e.cancelable)e.preventDefault();
+  if(!active){movePan(e);return}if(e.touches.length!==2){finish();return}if(e.cancelable)e.preventDefault();
   const scale=Math.max(.8,Math.min(2.5,distance(e.touches)/active.distance)),mid=center(e.touches);
   root.style.setProperty('transform','translate3d('+(mid.x-active.mid.x)+'px,'+(mid.y-active.mid.y)+'px,0) scale('+scale.toFixed(3)+')','important');
   active.rings.forEach((ring,i)=>{ring.style.left=e.touches[i].clientX+'px';ring.style.top=e.touches[i].clientY+'px'});

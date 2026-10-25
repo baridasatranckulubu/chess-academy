@@ -24,7 +24,7 @@ def swipe(page,board):
  for step in range(1,9):
   client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*22}]});page.wait_for_timeout(20)
  client.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(200);client.detach()
- assert page.evaluate('scrollY')>before+40,'Vertical swipe starting on the chessboard must scroll the page'
+ assert page.evaluate('scrollY')>before+40,('Vertical swipe starting on the chessboard must scroll the page',before,page.evaluate('scrollY'),r,x,y)
 def pinch(page,board,frame=None):
  board.scroll_into_view_if_needed();r=board.bounding_box();x=r['x']+r['width']*.5;y=min(r['y']+r['height']*.5,520)
  client=page.context.new_cdp_session(page)
@@ -59,6 +59,7 @@ try:
   assert frame.evaluate('ChessAcademyDemo.analysisHistory().moves.length')==fen,'Scrolling must not move a piece'
   frame.locator('#board [data-square="e2"]').tap();frame.locator('#board [data-square="e4"]').tap()
   assert frame.evaluate('ChessAcademyDemo.analysisHistory().moves.length')==fen+1,'Two taps must still make a move'
+  page.set_viewport_size({'width':360,'height':600})
   page.goto(f'http://127.0.0.1:{server.server_port}/puzzles.html');page.wait_for_function('document.getElementById("status").textContent==="Sıra sende"')
   page.wait_for_function('window.__selections===2')
   page.evaluate("()=>{window.__rank=document.querySelector('.ca-ranks span');window.__piece=document.querySelector('#board [data-square=\"b8\"] .piece');window.__mutations=0;new MutationObserver(items=>window.__mutations+=items.filter(i=>i.type==='childList').length).observe(document.getElementById('board'),{childList:true,subtree:true})}")

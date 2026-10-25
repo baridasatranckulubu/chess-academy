@@ -70,3 +70,5 @@ html.barida-native body #board,html.barida-native body #board .sq{touch-action:p
 }
 
 html body:has(.barida-touch-zooming){overflow-x:clip!important}
+
+html.barida-native{scroll-behavior:auto!important}
