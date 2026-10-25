@@ -8,7 +8,7 @@ let soundEnabled=true,audioContext=null,lastMove=null,flipBusy=false;
 try{soundEnabled=AcademyStorage.getItem('chess-academy-sound')!=='off'}catch{}
 function sound(type){
  if(!soundEnabled)return;
- if(window.ChessAcademySharedBoard){window.ChessAcademySharedBoard.setSoundEnabled(soundEnabled);return window.ChessAcademySharedBoard.sound(type)}
+ if(window.ChessAcademySharedBoard){if(window.ChessAcademySharedBoard.soundEnabled()!==soundEnabled)window.ChessAcademySharedBoard.setSoundEnabled(soundEnabled);return window.ChessAcademySharedBoard.sound(type)}
  try{
   const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
   audioContext=audioContext||new AC();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});
