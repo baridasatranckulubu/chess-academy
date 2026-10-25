@@ -1,7 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 Deno.serve(async(req)=>{
  const requestedOrigin=req.headers.get("origin")||"";
- const allowedOrigins=["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev"];
+ const allowedOrigins=["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost"];
  const origin=allowedOrigins.includes(requestedOrigin)?requestedOrigin:allowedOrigins[0];
  const headers={"Content-Type":"application/json","Access-Control-Allow-Origin":origin,"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"};
  const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers});

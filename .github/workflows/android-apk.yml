@@ -9,6 +9,9 @@ on:
       - 'tools/*android*'
       - 'mobile.*'
       - '.github/workflows/android-apk.yml'
+      - 'site-presence.js'
+      - 'academy.js'
+      - 'academy.html'
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,6 +30,16 @@ jobs:
           distribution: temurin
           java-version: '21'
       - run: npm ci --no-audit --no-fund
+      - name: Verify native API origin
+        run: |
+          python - <<'PYCODE'
+          import urllib.request
+          for name in ['academy-student-login','academy-teacher-login','academy-student-password','academy-delete-student','academy-teacher-password-request']:
+            request=urllib.request.Request('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/'+name,method='OPTIONS',headers={'Origin':'https://localhost','Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'apikey,content-type,authorization'})
+            with urllib.request.urlopen(request,timeout=30) as response:
+              assert response.status==204 and response.headers.get('Access-Control-Allow-Origin')=='https://localhost',name
+              print('Native origin OK:',name)
+          PYCODE
       - name: Bundle application and generate Android project
         run: |
           python tools/prepare_android.py
@@ -46,7 +59,7 @@ jobs:
           target: google_apis
           disable-animations: true
           script: |
-            cd android && bash ./gradlew :app:connectedDebugAndroidTest --no-daemon
+            bash -c 'cd android && ./gradlew :app:connectedDebugAndroidTest --no-daemon'
             adb install -r android/app/build/outputs/apk/debug/app-debug.apk
             adb shell am start -n com.baridasatranckulubu.academy/.MainActivity
             sleep 8
@@ -55,7 +68,7 @@ jobs:
       - name: Upload tested installable APK
         uses: actions/upload-artifact@v4
         with:
-          name: Barida-Satranc-1.0.0-test-apk
+          name: Barida-Satranc-1.0.0-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 30

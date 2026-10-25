@@ -1,7 +1,7 @@
 import {createClient} from "npm:@supabase/supabase-js@2";
 Deno.serve(async req=>{
  const origin=req.headers.get("origin")||"";
- const allowed=["https://hskgsuygar32-boop.github.io","https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev"];
+ const allowed=["https://hskgsuygar32-boop.github.io","https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost"];
  const headers={"content-type":"application/json","access-control-allow-origin":allowed.includes(origin)?origin:allowed[0],"access-control-allow-headers":"apikey,content-type","access-control-allow-methods":"POST,OPTIONS","vary":"Origin"};
  const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers});

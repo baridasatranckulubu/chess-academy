@@ -1,6 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
 Deno.serve(async (req) => {
- const headers={"Content-Type":"application/json","Access-Control-Allow-Origin":(["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://hskgsuygar32-boop.github.io"].includes(req.headers.get("origin")||"")?(req.headers.get("origin")||""):"https://hskgsuygar32-boop.github.io"),"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"};
+ const headers={"Content-Type":"application/json","Access-Control-Allow-Origin":(["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost","https://hskgsuygar32-boop.github.io"].includes(req.headers.get("origin")||"")?(req.headers.get("origin")||""):"https://hskgsuygar32-boop.github.io"),"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"};
  const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers});
  if(req.method!=="POST")return reply({error:"Method not allowed"},405);

@@ -15,3 +15,7 @@ p=OUT/'academy.html';p.write_text(p.read_text().replace('https://cdn.jsdelivr.ne
 assert (OUT/'index.html').is_file() and (OUT/'academy.html').is_file()
 assert not list(OUT.rglob('*.sql'))
 print('Prepared bundled Android UI:',len(list(OUT.rglob('*'))),'entries')
+
+# The large archive is fetched selectively from the working public mirror.
+p=OUT/'assignment-bank.js'
+p.write_text(p.read_text().replace('const r=await fetch(url);',"const r=await fetch(url.startsWith('puzzle-full/')?'https://baridasatranckulubu.github.io/chess-academy/'+url:url);"))
