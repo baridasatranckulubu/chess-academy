@@ -7,6 +7,7 @@
  function network(){message(navigator.onLine?'':'Çevrimdışısın. Giriş ve kayıt işlemleri için bağlantı gerekiyor. Açık çalışmalarını sürdürebilirsin.');}
  window.addEventListener('online',network);window.addEventListener('offline',network);network();
  if(native){document.documentElement.classList.add('barida-native');const App=C.Plugins?.App||C.registerPlugin?.('App');
+  App.addListener('appStateChange',({isActive})=>window.BaridaSiteTime?.setAppActive(isActive));
   App.addListener('backButton',()=>{if(window.baridaHandleBack?.())return;App.minimizeApp();});
  }
  async function restore(explicit=false){
