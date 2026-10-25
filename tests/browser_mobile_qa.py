@@ -8,7 +8,7 @@ from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 source=ast.parse((ROOT/'tests/browser_club_qa.py').read_text())
 MOCK=next(ast.literal_eval(n.value) for n in source.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='MOCK' for t in n.targets))
-MOCK=MOCK.replace('ROLE','"teacher"').replace('getSession:async()=>({data:{session}})','getSession:async()=>({data:{session:null}}),signInWithPassword:async()=>({data:{session},error:null})')
+MOCK=MOCK.replace('ROLE','"teacher"').replace('getUser:async()=>({data:{user:session.user},error:null}),refreshSession:async()=>({data:{session},error:null}),getSession:async()=>({data:{session}})','getUser:async()=>({data:{user:session.user},error:null}),refreshSession:async()=>({data:{session},error:null}),getSession:async()=>({data:{session:null}}),signInWithPassword:async()=>({data:{session},error:null})')
 NATIVE="""
 window.__vault={identity:'trainer@example.invalid',password:'test-only-password-123',role:'teacher'};window.__saved=0;
 window.Capacitor={isNativePlatform:()=>true,Plugins:{SecureLogin:{load:async()=>window.__vault||{},save:async data=>{window.__saved++;window.__vault=data},clear:async()=>{window.__vault=null}},App:{addListener:()=>{},minimizeApp:()=>{}}}};
