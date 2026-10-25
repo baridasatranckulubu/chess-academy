@@ -1,12 +1,19 @@
 /* Shared Chess Academy board presentation for free play and homework */
 (function(){'use strict';let soundEnabled=true,audioContext=null;try{soundEnabled=localStorage.getItem('chess-academy-sound')!=='off'}catch{};
+const volumeLevels=[.1,.3,.5,.7,1];let volumeLevel=3,masterGain=null;
+function readVolume(){try{const value=Number(localStorage.getItem('chess-academy-volume'));if(Number.isInteger(value)&&value>=1&&value<=5)volumeLevel=value}catch{}return volumeLevel}
+readVolume();
+function syncVolume(){if(masterGain)masterGain.gain.value=soundEnabled?volumeLevels[readVolume()-1]:0}
+function soundOutput(ctx){if(!masterGain){masterGain=ctx.createGain();masterGain.connect(ctx.destination)}syncVolume();return masterGain}
+function setVolume(value){const level=Number(value);if(!Number.isInteger(level)||level<1||level>5)return;volumeLevel=level;try{localStorage.setItem('chess-academy-volume',String(level))}catch{}syncVolume();window.dispatchEvent?.(new CustomEvent('barida-volume-change',{detail:{level,percent:Math.round(volumeLevels[level-1]*100)}}))}
+window.addEventListener?.('storage',e=>{if(e.key==='chess-academy-volume')syncVolume();if(e.key==='chess-academy-sound'){soundEnabled=e.newValue!=='off';syncVolume()}});
 const soundScript=document.currentScript?.src||'',soundAssetBase=(soundScript?soundScript.slice(0,soundScript.lastIndexOf('/')+1):'')+'assets/sounds/lichess-sfx/';
 const soundSamples={move:'Move',capture:'Capture',check:'Check',mate:'Victory',start:'GenericNotify'},soundBuffers=new Map();
 function soundContext(){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;audioContext=audioContext||new AC();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});return audioContext}
 function loadSoundSample(name){if(!soundBuffers.has(name)){const ctx=soundContext();if(!ctx)return Promise.reject(Error('Audio unavailable'));const task=fetch(soundAssetBase+name+'.mp3').then(r=>{if(!r.ok)throw Error('Sound unavailable');return r.arrayBuffer()}).then(bytes=>ctx.decodeAudioData(bytes)).catch(e=>{soundBuffers.delete(name);throw e});soundBuffers.set(name,task)}return soundBuffers.get(name)}
 function preloadSound(){if(!soundEnabled)return;try{if(!soundContext())return;for(const name of Object.values(soundSamples))loadSoundSample(name).catch(()=>{})}catch{}}
-function clockSound(type){try{const ctx=soundContext();if(!ctx)return;const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(type==='tick'?2400:1600,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.022,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.035);o.connect(g);g.connect(ctx.destination);o.start(t);o.stop(t+.04)}catch{}}
-function sound(type){if(!soundEnabled)return;if(type==='tick'||type==='tock'||type==='time'){clockSound(type==='time'?'tick':type);return}const name=soundSamples[type];if(!name){fallbackSound(type);return}try{const ctx=soundContext();if(!ctx)return;loadSoundSample(name).then(buffer=>{if(!soundEnabled)return;const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=type==='start'?.42:type==='mate'?.35:.55;source.connect(gain);gain.connect(ctx.destination);source.start()}).catch(()=>fallbackSound(type))}catch{fallbackSound(type)}}
+function clockSound(type){try{const ctx=soundContext();if(!ctx)return;const t=ctx.currentTime,o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.setValueAtTime(type==='tick'?2400:1600,t);g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.022,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.035);o.connect(g);g.connect(soundOutput(ctx));o.start(t);o.stop(t+.04)}catch{}}
+function sound(type){if(!soundEnabled)return;if(type==='tick'||type==='tock'||type==='time'){clockSound(type==='time'?'tick':type);return}const name=soundSamples[type];if(!name){fallbackSound(type);return}try{const ctx=soundContext();if(!ctx)return;loadSoundSample(name).then(buffer=>{if(!soundEnabled)return;const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=type==='start'?.42:type==='mate'?.35:.55;source.connect(gain);gain.connect(soundOutput(ctx));source.start()}).catch(()=>fallbackSound(type))}catch{fallbackSound(type)}}
 document.addEventListener?.('pointerdown',preloadSound,{once:true,passive:true});document.addEventListener?.('keydown',preloadSound,{once:true,passive:true});
 function fallbackSound(type){
  if(!soundEnabled)return;
@@ -21,14 +28,14 @@ function fallbackSound(type){
    const src=ctx.createBufferSource();src.buffer=buffer;
    const filter=ctx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=brightness;
    const gain=ctx.createGain();gain.gain.value=volume;
-   src.connect(filter);filter.connect(gain);gain.connect(ctx.destination);
+   src.connect(filter);filter.connect(gain);gain.connect(soundOutput(ctx));
    src.start(t+delay);src.stop(t+delay+duration);
    const osc=ctx.createOscillator(),og=ctx.createGain();osc.type='sine';osc.frequency.value=body;
    og.gain.setValueAtTime(.0001,t+delay);og.gain.exponentialRampToValueAtTime(volume*.25,t+delay+.003);
    og.gain.exponentialRampToValueAtTime(.0001,t+delay+.075);
-   osc.connect(og);og.connect(ctx.destination);osc.start(t+delay);osc.stop(t+delay+.08);
+   osc.connect(og);og.connect(soundOutput(ctx));osc.start(t+delay);osc.stop(t+delay+.08);
   };
-  if(type==='time'){const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(880,t);osc.frequency.exponentialRampToValueAtTime(660,t+.08);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(g);g.connect(ctx.destination);osc.start(t);osc.stop(t+.13)}else if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,155,3200,.38);strike(.035,95,1800,.24)}
+  if(type==='time'){const osc=ctx.createOscillator(),g=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(880,t);osc.frequency.exponentialRampToValueAtTime(660,t+.08);g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.0001,t+.12);osc.connect(g);g.connect(soundOutput(ctx));osc.start(t);osc.stop(t+.13)}else if(type==='flip'){strike(0,185,1800,.17);strike(.1,130,1300,.15);strike(.22,210,2200,.12)}else if(type==='capture'){strike(0,155,3200,.38);strike(.035,95,1800,.24)}
   else if(type==='mate'){strike(0,175,1800,.28);strike(.11,140,1400,.25);strike(.25,105,1050,.28)}
   else if(type==='check'){strike(0,195,2300,.23);strike(.085,170,1700,.15)}
   else{strike(0,280,3500,.25);strike(.025,170,1900,.10)}
@@ -162,8 +169,9 @@ function choosePromotion(color='w'){return new Promise(resolve=>{
 .ca-drag-ghost svg.piece-3d{width:100%!important;height:100%!important;transform:none!important}
 .ca-drag-ghost svg.piece-3d text{font-size:82px!important;font-weight:900!important}
 `;document.head.append(st)})();
-window.ChessAcademySharedBoard={pieceSVG,sound,preloadSound,renderBoard,bindDrag,choosePromotion,setSoundEnabled(value){soundEnabled=!!value;try{localStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}},soundEnabled(){return soundEnabled}};
+window.ChessAcademySharedBoard={pieceSVG,sound,preloadSound,renderBoard,bindDrag,choosePromotion,setVolume,volumeLevel:readVolume,volumePercent(){return Math.round(volumeLevels[readVolume()-1]*100)},setSoundEnabled(value){soundEnabled=!!value;syncVolume();try{localStorage.setItem('chess-academy-sound',soundEnabled?'on':'off')}catch{}},soundEnabled(){return soundEnabled}};
 })();
 
 /* Soft mint move-trace on source and destination, placed behind all pieces. */
 (function installMoveTraceStyle(){if(document.getElementById('barida-last-move-global-v2'))return;const style=document.createElement('style');style.id='barida-last-move-global-v2';style.textContent=`.board .sq.last-move,.ca-grid .board>.sq.last-move,.chess-board-frame .board .sq.last-move{position:relative!important;isolation:isolate!important;box-shadow:inset 0 0 0 999px rgba(33,153,83,.45),inset 0 0 0 1px rgba(80,207,125,.48)!important}.board .sq.last-move::after{pointer-events:none}.board .sq.last-move .piece,.board .sq.last-move .piece-3d{position:relative!important;z-index:2!important}.board .sq.last-move.selected{box-shadow:inset 0 0 0 999px rgba(33,153,83,.42),inset 0 0 0 3px #e9ca75!important}`;document.head.append(style)})();
+
