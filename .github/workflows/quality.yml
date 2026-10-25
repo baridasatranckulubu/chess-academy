@@ -80,6 +80,8 @@ jobs:
         run: python tests/browser_integration_oct25_qa.py
       - name: Kayıt servisi, doğrulama ve hesap temizliği
         run: node tests/registration.test.js
+      - name: Tek Rating, soru başına bir sonuç ve puana göre zorluk
+        run: python tests/browser_unified_rating_qa.py
       - name: Buton seçimleri, geçersiz oturum, sınıf mesajları ve 9 kademe
         run: python tests/browser_admin_controls_qa.py
       - name: Sporcu ve antrenör kayıt mesajları
