@@ -65,6 +65,7 @@ jobs:
             sleep 8
             adb shell screencap -p /sdcard/barida-login.png
             adb pull /sdcard/barida-login.png "$GITHUB_WORKSPACE/barida-login.png"
+            python tools/check_android_tablets.py
       - name: Upload tested installable APK
         uses: actions/upload-artifact@v4
         with:
@@ -81,4 +82,5 @@ jobs:
             android/app/build/reports/
             android/app/build/outputs/androidTest-results/
             barida-login.png
+            barida-tablet-*.png
           retention-days: 14

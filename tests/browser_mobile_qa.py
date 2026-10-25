@@ -62,6 +62,22 @@ try:
   assert frame.locator('.ca-board-resize-hit').first.is_hidden()
   assert page.locator('.board-studio-resizer').evaluate('(el)=>Math.abs(el.getBoundingClientRect().width-el.parentElement.clientWidth)<2')
   page.set_viewport_size({'width':412,'height':850})
+  # Tablet profiles span compact 9-inch class viewports through large 24-inch displays.
+  for label,width,height in [('9-portrait',768,1024),('10-portrait',800,1280),('12-portrait',960,1280),('10-landscape',1280,800),('14-landscape',1366,1024),('18-landscape',1920,1080),('24-landscape',2560,1440),('24-portrait',1440,2560)]:
+   page.set_viewport_size({'width':width,'height':height})
+   frame.wait_for_function('(mode)=>document.documentElement.dataset.nativeAspect===mode',arg='landscape' if width>height else 'portrait')
+   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),label
+   assert frame.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),label
+   assert frame.locator('.ca-board-resize-hit').first.is_hidden(),label
+   boxes=frame.evaluate("""()=>{const box=s=>{const r=document.querySelector(s).getBoundingClientRect();return {x:r.x,y:r.y,right:r.right,bottom:r.bottom,width:r.width}};return {board:box('.chess-board-frame'),panel:box('#caAnalysisSide')}}""")
+   if width<height:
+    assert boxes['board']['width']>=min(frame.evaluate('innerWidth')*.94,1090),label
+    assert boxes['panel']['y']>=boxes['board']['bottom'],label
+   else:assert boxes['panel']['x']>=boxes['board']['right'],label
+   assert page.locator('#nativeBottomNav').is_visible(),label
+   if label in ['9-portrait','24-landscape']:
+    (ROOT/'qa-artifacts').mkdir(exist_ok=True);page.screenshot(path=str(ROOT/'qa-artifacts'/('tablet-'+label+'.png')),full_page=True)
+  page.set_viewport_size({'width':412,'height':850})
   def boardmove(a,b):
    frame.locator('#board [data-square="'+a+'"]').click();frame.locator('#board [data-square="'+b+'"]').click()
   for a,b in [('e2','e4'),('d7','d5'),('e4','d5'),('d8','d5')]:boardmove(a,b)

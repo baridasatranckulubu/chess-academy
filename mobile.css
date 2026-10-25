@@ -30,3 +30,31 @@ html.barida-native body #nativeBottomNav{backdrop-filter:none;background:#0b281f
 }
 
 html.barida-native body.embedded-studio .ca-board-resize-hit{display:none!important;pointer-events:none!important}
+/* Tablet controls stay touch-sized; layout follows viewport and density, not inches. */
+@media(min-width:768px){
+ html.barida-native body{font-size:16px}
+ html.barida-native #nativeTopNav{justify-content:center;flex-wrap:wrap;overflow:visible;gap:10px}
+ html.barida-native #nativeTopNav button{min-height:48px;font-size:14px;padding:11px 17px}
+ html.barida-native #nativeBottomNav{max-width:1100px;margin:0 auto;border-radius:15px 15px 0 0}
+ html.barida-native #nativeBottomNav button{min-height:60px}html.barida-native #nativeBottomNav small{font-size:13px}
+ html.barida-native #nativeQuickActions{max-width:1200px;margin:18px auto 25px;gap:14px}
+ html.barida-native #nativeQuickActions button{min-height:106px;font-size:15px}
+ html.barida-native #nativeQuickActions span{font-size:30px}
+ html.barida-native #nativePublicShortcuts{max-width:900px}
+ html.barida-native body.embedded-studio .ca-notation-row button{font-size:16px;min-height:43px}
+ html.barida-native body.embedded-studio .ca-analysis-caption{font-size:12px!important}
+ html.barida-native body.embedded-studio #caAnalysisPV{font-size:14px}
+}
+@media(min-width:1200px){html.barida-native #nativeQuickActions{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media(min-width:641px){
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio .ca-analysis-layout{grid-template-columns:minmax(0,1fr)!important;gap:18px!important}
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio .ca-analysis-layout .chess-board-frame{width:100%!important;max-width:1100px!important;margin:0 auto!important}
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio .ca-captured-rails{position:static!important;display:flex!important;justify-content:space-between!important;width:100%!important;margin-top:7px;min-height:32px;pointer-events:auto!important}
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio .ca-captured-rail{position:static!important;display:flex!important;flex-flow:row wrap!important;width:48%!important;height:auto!important;max-height:90px!important;gap:2px!important;overflow:auto!important;pointer-events:auto!important}
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio #caEngineEvalBar{display:none!important}
+ html.barida-native[data-native-aspect=portrait] body.embedded-studio .ca-analysis-layout #caAnalysisSide{width:100%!important;max-width:1100px!important;height:420px!important;margin:0 auto!important}
+}
+@media(min-width:900px){
+ html.barida-native[data-native-aspect=landscape] body.embedded-studio .ca-analysis-layout{grid-template-columns:minmax(0,min(66%,calc(var(--native-screen-height,1080px) - 190px))) minmax(280px,1fr)!important;gap:22px!important}
+}
+@media(min-width:1800px){html.barida-native body .workspace{max-width:2200px!important;margin:0 auto}}
