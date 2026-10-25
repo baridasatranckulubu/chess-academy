@@ -4,7 +4,7 @@ const getGame=()=>window.ChessAcademyDemo?.game;
 const $=id=>document.getElementById(id);
 const sources=['engines/stockfish19/stockfish-19-lite-single.js','https://cdn.jsdelivr.net/npm/stockfish@19.0.1/bin/stockfish-19-asm.js'];
 let worker=null,ready=false,busy=false,current=null,queue=[],scores=new Map(),depths=new Map(),requested=false,lastKey='',error='',loading=false,attempt=0,liveEnabled=false,bestMove=null,analysisEpoch=0;
-const fmt=v=>v===undefined?'…':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
+const fmt=v=>v===undefined?'…':v==='M0'?'Mat':typeof v==='string'?v:(v>=0?'+':'')+(v/100).toFixed(2);
 let cachedPositionsKey='',cachedPositions=[];
 function positions(){
  const g=getGame();if(!g)return [];
@@ -21,13 +21,13 @@ function chance(cp){return 1/(1+Math.exp(-Math.max(-1000,Math.min(1000,cp))/170)
 function ensureEvalBar(){
  const frame=document.querySelector('.chess-board-frame');if(!frame)return;
  if($('caEngineEvalBar'))return;
- const container=document.createElement('div');container.id='caEngineEvalBar';container.setAttribute('role','meter');container.setAttribute('aria-label','Stockfish konum değerlendirmesi');container.setAttribute('aria-valuemin','0');container.setAttribute('aria-valuemax','100');container.setAttribute('aria-valuenow','50');
+ const container=document.createElement('div');container.id='caEngineEvalBar';container.hidden=!liveEnabled;container.setAttribute('role','meter');container.setAttribute('aria-label','Stockfish konum değerlendirmesi');container.setAttribute('aria-valuemin','0');container.setAttribute('aria-valuemax','100');container.setAttribute('aria-valuenow','50');
  container.innerHTML='<div class="ca-engine-numbers"><strong id="caEngineBlackPercent">50%</strong><span class="ca-engine-depth" id="caEngineDepth">D: …</span><span class="ca-engine-score" id="caEngineScore">…</span><strong id="caEngineWhitePercent">50%</strong></div><div class="ca-engine-meter"><div class="ca-engine-white-fill" id="caEngineWhiteFill"></div><div class="ca-engine-equal"></div></div>';
  frame.append(container);
 }
 function updateEvalBar(score,depth){
  ensureEvalBar();const bar=$('caEngineEvalBar');if(!bar)return;
- const white=typeof score==='number'?Math.round(100*chance(score)):typeof score==='string'&&score.startsWith('M')?(Number(score.slice(1))>0?100:0):50;
+ const white=typeof score==='number'?Math.round(100*chance(score)):typeof score==='string'&&score.startsWith('M')?(Number(score.slice(1))===0?(getGame()?.turn==='b'?100:0):Number(score.slice(1))>0?100:0):50;
  $('caEngineWhiteFill').style.height=white+'%';
  $('caEngineWhitePercent').textContent=fmt(score);
  $('caEngineBlackPercent').textContent='';
@@ -102,12 +102,12 @@ async function init(){
    if(line.includes('uciok'))worker.postMessage('isready');
    if(line.includes('readyok')){ready=true;loading=false;error='';worker.postMessage('setoption name Hash value 32');next()}
    if(!current)return;
-   const pv=line.match(/\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/),depth=line.match(/\bdepth (\d+)/);if(depth&&current.epoch===analysisEpoch){current.depth=Math.max(current.depth,Number(depth[1]));}if(pv&&depth&&Number(depth[1])>=10&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()&&!(evaluationMeta.get(current.fen)?.depth>current.depth)){bestMove=pv[1];paintBestMove()}
+   const pv=line.match(/\bpv ([a-h][1-8][a-h][1-8][qrbn]?)/),depth=line.match(/\bdepth (\d+)/);if(depth&&/\bscore (?:cp|mate) /.test(line)&&current.epoch===analysisEpoch){current.depth=Math.max(current.depth,Number(depth[1]));}if(pv&&depth&&Number(depth[1])>=10&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()&&!(evaluationMeta.get(current.fen)?.depth>current.depth)){bestMove=pv[1];paintBestMove()}
    const variation=line.match(/\bpv (.+)$/);if(variation)current.pv=variation[1];
    const cp=line.match(/\bscore cp (-?\d+)/),mate=line.match(/\bscore mate (-?\d+)/);
    if(cp)current.score=Number(cp[1])*(current.turn==='w'?1:-1);
    if(mate)current.score='M'+(Number(mate[1])*(current.turn==='w'?1:-1));
-   if((cp||mate||depth)&&current.epoch===analysisEpoch){if(current.score!==undefined){storeEvaluation(current.fen,current.score,current.depth,'Stockfish 19',current.pv)}if(current.fen===getGame()?.fen())draw()}
+   if((cp||mate)&&current.epoch===analysisEpoch){if(current.score!==undefined){storeEvaluation(current.fen,current.score,current.depth,'Stockfish 19',current.pv)}if(current.fen===getGame()?.fen())draw()}
    if(line.startsWith('bestmove ')){const best=line.match(/^bestmove ([a-h][1-8][a-h][1-8][qrbn]?)/);if(best&&liveEnabled&&current.epoch===analysisEpoch&&current.fen===getGame()?.fen()&&!(evaluationMeta.get(current.fen)?.depth>current.depth)){bestMove=best[1];paintBestMove()}
     if(current.score!==undefined&&current.epoch===analysisEpoch)storeEvaluation(current.fen,current.score,current.depth,'Stockfish 19',current.pv);
     current=null;busy=false;draw();next();
@@ -133,7 +133,7 @@ let cloudTimer=null,cloudAbort=null,cloudBusy=false,cloudPending=null,cloudCoold
 function storeEvaluation(fen,score,depth,source,pv){
  const old=evaluationMeta.get(fen);if(old&&old.depth>depth)return;
  scores.set(fen,score);depths.set(fen,depth);evaluationMeta.set(fen,{depth,source,pv:pv||''});
- if(fen===getGame()?.fen()&&liveEnabled){bestMove=(pv||'').split(' ')[0]||null;paintBestMove()}
+ if(fen===getGame()?.fen()&&liveEnabled){bestMove=(pv||'').split(' ')[0]||null;if(bestMove){const g=getGame(),from=bestMove.slice(0,2),to=bestMove.slice(2,4);if(g.at(from)?.toLowerCase()==='k'&&g.at(to)===(g.turn==='w'?'R':'r'))bestMove=from+(to[0]==='h'?'g':'c')+from[1]}paintBestMove()}
 }
 function requestCloud(fen){
  cloudPending=fen;clearTimeout(cloudTimer);
@@ -180,7 +180,7 @@ function setupSidePanel(){
  const layout=document.createElement('div');layout.className='ca-analysis-layout';frame.before(layout);layout.append(frame);
  const panel=document.createElement('aside');panel.id='caAnalysisSide';panel.setAttribute('aria-label','Canlı analiz ve hamleler');
  panel.innerHTML='<div class="ca-analysis-top"><strong id="caAnalysisScore" aria-live="polite">…</strong><div><b id="caAnalysisSource">Stockfish 19</b><span id="caAnalysisDepth">Derinlik —</span></div></div><p class="ca-analysis-caption">Değerlendirme beyaz açısından · + beyaz, − siyah avantajı</p><div id="caAnalysisPV" aria-label="Motorun önerdiği devam yolu">Analizi açarak önerilen hamleleri görebilirsiniz.</div><div class="ca-notation-heading"><span>Hamle</span><span>Beyaz</span><span>Siyah</span></div><div id="caNotationRows"></div><div class="ca-analysis-nav"><button type="button" data-jump="first" aria-label="İlk konum">⏮</button><button type="button" data-jump="back" aria-label="Önceki hamle">◀</button><span id="caAnalysisPly">0 / 0</span><button type="button" data-jump="next" aria-label="Sonraki hamle">▶</button><button type="button" data-jump="last" aria-label="Son konum">⏭</button></div>';
- layout.append(panel);panel.prepend($('caLiveEngineToggle'));
+ layout.append(panel);panel.prepend($('caLiveEngineToggle'));const status=$('caReviewStatus');if(status){status.textContent='';panel.append(status)}
  panel.addEventListener('click',e=>{const b=e.target.closest('button[data-ply],button[data-jump]');if(!b)return;const h=window.ChessAcademyDemo.analysisHistory(),target=b.dataset.ply!==undefined?Number(b.dataset.ply):b.dataset.jump==='first'?0:b.dataset.jump==='last'?h.moves.length:h.ply+(b.dataset.jump==='back'?-1:1);window.ChessAcademyDemo.navigateHistory(target-h.ply);renderSidePanel()});
  const style=document.createElement('style');style.textContent=`
  body .wrap{max-width:1200px!important}#home .hero>div:last-child{max-width:none!important}
@@ -190,7 +190,7 @@ function setupSidePanel(){
  #caAnalysisSide{background:#122a2c!important;border:1px solid #395d50;border-radius:14px;overflow:hidden;min-width:0;color:#ecf6ef;box-shadow:0 10px 25px #0003}
  #caAnalysisSide #caLiveEngineToggle{display:block!important;width:100%;margin:0!important;border:0!important;border-radius:0!important;border-bottom:1px solid #375348!important;background:#1b3b30!important;text-align:left}
  .ca-analysis-top{display:flex;align-items:center;gap:15px;padding:16px}.ca-analysis-top>strong{font:700 29px system-ui;color:#b9f6c9}.ca-analysis-top div{display:grid;gap:4px}.ca-analysis-top b{font-size:12px;color:#b7ccbe}.ca-analysis-top span{font-size:12px;color:#b5c7bd}
- .ca-analysis-caption{font-size:11px;line-height:1.5;margin:0;padding:0 16px 12px;color:#b3c8bb}
+ #caAnalysisSide #caReviewStatus{padding:0 14px 10px;font-size:12px;color:#ddc693}#caAnalysisSide #caReviewStatus:empty{display:none}.ca-analysis-caption{font-size:11px;line-height:1.5;margin:0;padding:0 16px 12px;color:#b3c8bb}
  #caAnalysisPV{padding:12px 16px;background:#0b211e;border-block:1px solid #325044;font-size:13px;line-height:1.8;min-height:68px;overflow-wrap:anywhere}
  .ca-notation-heading,.ca-notation-row{display:grid;grid-template-columns:38px minmax(0,1fr) minmax(0,1fr);align-items:stretch}.ca-notation-heading{font-size:11px;color:#a9c4b4;background:#1c352e;padding:8px 6px;text-align:center}
  #caNotationRows{min-height:220px;max-height:360px;overflow:auto;scrollbar-width:thin}.ca-notation-row:nth-child(even){background:#ffffff05}.ca-notation-row>span{padding:11px 5px;text-align:center;color:#92ad9e;font-size:12px}.ca-notation-row button{border:0;border-radius:0;padding:10px 8px;background:transparent;color:#f1f7f2;text-align:left;display:flex;justify-content:space-between;gap:6px;min-width:0;font:600 14px system-ui}.ca-notation-row button small{color:#a9c5b2;font:11px system-ui;letter-spacing:0;align-self:center}.ca-notation-row button[aria-current="step"]{background:#26734a;color:white}.ca-notation-row button:hover{background:#315440}.ca-analysis-nav{display:flex;align-items:center;justify-content:space-around;padding:10px;border-top:1px solid #375348;gap:4px}.ca-analysis-nav button{background:#1d3c30;border:1px solid #41614f;border-radius:7px;color:#ddf1e3;min-width:37px;min-height:38px}.ca-analysis-nav button:disabled{opacity:.35;cursor:default}#caAnalysisPly{font-size:12px;color:#abc4b4}
@@ -200,7 +200,7 @@ function setupSidePanel(){
 }
 let lastRowsKey='';
 function renderSidePanel(){
- if(!$('caAnalysisSide'))return;const g=getGame(),fen=g.fen(),meta=evaluationMeta.get(fen),score=scores.get(fen);
+ if(!$('caAnalysisSide'))return;if($('caEngineEvalBar'))$('caEngineEvalBar').hidden=!liveEnabled;const g=getGame(),fen=g.fen(),meta=evaluationMeta.get(fen),score=scores.get(fen);
  $('caAnalysisScore').textContent=liveEnabled?fmt(score):'—';$('caAnalysisDepth').textContent='Derinlik '+(liveEnabled&&meta?meta.depth:'—');$('caAnalysisSource').textContent=liveEnabled?(meta?.source||'Stockfish 19 · hesaplanıyor'):'Analiz kapalı';
  $('caAnalysisPV').textContent=liveEnabled?(meta?.pv?variationText(fen,meta.pv):'Konum hesaplanıyor…'):'Analizi açarak önerilen hamleleri görebilirsiniz.';
  const h=window.ChessAcademyDemo.analysisHistory(),key=h.start+'|'+h.moves.map(m=>m.from+m.to+(m.promotion||'')).join(',')+'|'+h.ply+'|'+Array.from(scores.entries()).map(([f,s])=>f+':'+s).join(';');
