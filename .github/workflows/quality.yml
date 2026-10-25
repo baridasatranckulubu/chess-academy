@@ -48,6 +48,8 @@ jobs:
         run: node tests/student_detail_layout.test.js
       - name: Şifre penceresi ve kayıt çerçevesi
         run: node tests/student_password_modal.test.js
+      - name: Ön planda geçen süre ve kapalı sayfa kontrolü
+        run: node tests/site_presence.test.js
       - name: Premium tahta ve ses kontrolleri
         run: node tests/board_premium.test.js
       - name: Mat pozisyonları

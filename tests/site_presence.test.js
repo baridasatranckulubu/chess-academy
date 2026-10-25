@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+let now=0,hidden=false,focused=true;const events={},timers=[],sent=[];
+const doc={get hidden(){return hidden},hasFocus:()=>focused,addEventListener:(name,fn)=>events[name]=fn};
+const w={addEventListener:(name,fn)=>events[name]=fn};
+vm.runInNewContext(fs.readFileSync('site-presence.js','utf8'),{window:w,document:doc,performance:{now:()=>now},crypto:{randomUUID:()=> 'session'},setInterval:fn=>timers.push(fn),fetch:async(url,args)=>{sent.push(JSON.parse(args.body));return{ok:true}},console});
+const client={auth:{getSession:async()=>({data:{session:{user:{id:'user'},access_token:'test'}}})},rpc:async(name,args)=>{sent.push(args);return{data:args.p_total,error:null}}};
+const advance=n=>{for(let i=0;i<n;i++){now+=1000;timers[0]()}};
+(async()=>{w.BaridaSiteTime.connect(client,'user','https://example.invalid','public');await new Promise(r=>setImmediate(r));advance(10);await w.BaridaSiteTime.flush();assert.equal(sent.at(-1).p_total,10);
+ hidden=true;focused=false;events.visibilitychange();advance(120);await w.BaridaSiteTime.flush();assert.equal(w.BaridaSiteTime.snapshot().total,10,'hidden time must not count');assert.equal(sent.at(-1).p_total,10);
+ hidden=false;focused=true;events.visibilitychange();advance(5);await w.BaridaSiteTime.flush();assert.equal(sent.at(-1).p_total,15);events.pagehide();w.BaridaSiteTime.disconnect();advance(300);assert.equal(w.BaridaSiteTime.snapshot(),null);assert.equal(sent.at(-1).p_total,15,'closed time must not count');console.log('PASS foreground time, hidden pause, resume and closed-page exclusion')})().catch(e=>{console.error(e);process.exit(1)});

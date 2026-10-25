@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[1]
 tree=ast.parse((ROOT/'tests/browser_club_qa.py').read_text());BASE=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='MOCK' for t in n.targets))
 MOCK=BASE.replace("assignments_total:0,assignments_done:0","assignments_total:2,assignments_done:1").replace("champions:[],solved:0,correct:0","champions:[],solved:9,correct:6")
 MOCK=MOCK.replace("table==='academy_notifications'?notifications:[]","table==='academy_assignments'?[{id:'a',title:'Test bir',kind:'puzzle',puzzle_count:1,status:'completed'},{id:'b',title:'Test iki',kind:'puzzle',puzzle_count:1,status:'pending',due_at:'2026-11-01T20:59:59Z'}]:table==='academy_notifications'?notifications:[]")
-MOCK=MOCK.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='barida_puzzle_result')return{data:{rating:1342,delta:0}};if(name==='barida_coordinates')return{data:[{student_name:'Rekor Sahibi',score:135}]};if(name==='barida_club_roster')return{data:[{id:'athlete',name:'Test Sporcu',classes:[{teacher_id:'coach',class_name:'B'}],progress:{questions_answered:9,correct_answers:6},assignments_total:2,assignments_done:1}]};")
+MOCK=MOCK.replace('rpc:async name=>{',"rpc:async(name,args)=>{if(name==='barida_student_summary')return{data:{student_id:'00000000-0000-4000-8000-000000000001',student_name:'Test Sporcu',assignments_total:2,assignments_done:window.__summaryDone||1,correct:6,solved:9,club_rating:window.__summaryDone?135:125,puzzle_elo:window.__summaryDone?1349:1342,site_seconds:100,session_seconds:0,assignments:[]}};if(name==='barida_puzzle_result')return{data:{rating:1342,delta:0}};if(name==='barida_coordinates')return{data:[{student_name:'Rekor Sahibi',score:135}]};if(name==='barida_club_roster')return{data:[{id:'athlete',name:'Test Sporcu',classes:[{teacher_id:'coach',class_name:'B'}],progress:{questions_answered:9,correct_answers:6},assignments_total:2,assignments_done:1}]};")
 class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)));Thread(target=server.serve_forever,daemon=True).start()
@@ -25,10 +25,13 @@ try:
    if role=='student':
     page.evaluate("window.baridaNavigate('pet-home')");page.locator('.bd-grid .bd-card').first.wait_for()
     cards=page.locator('.bd-grid .bd-card');assert cards.nth(0).locator('strong').inner_text()=='2';assert cards.nth(1).locator('strong').inner_text()=='1';assert cards.nth(2).locator('strong').inner_text()=='1';assert cards.nth(3).locator('strong').inner_text()=='6'
+    assert page.locator('[data-stat="Bulmaca Elosu"]').inner_text()=='1342';assert page.locator('[data-stat="Sporcu Ratingi"]').inner_text()=='125';assert page.locator('[data-stat="Tamamlanan ödev"]').inner_text()=='1'
+    page.evaluate('window.__summaryDone=2');page.wait_for_function("document.querySelector('[data-stat=\"Tamamlanan ödev\"]')?.textContent==='2'",timeout=6000);assert page.locator('[data-stat="Sporcu Ratingi"]').inner_text()=='135';assert page.locator('[data-stat="Bulmaca Elosu"]').inner_text()=='1349'
     page.evaluate("window.baridaNavigate('coordinates')");f=page.frame_locator('#view iframe');f.locator('#clubRecord').filter(has_text='Rekor puan: 135 - Rekor Sahibi').wait_for();assert f.locator('#pause').is_disabled()
     page.evaluate("window.baridaNavigate('tactics')");f=page.frame_locator('#view iframe');f.locator('#adaptive-info').filter(has_text='Puan: 1342').wait_for();assert not f.locator('#level').is_visible();assert not f.locator('#info').is_visible();assert not f.locator('#count').is_visible()
    else:
     page.evaluate("window.baridaNavigate('staff-home')");page.locator('.sd-stats .sd-stat').nth(5).wait_for();values=page.locator('.sd-stats .sd-stat strong').all_text_contents();assert values[1:]==['1','9','67%','2','1'],values
+    page.evaluate("window.baridaNavigate('pet-home')");page.locator('#developmentStudent').wait_for();page.locator('[data-stat="Bulmaca Elosu"]').filter(has_text='1342').wait_for();assert page.locator('#developmentStudent').input_value()=='athlete'
     page.evaluate("window.baridaNavigate('student-register')");page.locator('#studentCreateTeacher option').wait_for(state='attached');assert page.locator('#studentCreateTeacher').input_value()=='coach';page.locator('#studentCreateClass').fill('B')
     page.evaluate("window.baridaNavigate('admin-rating')");page.get_by_text('Bu sırayı temizle',exact=True).wait_for(state='attached')
    assert not errors,errors
