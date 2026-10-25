@@ -44,6 +44,12 @@ try:
    ivory=page.locator('.barida-rating-name').filter(has_text=__import__('re').compile('^Sporcu 0$'));assert ivory.evaluate('(el)=>getComputedStyle(el).textShadow')=='none'
    yellow=page.locator('.barida-rating-name').filter(has_text=__import__('re').compile('^Sporcu 1000$'));assert yellow.evaluate('(el)=>getComputedStyle(el).color')=='rgb(250, 255, 0)';assert yellow.evaluate('(el)=>getComputedStyle(el).textShadow')!='none'
    rainbow=page.locator('.barida-rating-name').filter(has_text=__import__('re').compile('^Sporcu 8000$'));assert rainbow.evaluate('(el)=>getComputedStyle(el).animationName')=='barida-rating-spectrum';assert rainbow.evaluate('(el)=>getComputedStyle(el).webkitTextFillColor')=='rgba(0, 0, 0, 0)'
+   # A CSS animation name alone is insufficient: its actual background must move.
+   first=rainbow.evaluate('(el)=>getComputedStyle(el).backgroundPosition')
+   page.wait_for_timeout(350)
+   second=rainbow.evaluate('(el)=>getComputedStyle(el).backgroundPosition')
+   assert first!=second,(first,second,'rainbow frozen by an important background shorthand')
+   assert rainbow.evaluate('(el)=>getComputedStyle(el).backgroundSize')=='200% 100%'
    (ROOT/'qa-artifacts').mkdir(exist_ok=True);page.screenshot(path=str(ROOT/'qa-artifacts/rating-neon.png'),full_page=True)
    for points,tier in [(0,1),(999,1),(1000,2),(1999,2),(2000,3),(5000,6),(7000,8),(8000,9),(9000,9)]:
     name=page.locator('.barida-rating-name').filter(has_text=__import__('re').compile('^Sporcu '+str(points)+'$'));assert 'br-tier-'+str(tier) in name.get_attribute('class')
@@ -55,3 +61,4 @@ try:
    assert not errors,errors;context.close()
   browser.close();print('PASS buttons, refresh/revoked session recovery, class message isolation, nine tier boundaries and persistent admin edits')
 finally:server.shutdown()
+

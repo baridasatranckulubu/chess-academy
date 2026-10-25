@@ -18,6 +18,14 @@ try:
   page.goto(f'http://127.0.0.1:{server.server_port}/board.html?embed=studio');page.locator('#caLiveEngineToggle').click();page.wait_for_function("document.querySelector('#caAnalysisDepth').textContent==='Derinlik 18'")
   assert not page.locator('#promotionChoice').is_visible();assert not page.locator('#promotionLabel').is_visible()
   assert page.locator('#caAnalysisScore').inner_text()=='+0.42';assert 'e4' in page.locator('#caAnalysisPV').inner_text()
+  def assert_arrow():
+   page.locator('.ca-best-move-arrow').wait_for()
+   result=page.evaluate("""()=>{const svg=document.querySelector('.ca-best-move-arrow'),line=svg.querySelector('line'),tip=svg.querySelector('polygon').points.getItem(0),m=svg.getScreenCTM();const point=(x,y)=>new DOMPoint(x,y).matrixTransform(m),a=point(+line.getAttribute('x1'),+line.getAttribute('y1')),b=point(tip.x,tip.y),f=document.querySelector('#board [data-square="e2"]').getBoundingClientRect(),t=document.querySelector('#board [data-square="e4"]').getBoundingClientRect();return {start:Math.hypot(a.x-f.left-f.width/2,a.y-f.top-f.height/2),end:Math.hypot(b.x-t.left-t.width/2,b.y-t.top-t.height/2),stroke:+line.getAttribute('stroke-width')}}""")
+   assert result['start']<1.2 and result['end']<1.2 and result['stroke']<=3.5,result
+  assert_arrow()
+  page.locator('#flipBoard').click();page.wait_for_function('!document.querySelector("#flipBoard").disabled');assert_arrow()
+  page.set_viewport_size({'width':950,'height':1000});page.wait_for_timeout(100);assert_arrow()
+  page.locator('#flipBoard').click();page.wait_for_function('!document.querySelector("#flipBoard").disabled');assert_arrow()
   move(page,'e2','e4');page.wait_for_function("document.querySelector('#caAnalysisScore').textContent==='-0.42'")
   assert page.locator('#caAnalysisDepth').inner_text()=='Derinlik 18';assert 'e5' in page.locator('#caAnalysisPV').inner_text();assert 'e4' in page.locator('#caNotationRows').inner_text()
   move(page,'e7','e5');move(page,'g1','f3');page.wait_for_function("document.querySelector('#caAnalysisScore').textContent==='-0.42'")
@@ -87,4 +95,5 @@ try:
   host.screenshot(path='qa-artifacts/analysis-shell-resize.png',full_page=True)
   browser.close();print('Analysis: real WASM, cloud, sign, depth, stale results, notation, navigation and mobile passed')
 finally:server.shutdown()
+
 
