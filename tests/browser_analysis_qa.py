@@ -47,6 +47,7 @@ try:
    box=page.evaluate("""()=>{const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height}};return {board:rect('.chess-board-frame'),panel:rect('#caAnalysisSide'),captures:rect('.ca-captured-rails')}}""")
    assert box['panel']['left']>=box['board']['right'],box
    assert box['captures']['right']<box['board']['left'],box
+   assert abs(page.locator('#capturedWhite .ca-captured-piece').first.bounding_box()['width']-26.5)<.1
    assert abs(box['panel']['top']-box['board']['top'])<2,box
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
   Path('qa-artifacts').mkdir(exist_ok=True);page.screenshot(path='qa-artifacts/analysis-resize-captures.png',full_page=True)
@@ -74,6 +75,9 @@ try:
   host=shell.new_page();host.goto(f'http://127.0.0.1:{server.server_port}/academy.html');host.locator('#baridaBoot').wait_for(state='hidden')
   host.get_by_text('🎯 Antrenman',exact=True).click();host.get_by_role('button',name='♟ Analiz Tahtası',exact=True).click()
   host.locator('.home-board-frame').wait_for();embedded=host.locator('.home-board-frame').element_handle().content_frame();embedded.locator('#caAnalysisSide').wait_for()
+  for theme in ['dark','light']:
+   if theme=='light':host.locator('#caThemeToggle').click()
+   embedded.wait_for_function("getComputedStyle(document.documentElement).backgroundColor==='rgba(0, 0, 0, 0)' && getComputedStyle(document.body).backgroundColor==='rgba(0, 0, 0, 0)'")
   for delta in [-180,300]:
    before=host.locator('.board-studio-resizer').bounding_box()['width'];grip=embedded.locator('.ca-board-resize-se').bounding_box();x=grip['x']+15;y=grip['y']+15
    host.mouse.move(x,y);host.mouse.down();host.mouse.move(x+delta,y+delta,steps=12);host.mouse.up()
