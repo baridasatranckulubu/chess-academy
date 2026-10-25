@@ -23,7 +23,12 @@ try:
   context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''))
   context.route('https://**.supabase.co/**',lambda r:r.abort())
   page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
-  page.goto(f'http://127.0.0.1:{server.server_port}/academy.html')
+  public=(ROOT/'index.html').read_text().replace('</head>','<link rel="stylesheet" href="mobile.css"><script defer src="mobile.js"></script></head>')
+  context.route('**/index.html',lambda r:r.fulfill(status=200,content_type='text/html',body=public))
+  page.goto(f'http://127.0.0.1:{server.server_port}/index.html')
+  page.locator('#nativePublicShortcuts').wait_for();assert page.locator('#authForm').count()==0
+  assert page.locator('#hero-title').is_visible()
+  page.locator('#nativePublicShortcuts').get_by_role('link',name='Sporcu / Antrenör Girişi',exact=True).click()
   page.wait_for_function("document.getElementById('authPassword').value==='test-only-password-123'")
   assert page.locator('#authEmail').input_value()=='trainer@example.invalid'
   assert page.locator('#authTeacherTab').get_attribute('class').find('active')>=0
