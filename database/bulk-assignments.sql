@@ -1,8 +1,8 @@
 
-create table public.academy_assignment_batches(id uuid primary key,actor_id uuid not null references public.profiles(id),signature text not null,recipient_count integer not null,created_at timestamptz not null default now());
+create table public.academy_assignment_batches(id uuid primary key,actor_id uuid not null references public.profiles(id) on delete cascade,signature text not null,recipient_count integer not null,created_at timestamptz not null default now());
 alter table public.academy_assignment_batches enable row level security;
 revoke all on public.academy_assignment_batches from anon,authenticated;
-alter table public.academy_assignments add column batch_id uuid references public.academy_assignment_batches(id);
+alter table public.academy_assignments add column batch_id uuid references public.academy_assignment_batches(id) on delete set null;
 create unique index assignment_batch_student on public.academy_assignments(batch_id,student_id) where batch_id is not null;
 create policy "admin manages club assignments" on public.academy_assignments for all to authenticated using(exists(select 1 from public.profiles where id=(select auth.uid()) and role='admin')) with check(exists(select 1 from public.profiles where id=(select auth.uid()) and role='admin'));
 
