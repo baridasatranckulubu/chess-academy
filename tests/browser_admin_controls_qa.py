@@ -25,6 +25,8 @@ try:
    context=browser.new_context(viewport={'width':1280,'height':1000});context.add_init_script(script(mode));context.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''))
    requests=[]
    def endpoint(route):
+    if not route.request.url.endswith('/academy-admin-teachers'):
+     route.fulfill(status=200,content_type='application/json',body='{}');return
     requests.append(route.request.headers.get('authorization',''))
     failed=mode in ['recover','revoked'] and len(requests)==1
     route.fulfill(status=401 if failed else 200,content_type='application/json',body=json.dumps({'error':'Oturum geçersiz'} if failed else {'teachers':[{'id':'coachA','display_name':'Mehmet'},{'id':'coachB','display_name':'Ayşe'}]}))
@@ -34,7 +36,7 @@ try:
     page.locator('#authMessage').filter(has_text='yeniden giriş').wait_for();assert page.locator('#app').is_hidden();assert page.evaluate('window.__signedOut');assert not requests;context.close();continue
    page.evaluate("window.baridaNavigate('student-register')")
    if mode=='revoked':
-    page.locator('#authMessage').filter(has_text='yeniden giriş').wait_for();assert page.locator('#app').is_hidden();assert page.evaluate('window.__signedOut');assert len(requests)==1;context.close();continue
+    page.locator('#authMessage').filter(has_text='yeniden giriş').wait_for();assert page.locator('#app').is_hidden();assert page.evaluate('window.__signedOut');assert len(requests)==1,requests;context.close();continue
    page.locator('#studentTeacherChoices button').nth(1).wait_for();assert page.locator('#studentCreateTeacher').is_hidden();page.locator('#studentTeacherChoices').get_by_role('button',name='Ayşe',exact=True).click();assert page.locator('#studentCreateTeacher').input_value()=='coachB';assert page.locator('#studentTeacherChoices').get_by_role('button',name='Ayşe',exact=True).get_attribute('aria-pressed')=='true'
    if mode=='recover':assert requests==['Bearer test-token','Bearer fresh-token'];assert page.evaluate('window.__refresh')==1;context.close();continue
    page.evaluate("window.baridaNavigate('admin-messages')");page.get_by_role('button',name='♟ Sınıfa özel',exact=True).click();page.get_by_role('button',name='Ayşe · B sınıfı · 1 sporcu',exact=True).click();page.locator('[name=title]').fill('Haftanın duyurusu');page.locator('[name=body]').fill('Cumartesi kulüpte görüşelim.');page.on('dialog',lambda d:d.accept());page.get_by_role('button',name='📨 Bildirimi Gönder',exact=True).click();page.locator('.ca-message-status').filter(has_text='1 kullanıcıya').wait_for();call=page.evaluate("window.__calls.find(x=>x.name==='academy_send_class_notification')");assert call['args']['p_teacher']=='coachB' and call['args']['p_class']=='B';assert not page.evaluate("window.__calls.some(x=>x.name==='academy_send_notification')")

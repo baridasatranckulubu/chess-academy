@@ -41,9 +41,15 @@ begin
  if p_teacher is null or length(trim(coalesce(p_class,''))) not between 1 and 40 or not exists(select 1 from public.teacher_students ts join public.profiles t on t.id=ts.teacher_id and t.role='teacher' where ts.teacher_id=p_teacher and ts.class_name=trim(p_class)) then raise exception 'Sınıf bulunamadı';end if;
  v_payment:=lower(p_title||' '||p_body)~'(ödeme|aidat|tahsilat|taksit|borç)';
  insert into public.academy_notifications(recipient_id,sender_id,category,title,body)
- select p.id,uid,case when v_payment then 'payment_manual' else 'message' end,trim(p_title),trim(p_body) from public.profiles p
+ select p.id,uid,case when v_payment then 'payment' else 'message' end,trim(p_title),trim(p_body) from public.profiles p
  where (v_payment and p.role='admin') or (not v_payment and p.role='student' and not exists(select 1 from public.academy_student_status st where st.student_id=p.id and not st.active) and exists(select 1 from public.teacher_students ts where ts.student_id=p.id and ts.teacher_id=p_teacher and ts.class_name=trim(p_class)));
  get diagnostics v_count=row_count;return v_count;
 end $$;
 revoke all on function public.academy_send_class_notification(uuid,text,text,text) from public,anon;
 grant execute on function public.academy_send_class_notification(uuid,text,text,text) to authenticated;
+
+-- Keep the existing group notification path compatible with its category constraint.
+do $$declare source text;begin
+ select pg_get_functiondef('public.academy_send_notification(text,text,text,uuid)'::regprocedure) into source;
+ execute replace(source,'''payment_manual''','''payment''');
+end $$;
