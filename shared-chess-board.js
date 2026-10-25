@@ -102,6 +102,7 @@ function boardAnnotations(root,flipped){
  state.flipped=flipped;drawAnnotations(root,state)
 }
 function drawAnnotations(root,state){
+ if(!state.marks.size&&!state.arrows.size){root.querySelectorAll('.ca-board-annotations').forEach(el=>el.remove());return}
  root.querySelectorAll('.ca-board-annotations').forEach(el=>el.remove());const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 800 800');svg.setAttribute('class','ca-board-annotations');svg.setAttribute('aria-hidden','true');svg.style.cssText='position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;filter:none!important;box-shadow:none!important;opacity:1;transform:none!important';
  const xy=sq=>{const f='abcdefgh'.indexOf(sq[0]),rank=Number(sq[1]);return state.flipped?[(7-f)*100+50,(rank-1)*100+50]:[f*100+50,(8-rank)*100+50]};
  const el=(name,attrs)=>{const n=document.createElementNS('http://www.w3.org/2000/svg',name);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,String(v));return n};
@@ -174,4 +175,5 @@ window.ChessAcademySharedBoard={pieceSVG,sound,preloadSound,renderBoard,bindDrag
 
 /* Soft mint move-trace on source and destination, placed behind all pieces. */
 (function installMoveTraceStyle(){if(document.getElementById('barida-last-move-global-v2'))return;const style=document.createElement('style');style.id='barida-last-move-global-v2';style.textContent=`.board .sq.last-move,.ca-grid .board>.sq.last-move,.chess-board-frame .board .sq.last-move{position:relative!important;isolation:isolate!important;box-shadow:inset 0 0 0 999px rgba(33,153,83,.45),inset 0 0 0 1px rgba(80,207,125,.48)!important}.board .sq.last-move::after{pointer-events:none}.board .sq.last-move .piece,.board .sq.last-move .piece-3d{position:relative!important;z-index:2!important}.board .sq.last-move.selected{box-shadow:inset 0 0 0 999px rgba(33,153,83,.42),inset 0 0 0 3px #e9ca75!important}`;document.head.append(style)})();
+
 

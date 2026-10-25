@@ -19,3 +19,11 @@ print('Prepared bundled Android UI:',len(list(OUT.rglob('*'))),'entries')
 # The large archive is fetched selectively from the working public mirror.
 p=OUT/'assignment-bank.js'
 p.write_text(p.read_text().replace('const r=await fetch(url);',"const r=await fetch(url.startsWith('puzzle-full/')?'https://baridasatranckulubu.github.io/chess-academy/'+url:url);"))
+
+
+# Public landing opens first. Native enhancements remain native-only.
+p=OUT/'index.html';p.write_text(p.read_text().replace('</head>','<link rel="stylesheet" href="mobile.css"><script defer src="mobile.js"></script></head>'))
+# Asset hashes make every bundled UI file traceable to the same source revision.
+import hashlib,json,os
+manifest={"revision":os.environ.get("GITHUB_SHA","local"),"files":{str(p.relative_to(OUT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in OUT.rglob('*') if p.is_file() and p.suffix in {'.js','.css','.html'}}}
+(OUT/'app-build.json').write_text(json.dumps(manifest,separators=(',',':')))

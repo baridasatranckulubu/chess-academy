@@ -37,29 +37,8 @@ function updateEvalBar(score,depth){
  bar.setAttribute('aria-valuetext','Beyaz açısından '+fmt(score)+', analiz derinliği '+(depth||'bilinmiyor'));
 }
 function draw(){
- renderSidePanel();
- const livePositions=positions(),pos=reviewSnapshot?.positions||livePositions,score=scores.get(livePositions[livePositions.length-1]);if(!$('caLiveEval'))return;updateEvalBar(score,depths.get(livePositions[livePositions.length-1]));
- $('caLiveEval').textContent=fmt(score);renderSidePanel();
- const white=$('caWhiteEval'),black=$('caBlackEval');if(white)white.textContent=fmt(score);if(black)black.textContent=typeof score==='number'?fmt(-score):typeof score==='string'&&score.startsWith('M')?'M'+(-Number(score.slice(1))):'…';
- $('caReviewStatus').textContent=error||'';
- const W=680,H=170,mid=H/2;let markup='<line x1="0" y1="'+mid+'" x2="'+W+'" y2="'+mid+'" stroke="#8999a8" stroke-dasharray="4 5"/>';
- const samples=pos.map((fen,i)=>({i,v:scores.get(fen)})).filter(p=>typeof p.v==='number');
- const bound=Math.max(200,...samples.map(p=>Math.abs(p.v)));
- const x=i=>pos.length===1?W/2:i*W/(pos.length-1),y=v=>mid-(v/bound)*(mid-12);
- if(samples.length)markup+='<polyline fill="none" stroke="#e9c27e" stroke-width="3" points="'+samples.map(p=>x(p.i)+','+y(p.v)).join(' ')+'"/>';
- if(samples.length)markup+='<polyline fill="none" stroke="#a9c8e9" stroke-width="2" stroke-dasharray="5 4" points="'+samples.map(p=>x(p.i)+','+y(-p.v)).join(' ')+'"/>';markup+='<text x="10" y="16" fill="#e9c27e" font-size="12">Beyaz avantajı</text><text x="10" y="162" fill="#a9c8e9" font-size="12">Siyah avantajı</text>'; for(const p of samples)markup+='<circle cx="'+x(p.i)+'" cy="'+y(p.v)+'" r="3" fill="#f6e6c6"><title>Hamle '+p.i+': '+fmt(p.v)+'</title></circle>';
- $('caEvalGraph').innerHTML=markup;const graphWhite=$('caGraphWhite'),graphBlack=$('caGraphBlack');if(graphWhite)graphWhite.textContent=fmt(score);if(graphBlack)graphBlack.textContent=typeof score==='number'?fmt(-score):typeof score==='string'&&score.startsWith('M')?'M'+(-Number(score.slice(1))):'…';
- const data={w:[],b:[]};for(let i=1;i<pos.length;i++){const before=scores.get(pos[i-1]),after=scores.get(pos[i]);if(typeof before!=='number'||typeof after!=='number')continue;const side=i%2?'w':'b';const loss=Math.max(0,(side==='w'?chance(before)-chance(after):chance(after)-chance(before)));data[side].push(loss)}
- const stats=$('caReviewStats');stats.replaceChildren();
- for(const side of ['w','b']){
-  const moves=[],losses=[];
-  for(let i=1;i<pos.length;i++){if((i%2?'w':'b')!==side)continue;const before=scores.get(pos[i-1]),after=scores.get(pos[i]);if(typeof before!=='number'||typeof after!=='number')continue;const loss=Math.max(0,(side==='w'?chance(before)-chance(after):chance(after)-chance(before)));losses.push(loss);if(loss>=.12)moves.push(i)}
-  const avg=losses.length?losses.reduce((sum,v)=>sum+v,0)/losses.length:null;
-  const line=document.createElement('div');line.textContent=(side==='w'?'Beyaz':'Siyah')+': '+(avg===null?'analiz bekleniyor':'yaklaşık doğruluk %'+Math.round(100*(1-avg)))+' - belirgin hata '+moves.length;stats.append(line);
-  const buttons=document.createElement('div');buttons.className='ca-mistake-numbers';
-  moves.forEach((ply,index)=>{const btn=document.createElement('button');btn.type='button';btn.textContent=String(index+1);btn.title=Math.ceil(ply/2)+'. hamledeki hatayı tahtada göster';btn.onclick=()=>showMistake(ply,side,index+1);buttons.append(btn)});
-  stats.append(buttons);
- }
+ renderSidePanel();const g=getGame();if(!g||!$('caLiveEval'))return;
+ const score=scores.get(g.fen());updateEvalBar(score,depths.get(g.fen()));$('caLiveEval').textContent=fmt(score);$('caReviewStatus').textContent=error||'';
 }
 let annotation=null,reviewSnapshot=null;
 function clearAnnotation(){annotation=null;document.querySelectorAll('.ca-error-arrow,.ca-error-circle').forEach(el=>el.remove());}
@@ -85,7 +64,7 @@ function setupReview(){
  const notice=document.createElement('p');notice.id='caMistakeNotice';notice.hidden=true;notice.className='ca-mistake-notice';board.closest('.chess-board-frame')?.after(notice);
  board.addEventListener('click',event=>{if(annotation){event.stopPropagation();event.preventDefault();clearAnnotation();const n=$('caMistakeNotice');if(n)n.hidden=true}},true);
 }
-function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage('go depth 24 movetime 10000');draw()}
+function next(){if(!liveEnabled||!ready||busy||!queue.length)return;const fen=queue.pop();queue=[];busy=true;current={fen,score:undefined,turn:fen.split(' ')[1],epoch:analysisEpoch,depth:0,pv:null};worker.postMessage('position fen '+fen);worker.postMessage(matchMedia('(max-width:640px)').matches?'go depth 18 movetime 1800':'go depth 24 movetime 10000');draw()}
 async function init(){
  if(worker||loading)return;
  loading=true;error='Motor dosyası indiriliyor…';draw();
@@ -125,7 +104,11 @@ function schedule(full=false){if(!liveEnabled)return;
  draw();requestCloud(fen);init();next();
 }
 let paintedBestMove='',paintedBestBoard=null;
+let arrowGeometry="";
 function paintBestMove(){
+ if(!liveEnabled||!bestMove){arrowGeometry="";document.querySelectorAll('.ca-best-move-arrow').forEach(x=>x.remove());return}
+ const root=$('board'),origin=root?.querySelector('[data-square="'+bestMove.slice(0,2)+'"]'),target=root?.querySelector('[data-square="'+bestMove.slice(2,4)+'"]');
+ const geometry=origin&&target?[bestMove,origin.offsetLeft,origin.offsetTop,target.offsetLeft,target.offsetTop,root.clientWidth,root.clientHeight].join('|'):'';if(geometry===arrowGeometry&&root.querySelector('.ca-best-move-arrow'))return;arrowGeometry=geometry;
  document.querySelectorAll('.ca-best-move-arrow').forEach(x=>x.remove());
  if(!liveEnabled||!bestMove)return;
  const board=$('board');if(!board)return;
@@ -183,9 +166,9 @@ function sanMove(g,move){
  }
  if(!g.move(from,to,promotion))return null;return san+(g.isCheckmate()?'#':g.isCheck()?'+':'');
 }
-function variationText(fen,pv){
+let variationKey="",variationValue="";function variationText(fen,pv){const key=fen+"|"+pv;if(key===variationKey)return variationValue;variationKey=key;
  const g=new window.ChessAcademyEngine.ChessEngine(fen),out=[];
- for(const uci of (pv||'').trim().split(/\s+/).slice(0,14)){const turn=g.turn,n=g.fullmove,label=sanMove(g,uci);if(!label)break;out.push((turn==='w'?n+'. ':out.length===0?n+'… ':'')+label)}return out.join(' ');
+ for(const uci of (pv||'').trim().split(/\s+/).slice(0,14)){const turn=g.turn,n=g.fullmove,label=sanMove(g,uci);if(!label)break;out.push((turn==='w'?n+'. ':out.length===0?n+'… ':'')+label)}return variationValue=out.join(' ');
 }
 function setupSidePanel(){
  const board=$('board'),frame=board.closest('.chess-board-frame');if(!frame)return;
@@ -238,13 +221,13 @@ function renderSidePanel(){
  if(!$('caAnalysisSide'))return;if($('caEngineEvalBar'))$('caEngineEvalBar').hidden=!liveEnabled;const g=getGame(),fen=g.fen(),meta=evaluationMeta.get(fen),score=scores.get(fen);
  $('caAnalysisScore').textContent=liveEnabled?fmt(score):'—';$('caAnalysisDepth').textContent='Derinlik '+(liveEnabled&&meta?meta.depth:'—');$('caAnalysisSource').textContent=liveEnabled?(meta?.source||'Stockfish 19 · hesaplanıyor'):'Analiz kapalı';
  $('caAnalysisPV').textContent=liveEnabled?(meta?.pv?variationText(fen,meta.pv):'Konum hesaplanıyor…'):'Analizi açarak önerilen hamleleri görebilirsiniz.';
- const h=window.ChessAcademyDemo.analysisHistory(),key=h.start+'|'+h.moves.map(m=>m.from+m.to+(m.promotion||'')).join(',')+'|'+h.ply+'|'+Array.from(scores.entries()).map(([f,s])=>f+':'+s).join(';');
+ const h=window.ChessAcademyDemo.analysisHistory(),key=h.start+'|'+h.moves.map(m=>m.from+m.to+(m.promotion||'')).join(',')+'|'+h.ply;
  $('caAnalysisPly').textContent=h.ply+' / '+h.moves.length;
  document.querySelectorAll('[data-jump]').forEach(b=>b.disabled=(['first','back'].includes(b.dataset.jump)?h.ply===0:h.ply===h.moves.length));
- if(key===lastRowsKey)return;lastRowsKey=key;const rows=$('caNotationRows');rows.replaceChildren();const replay=new window.ChessAcademyEngine.ChessEngine(h.start);let row=null;
+ if(key===lastRowsKey){$('caNotationRows').querySelectorAll('small[data-fen]').forEach(el=>{const value=scores.get(el.dataset.fen);if(value!==undefined){const text=fmt(value);if(el.textContent!==text)el.textContent=text}});return;}lastRowsKey=key;const rows=$('caNotationRows');rows.replaceChildren();const replay=new window.ChessAcademyEngine.ChessEngine(h.start);let row=null;
  h.moves.forEach((m,i)=>{const turn=replay.turn,n=replay.fullmove,san=sanMove(replay,m.from+m.to+(m.promotion||''));if(!san)return;
  if(!row||turn==='w'){row=document.createElement('div');row.className='ca-notation-row';const label=document.createElement('span');label.textContent=n;row.append(label);if(turn==='b')row.append(document.createElement('span'));rows.append(row)}
- const b=document.createElement('button');b.type='button';b.dataset.ply=i+1;b.setAttribute('aria-current',h.ply===i+1?'step':'false');const label=document.createElement('span');label.textContent=san;b.append(label);const value=document.createElement('small');value.textContent=scores.has(replay.fen())?fmt(scores.get(replay.fen())):'';b.append(value);row.append(b);
+ const b=document.createElement('button');b.type='button';b.dataset.ply=i+1;b.setAttribute('aria-current',h.ply===i+1?'step':'false');const label=document.createElement('span');label.textContent=san;b.append(label);const value=document.createElement('small');value.dataset.fen=replay.fen();value.textContent=scores.has(replay.fen())?fmt(scores.get(replay.fen())):'';b.append(value);row.append(b);
  });
  if(!h.moves.length){const p=document.createElement('p');p.className='ca-analysis-caption';p.textContent='Hamleleriniz burada sıralanacak.';rows.append(p)}
 }
@@ -259,5 +242,6 @@ function boot(){
 }
 boot();
 })();
+
 
 

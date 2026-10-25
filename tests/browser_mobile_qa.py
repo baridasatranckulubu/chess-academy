@@ -39,8 +39,29 @@ try:
   assert page.evaluate("window.__vault.identity==='trainer@example.invalid'&&window.__vault.password==='test-only-password-123'")
   assert page.locator('#nativeBottomNav').is_visible()
   assert page.evaluate("!JSON.stringify(localStorage).includes('test-only-password-123')")
+  page.locator('#nativeQuickActions button').nth(5).wait_for();assert page.locator('#nativeQuickActions button').count()==6
+  assert page.locator('#clubMobileNav').is_hidden()
+  page.locator('#nativeTopNav button').first.click();page.locator('#nativeMenuDialog').wait_for()
+  assert page.locator('#nativeMenuDialog').evaluate('(el)=>getComputedStyle(el).backgroundColor')=='rgb(14, 48, 33)'
+  assert page.locator('#nativeMenuDialog .native-menu-items button').count()>0
+  page.get_by_role('button',name='Menüyü kapat',exact=True).click()
   page.locator('#nativeBottomNav').get_by_role('button',name='Analiz').click()
   assert page.locator('#view iframe').count()>0
+  frame=page.locator('#view iframe').element_handle().content_frame();frame.locator('#board .sq').first.wait_for()
+  for width in [320,360,412]:
+   page.set_viewport_size({'width':width,'height':850})
+   frame.wait_for_function("document.querySelector('.chess-board-frame').getBoundingClientRect().width>=innerWidth*.94")
+   assert frame.locator('.ca-board-resize-hit').first.is_hidden()
+   assert frame.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+  def boardmove(a,b):
+   frame.locator('#board [data-square="'+a+'"]').click();frame.locator('#board [data-square="'+b+'"]').click()
+  for a,b in [('e2','e4'),('d7','d5'),('e4','d5'),('d8','d5')]:boardmove(a,b)
+  frame.locator('#board [data-square="g1"]').click();frame.locator('#board [data-square="g1"]').click()
+  frame.evaluate("window.__moveCalls=0;window.__capture=document.querySelector('#capturedWhite').firstElementChild;window.__coordinate=document.querySelector('.chess-board-files span');const original=ChessAcademyEngine.ChessEngine.prototype.moves;ChessAcademyEngine.ChessEngine.prototype.moves=function(...args){window.__moveCalls++;return original.apply(this,args)}")
+  frame.locator('#board [data-square="g1"]').click()
+  assert frame.evaluate('window.__moveCalls')<=2,'Selecting a piece must not replay and evaluate the entire game'
+  assert frame.evaluate("window.__capture===document.querySelector('#capturedWhite').firstElementChild && window.__coordinate===document.querySelector('.chess-board-files span')")
+  (ROOT/'qa-artifacts').mkdir(exist_ok=True);page.screenshot(path=str(ROOT/'qa-artifacts/mobile-full-width-analysis.png'),full_page=True)
   assert page.evaluate('window.baridaHandleBack()') is True
   page.locator('#club-title').wait_for()
   page.locator('#logout').click();assert page.locator('#authRecall, #authForget').count()==0
@@ -50,3 +71,4 @@ try:
   print('PASS native restore/save/forget, coach role restoration, no plaintext web storage, 4 viewport sizes, bottom navigation and Android back')
   browser.close()
 finally:server.shutdown()
+
