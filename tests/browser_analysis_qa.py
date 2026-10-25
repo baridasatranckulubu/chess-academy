@@ -36,6 +36,21 @@ try:
   page.locator('#resetBoard').click();move(page,'d2','d4');page.wait_for_function("document.querySelector('#caAnalysisSource').textContent==='Lichess Cloud'",timeout=12000)
   assert page.locator('#caAnalysisScore').inner_text()=='+0.22';assert page.locator('#caAnalysisDepth').inner_text()=='Derinlik 65'
   page.locator('#caLiveEngineToggle').click();assert page.locator('#caAnalysisScore').inner_text()=='—'
+  # Both capture rails stay left; analysis follows the frame height at all desktop sizes.
+  page.locator('#resetBoard').click()
+  move(page,'e2','e4');move(page,'d7','d5');move(page,'e4','d5');move(page,'d8','d5')
+  assert page.locator('#capturedWhite .ca-captured-piece').count()==1
+  assert page.locator('#capturedBlack .ca-captured-piece').count()==1
+  for width in [1400,1060,900,700]:
+   page.set_viewport_size({'width':width,'height':1100})
+   page.wait_for_function("Math.abs(document.querySelector('#caAnalysisSide').getBoundingClientRect().height-document.querySelector('.chess-board-frame').getBoundingClientRect().height)<3")
+   box=page.evaluate("""()=>{const rect=s=>{const r=document.querySelector(s).getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height}};return {board:rect('.chess-board-frame'),panel:rect('#caAnalysisSide'),captures:rect('.ca-captured-rails')}}""")
+   assert box['panel']['left']>=box['board']['right'],box
+   assert box['captures']['right']<box['board']['left'],box
+   assert abs(box['panel']['top']-box['board']['top'])<2,box
+   assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1')
+  Path('qa-artifacts').mkdir(exist_ok=True);page.screenshot(path='qa-artifacts/analysis-resize-captures.png',full_page=True)
+
   # Arbitrary FEN: retain Black-to-move numbering and its actual initial position.
   page.evaluate("window.ChessAcademyDemo.loadReviewPosition('4k3/8/8/8/8/8/8/R3K3 b - - 0 17')")
   move(page,'e8','d7');assert '17' in page.locator('#caNotationRows').inner_text();assert 'Kd7' in page.locator('#caNotationRows').inner_text()
@@ -50,5 +65,21 @@ try:
   real.goto(f'http://127.0.0.1:{server.server_port}/board.html?embed=studio');real.locator('#caLiveEngineToggle').click();real.wait_for_function("/Derinlik [1-9]/.test(document.querySelector('#caAnalysisDepth').textContent)",timeout=45000)
   assert real.locator('#caAnalysisScore').inner_text() not in ['…','—'];assert real.locator('#caAnalysisSource').inner_text()=='Stockfish 19'
   move(real,'e2','e4');move(real,'e7','e5');real.wait_for_function("document.querySelectorAll('#caNotationRows button').length===2");real.screenshot(path='qa-artifacts/analysis-desktop.png',full_page=True)
+  # Use the real Academy shell and drag the real iframe corner grip.
+  import ast,json
+  tree=ast.parse((ROOT/'tests/browser_club_qa.py').read_text())
+  mock=next(ast.literal_eval(n.value) for n in tree.body if isinstance(n,ast.Assign) and any(isinstance(t,ast.Name) and t.id=='MOCK' for t in n.targets))
+  shell=browser.new_context(viewport={'width':1600,'height':1200});shell.add_init_script(mock.replace('ROLE',json.dumps('student')))
+  shell.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''));shell.route('https://**.supabase.co/**',lambda r:r.abort())
+  host=shell.new_page();host.goto(f'http://127.0.0.1:{server.server_port}/academy.html');host.locator('#baridaBoot').wait_for(state='hidden')
+  host.get_by_text('🎯 Antrenman',exact=True).click();host.get_by_role('button',name='♟ Analiz Tahtası',exact=True).click()
+  host.locator('.home-board-frame').wait_for();embedded=host.locator('.home-board-frame').element_handle().content_frame();embedded.locator('#caAnalysisSide').wait_for()
+  for delta in [-180,300]:
+   before=host.locator('.board-studio-resizer').bounding_box()['width'];grip=embedded.locator('.ca-board-resize-se').bounding_box();x=grip['x']+15;y=grip['y']+15
+   host.mouse.move(x,y);host.mouse.down();host.mouse.move(x+delta,y+delta,steps=12);host.mouse.up()
+   host.wait_for_function('(before)=>Math.abs(document.querySelector(".board-studio-resizer").getBoundingClientRect().width-before)>50',arg=before)
+   embedded.wait_for_function("Math.abs(document.querySelector('#caAnalysisSide').getBoundingClientRect().height-document.querySelector('.chess-board-frame').getBoundingClientRect().height)<3")
+  host.screenshot(path='qa-artifacts/analysis-shell-resize.png',full_page=True)
   browser.close();print('Analysis: real WASM, cloud, sign, depth, stale results, notation, navigation and mobile passed')
 finally:server.shutdown()
+
