@@ -62,7 +62,7 @@ try:
    frame.locator('#board [data-square="'+a+'"]').click();frame.locator('#board [data-square="'+b+'"]').click()
   for a,b in [('e2','e4'),('d7','d5'),('e4','d5'),('d8','d5')]:boardmove(a,b)
   frame.locator('#board [data-square="g1"]').click();frame.locator('#board [data-square="g1"]').click()
-  frame.evaluate("window.__moveCalls=0;window.__capture=document.querySelector('#capturedWhite').firstElementChild;window.__coordinate=document.querySelector('.chess-board-files span');const original=ChessAcademyEngine.ChessEngine.prototype.moves;ChessAcademyEngine.ChessEngine.prototype.moves=function(...args){window.__moveCalls++;return original.apply(this,args)}")
+  frame.evaluate("()=>{window.__moveCalls=0;window.__capture=document.querySelector('#capturedWhite').firstElementChild;window.__coordinate=document.querySelector('.chess-board-files span');const original=ChessAcademyEngine.ChessEngine.prototype.moves;ChessAcademyEngine.ChessEngine.prototype.moves=function(...args){window.__moveCalls++;return original.apply(this,args)}}")
   frame.locator('#board [data-square="g1"]').click()
   assert frame.evaluate('window.__moveCalls')<=2,'Selecting a piece must not replay and evaluate the entire game'
   assert frame.evaluate("window.__capture===document.querySelector('#capturedWhite').firstElementChild && window.__coordinate===document.querySelector('.chess-board-files span')")
