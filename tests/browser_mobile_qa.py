@@ -46,6 +46,11 @@ try:
   assert page.evaluate("!JSON.stringify(localStorage).includes('test-only-password-123')")
   page.locator('#nativeQuickActions button').nth(5).wait_for();assert page.locator('#nativeQuickActions button').count()==6
   assert page.locator('#clubMobileNav').is_hidden()
+  for width in [320,360,412,768]:
+   page.set_viewport_size({'width':width,'height':850})
+   fit=page.locator('#nativeTopNav').evaluate("el=>{const r=el.getBoundingClientRect();return el.scrollWidth<=el.clientWidth+1 && [...el.children].every(b=>{const q=b.getBoundingClientRect();return q.left>=r.left && q.right<=r.right+1 && q.width>40})}")
+   assert fit,('All native menu buttons must fit without horizontal scrolling',width)
+  page.set_viewport_size({'width':360,'height':800})
   page.locator('#nativeTopNav button').first.click();page.locator('#nativeMenuDialog').wait_for()
   assert page.locator('#nativeMenuDialog').evaluate('(el)=>getComputedStyle(el).backgroundColor')=='rgb(14, 48, 33)'
   assert page.locator('#nativeMenuDialog .native-menu-items button').count()>0

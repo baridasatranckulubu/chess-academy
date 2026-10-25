@@ -106,6 +106,8 @@ jobs:
         run: python tests/browser_sound_qa.py
       - name: Mobil giriş, güvenli saklama ve gezinme
         run: python tests/browser_mobile_qa.py
+      - name: Dokunmatik kaydırma ve akıcı bulmaca
+        run: python tests/browser_touch_qa.py
       - name: Test ekran görüntüleri
         if: always()
         uses: actions/upload-artifact@v4

@@ -33,8 +33,15 @@ public class CredentialVaultTest {
     if("true".equals(result.poll(2,TimeUnit.SECONDS))){publicHome=true;break;}Thread.sleep(500);
    }
    assertTrue("App must open the public club home before login",publicHome);
-   assertNotEquals(0,context.getResources().getIdentifier("barida_login_art","drawable",context.getPackageName()));
-   assertNotNull(context.getApplicationInfo().loadIcon(context.getPackageManager()));
+   assertNotEquals(0,context.getResources().getIdentifier("barida_icon_art","drawable",context.getPackageName()));
+   assertEquals("barida_launcher",context.getResources().getResourceEntryName(context.getApplicationInfo().icon));
+   android.content.pm.ResolveInfo launch=context.getPackageManager().resolveActivity(context.getPackageManager().getLaunchIntentForPackage(context.getPackageName()),0);
+   assertNotNull(launch);assertEquals("barida_launcher",context.getResources().getResourceEntryName(launch.getIconResource()));
+   android.graphics.drawable.Drawable icon=context.getApplicationInfo().loadIcon(context.getPackageManager());assertTrue(icon instanceof android.graphics.drawable.AdaptiveIconDrawable);
+   android.graphics.drawable.Drawable foreground=((android.graphics.drawable.AdaptiveIconDrawable)icon).getForeground();
+   assertTrue(foreground instanceof android.graphics.drawable.LayerDrawable);
+   assertTrue(((android.graphics.drawable.LayerDrawable)foreground).getDrawable(0) instanceof android.graphics.drawable.BitmapDrawable);
+   assertEquals(0,context.getResources().getIdentifier("ic_launcher_foreground","drawable",context.getPackageName()));
    scenario.onActivity(activity->activity.getBridge().getWebView().loadUrl("https://localhost/academy.html"));
    boolean restored=false;
    for(int n=0;n<40;n++){

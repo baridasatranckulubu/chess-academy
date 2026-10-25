@@ -225,7 +225,7 @@ function renderBoard(){const root=$('board');window.ChessAcademyBoardFrame?.upda
 let performedDrag=false;
 let dragOrigin=null,dragPointer=null,dragStartX=0,dragStartY=0;
 const boardEl=$('board');
-boardEl.style.touchAction='none';
+boardEl.style.touchAction=matchMedia('(pointer:coarse)').matches?'pan-y pinch-zoom':'none';
 let carryGhost=null,draggingPiece=false,lastPointerX=0,lastPointerY=0;
 function clearCarryGhost(){
  carryGhost?.remove();carryGhost=null;
@@ -254,7 +254,7 @@ function finishDrag(){
  draggingPiece=false;dragOrigin=null;dragPointer=null;clearCarryGhost();
 }
 boardEl.addEventListener('pointerdown',event=>{
- if(editPiece)return;if(event.pointerType==='mouse'&&event.button!==0)return;
+ if(editPiece||event.pointerType==='touch')return;if(event.pointerType==='mouse'&&event.button!==0)return;
  const sq=event.target.closest('.sq');if(!sq||!boardEl.contains(sq))return;
  const from=sq.dataset.square,piece=game.at(from);
  // A tap on any square remains a normal click, including legal destinations.
