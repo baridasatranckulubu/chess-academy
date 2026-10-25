@@ -1,0 +1,45 @@
+name: Import licensed Lichess SFX assets
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/lichess-audio.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch pinned and verified licensed sound files
+        run: |
+          python - <<'PY'
+          import pathlib,urllib.request,hashlib
+          p=pathlib.Path('audio-import');p.mkdir(exist_ok=True)
+          data=urllib.request.urlopen("https://raw.githubusercontent.com/lichess-org/lila/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx/Capture.mp3",timeout=60).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()=="3eef92606aed4e83e02fcba85b77635c04214aad"
+          (p/"Capture.mp3").write_bytes(data)
+          data=urllib.request.urlopen("https://raw.githubusercontent.com/lichess-org/lila/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx/Check.mp3",timeout=60).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()=="1c901efa7696ee633823a01478acd2faa45e76e7"
+          (p/"Check.mp3").write_bytes(data)
+          data=urllib.request.urlopen("https://raw.githubusercontent.com/lichess-org/lila/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx/GenericNotify.mp3",timeout=60).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()=="526552177f8beb354aaaa0c3bebacffc32b9e8b4"
+          (p/"GenericNotify.mp3").write_bytes(data)
+          data=urllib.request.urlopen("https://raw.githubusercontent.com/lichess-org/lila/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx/Move.mp3",timeout=60).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()=="7e84649561e588b072be683b03eff21a8436e0e3"
+          (p/"Move.mp3").write_bytes(data)
+          data=urllib.request.urlopen("https://raw.githubusercontent.com/lichess-org/lila/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx/Victory.mp3",timeout=60).read()
+          assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()=="34db055723898b3a001f22335175727d7f84988b"
+          (p/"Victory.mp3").write_bytes(data)
+          (p/'AGPL-3.0.txt').write_bytes(urllib.request.urlopen('https://www.gnu.org/licenses/agpl-3.0.txt',timeout=60).read())
+          (p/'SOURCE.md').write_text("# Lichess SFX sounds\n\nAuthor: Enigmahack. License: GNU AGPL v3 or later.\n\nUnmodified Move.mp3, Capture.mp3, Check.mp3, Victory.mp3 and GenericNotify.mp3.\n\nSource: https://github.com/lichess-org/lila/tree/e19c044af145c833d3a9133fa8f9418b1159767d/public/sound/sfx\nLicensing: https://github.com/lichess-org/lila/blob/e19c044af145c833d3a9133fa8f9418b1159767d/COPYING.md\n\nThe source MP3 files are included unchanged; see AGPL-3.0.txt.\n")
+          
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Lichess-SFX-source
+          path: audio-import/
+          retention-days: 7
