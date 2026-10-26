@@ -10,6 +10,21 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 @RunWith(AndroidJUnit4.class)
 public class CredentialVaultTest {
+ @Test public void launcherArtworkScalesInsideTheMask() throws Exception {
+  Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();
+  for(int size:new int[]{24,48,96,192}){
+   android.graphics.drawable.AdaptiveIconDrawable icon=(android.graphics.drawable.AdaptiveIconDrawable)context.getApplicationInfo().loadIcon(context.getPackageManager()).mutate();
+   android.graphics.Bitmap bitmap=android.graphics.Bitmap.createBitmap(size,size,android.graphics.Bitmap.Config.ARGB_8888);
+   icon.setBounds(0,0,size,size);icon.draw(new android.graphics.Canvas(bitmap));
+   android.graphics.drawable.InsetDrawable inset=(android.graphics.drawable.InsetDrawable)icon.getForeground();
+   android.graphics.Rect artwork=inset.getDrawable().getBounds();
+   assertTrue("Artwork must shrink with launcher size: "+artwork,artwork.width()<=size*.90f+2 && artwork.width()>=size*.75f-2);
+   assertTrue("Artwork must stay centered inside launcher mask: "+artwork,Math.abs(artwork.exactCenterX()-size/2f)<=2 && Math.abs(artwork.exactCenterY()-size/2f)<=2);
+   assertTrue("Top and bottom must stay inside the mask",artwork.top>=0 && artwork.bottom<=size);
+   if(size==192)try(java.io.FileOutputStream out=new java.io.FileOutputStream(new java.io.File(context.getFilesDir(),"barida-icon-preview.png"))){bitmap.compress(android.graphics.Bitmap.CompressFormat.PNG,100,out);}
+   bitmap.recycle();
+  }
+ }
  @Test public void encryptedRoundTripAndClear() throws Exception {
   Context context=InstrumentationRegistry.getInstrumentation().getTargetContext();CredentialVault vault=new CredentialVault(context);vault.clear();
   try{
@@ -39,8 +54,8 @@ public class CredentialVaultTest {
    assertNotNull(launch);assertEquals("barida_launcher",context.getResources().getResourceEntryName(launch.getIconResource()));
    android.graphics.drawable.Drawable icon=context.getApplicationInfo().loadIcon(context.getPackageManager());assertTrue(icon instanceof android.graphics.drawable.AdaptiveIconDrawable);
    android.graphics.drawable.Drawable foreground=((android.graphics.drawable.AdaptiveIconDrawable)icon).getForeground();
-   assertTrue(foreground instanceof android.graphics.drawable.LayerDrawable);
-   assertTrue(((android.graphics.drawable.LayerDrawable)foreground).getDrawable(0) instanceof android.graphics.drawable.BitmapDrawable);
+   assertTrue(foreground instanceof android.graphics.drawable.InsetDrawable);
+   assertTrue(((android.graphics.drawable.InsetDrawable)foreground).getDrawable() instanceof android.graphics.drawable.BitmapDrawable);
    assertEquals(0,context.getResources().getIdentifier("ic_launcher_foreground","drawable",context.getPackageName()));
    scenario.onActivity(activity->activity.getBridge().getWebView().loadUrl("https://localhost/academy.html"));
    boolean restored=false;
@@ -53,4 +68,5 @@ public class CredentialVaultTest {
   }finally{vault.clear();}
  }
 }
+
 
