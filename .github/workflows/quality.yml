@@ -41,6 +41,7 @@ jobs:
           node tests/native_push.test.js
           node tests/result_sync.test.js
           node tests/account_lifecycle.test.js
+          node tests/assignment_account_isolation.test.js
       - name: Satranç motoru
         run: node tests/engine.test.js
       - name: Tahta SVG ve 360 derece dönüş doğrulaması

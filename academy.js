@@ -994,8 +994,11 @@ function confirmAssignmentDelete(){
   dialog.showModal();cancel.focus();
  });
 }
+let assignmentLoadGeneration=0;
 async function loadAssignmentCards(view){
+ const owner=realUser?.id,generation=++assignmentLoadGeneration;if(!owner)return;
  const {data,error}=await authClient.from('academy_assignments').select('id,title,kind,theme,puzzle_count,min_rating,max_rating,fen,solution_uci,instructions,status,created_at,student_id,due_at').order('created_at',{ascending:false}).limit(100);
+ if(realUser?.id!==owner||generation!==assignmentLoadGeneration||section!=='assignments'||!view.isConnected)return;
  if(error)throw error;const snapshot=JSON.stringify(data||[]),old=view.querySelector('#realAssignmentList');if(old?._snapshot===snapshot&&old.dataset.tab===assignmentTab)return;old?.remove();
  const assignments=data||[],list=node('section','assignment-list');list.id='realAssignmentList';list._snapshot=snapshot;list.dataset.tab=assignmentTab;
  const tabs=node('div','assignment-tabs');for(const [key,label] of [['open','Bekleyen'],['completed','Tamamlanan']]){const n=assignments.filter(a=>(a.status==='completed')===(key==='completed')).length;const tab=button(label+' ('+n+')',()=>{assignmentTab=key;loadAssignmentCards(view)},'btn'+(assignmentTab===key?' gold':''));tab.dataset.tab=key;tabs.append(tab)}list.append(tabs);
