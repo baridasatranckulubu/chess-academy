@@ -1,6 +1,6 @@
 'use strict';const fs=require('node:fs'),assert=require('node:assert/strict'),vm=require('node:vm');
 const read=p=>fs.readFileSync(p,'utf8');new vm.Script(read('mobile.js'));new vm.Script(read('academy.js'));
-const config=JSON.parse(read('capacitor.config.json'));assert(!config.server?.url);assert.equal(config.appId,'com.baridasatranckulubu.academy');
+const config=JSON.parse(read('capacitor.config.json'));assert.equal(config.server?.url,'https://baridasatranc.pages.dev');assert.equal(config.server.cleartext,false);assert(!config.server.allowNavigation);assert.equal(config.server.errorPath,'native-offline.html');assert.equal(config.appId,'com.baridasatranckulubu.academy');
 assert(read('academy.js').includes('BaridaLoginMemory?.save(identity,password'));
 assert(!read('mobile.js').match(/localStorage\.setItem\([^\n]*password/));
 assert(read('native/android/CredentialVault.java').includes('AndroidKeyStore'));
@@ -9,4 +9,4 @@ assert(read('tools/configure_android.py').includes('android:allowBackup="false"'
 assert(read('mobile.js').includes('C.Plugins?.App'));
 assert(read('mobile.js').includes('C.Plugins?.SecureLogin'));
 assert(read('mobile.css').includes('safe-area-inset-bottom'));
-console.log('PASS native identity, bundled origin, encrypted credential design and mobile controls');
+console.log('PASS native identity, exact live-site origin, encrypted credential design and mobile controls');

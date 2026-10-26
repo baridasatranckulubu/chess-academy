@@ -33,7 +33,7 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import shutil
+          import shutil,json,os
           root = Path(".")
           out = Path("_pages")
           out.mkdir()
@@ -47,6 +47,14 @@ jobs:
           assert sum(1 for p in out.rglob("*") if p.is_file()) < 20000
           assert (out / "index.html").is_file()
           assert (out / "academy.html").is_file()
+          revision = os.environ["GITHUB_SHA"]
+          # workflow_run checks out the tested SHA rather than the workflow's default SHA.
+          import subprocess
+          revision = subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
+          (out / "site-version.json").write_text(json.dumps({"revision":revision}))
+          for page in out.glob("*.html"):
+              content=page.read_text()
+              page.write_text(content.replace("</head>",'<meta name="barida-revision" content="'+revision+'"></head>',1))
           assert all(p.stat().st_size < 25 * 1024 * 1024 for p in out.rglob("*") if p.is_file())
       - name: Ensure the exact Barida Satranc address exists
         env:

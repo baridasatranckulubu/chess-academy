@@ -1,7 +1,7 @@
 from pathlib import Path
 import shutil,re,base64,hashlib,json,struct
 root=Path(__file__).resolve().parents[1];app=root/'android/app/src/main';package='com/baridasatranckulubu/academy'
-for name in ['MainActivity.java','CredentialVault.java','SecureLoginPlugin.java']:
+for name in ['MainActivity.java','CredentialVault.java','SecureLoginPlugin.java','LiveSite.java']:
  (app/'java'/package).mkdir(parents=True,exist_ok=True);shutil.copy2(root/'native/android'/name,app/'java'/package/name)
 test=root/'android/app/src/androidTest/java'/package;test.mkdir(parents=True,exist_ok=True);shutil.copy2(root/'native/android/CredentialVaultTest.java',test/'CredentialVaultTest.java')
 p=app/'AndroidManifest.xml';s=p.read_text().replace('android:allowBackup="true"','android:allowBackup="false" android:fullBackupContent="false" android:dataExtractionRules="@xml/barida_data_extraction_rules" android:usesCleartextTraffic="false"');p.write_text(s)

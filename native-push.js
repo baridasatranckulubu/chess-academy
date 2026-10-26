@@ -1,7 +1,7 @@
 /* FCM token registration and authenticated notification navigation. */
 (()=>{'use strict';
  const C=window.Capacitor;if(!C?.isNativePlatform?.())return;
- const push=C.Plugins?.PushNotifications||C.registerPlugin('PushNotifications');
+ const push=C.Plugins?.PushNotifications||C.registerPlugin?.('PushNotifications');if(!push?.addListener)return;
  const launch=C.Plugins?.SecureLogin;
  let client=null,user=null,token='',pending=null,ready=false,work=Promise.resolve(),generation=0;
  const uuid=x=>typeof x==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x);

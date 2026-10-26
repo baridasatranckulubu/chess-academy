@@ -1,1 +1,24 @@
-{"appId":"com.baridasatranckulubu.academy","appName":"Barida Satran\u00e7","webDir":"android-web","loggingBehavior":"none","android":{"allowMixedContent":false,"webContentsDebuggingEnabled":false,"backgroundColor":"#092119"},"plugins":{"PushNotifications":{"presentationOptions":["sound","alert"]}}}
+{
+  "appId": "com.baridasatranckulubu.academy",
+  "appName": "Barida Satranç",
+  "webDir": "android-web",
+  "loggingBehavior": "none",
+  "android": {
+    "allowMixedContent": false,
+    "webContentsDebuggingEnabled": false,
+    "backgroundColor": "#092119"
+  },
+  "plugins": {
+    "PushNotifications": {
+      "presentationOptions": [
+        "sound",
+        "alert"
+      ]
+    }
+  },
+  "server": {
+    "url": "https://baridasatranc.pages.dev",
+    "cleartext": false,
+    "errorPath": "native-offline.html"
+  }
+}

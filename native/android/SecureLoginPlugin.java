@@ -6,7 +6,7 @@ import org.json.JSONObject;
 public class SecureLoginPlugin extends Plugin {
  private boolean trusted(PluginCall call){
   String url=getBridge().getWebView().getUrl();
-  if(url==null||!url.startsWith("https://localhost/")){call.reject("Untrusted origin");return false;}return true;
+  if(!LiveSite.isTrusted(url)){call.reject("Untrusted origin");return false;}return true;
  }
  @PluginMethod public void save(PluginCall call){getActivity().runOnUiThread(()->{if(!trusted(call))return;try{
   String identity=call.getString("identity",""),password=call.getString("password",""),role=call.getString("role","student");

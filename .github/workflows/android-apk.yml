@@ -7,17 +7,8 @@ on:
       - 'capacitor.config.json'
       - 'native/**'
       - 'tools/*android*'
-      - 'mobile.*'
-      - 'native-push.js'
-      - 'puzzles.js'
-      - 'assignment-bank.js'
-      - 'result-sync.js'
-      - 'shared-chess-board.js'
-      - 'premium-board.css'
+      - 'tools/wait_live_site.py'
       - '.github/workflows/android-apk.yml'
-      - 'site-presence.js'
-      - 'academy.js'
-      - 'academy.html'
   workflow_dispatch:
 permissions:
   contents: read
@@ -41,9 +32,9 @@ jobs:
           python - <<'PYCODE'
           import urllib.request
           for name in ['academy-student-login','academy-teacher-login','academy-student-password','academy-delete-student','academy-teacher-password-request']:
-            request=urllib.request.Request('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/'+name,method='OPTIONS',headers={'Origin':'https://localhost','Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'apikey,content-type,authorization'})
+            request=urllib.request.Request('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/'+name,method='OPTIONS',headers={'Origin':'https://baridasatranc.pages.dev','Access-Control-Request-Method':'POST','Access-Control-Request-Headers':'apikey,content-type,authorization'})
             with urllib.request.urlopen(request,timeout=30) as response:
-              assert response.status==204 and response.headers.get('Access-Control-Allow-Origin')=='https://localhost',name
+              assert response.status==204 and response.headers.get('Access-Control-Allow-Origin')=='https://baridasatranc.pages.dev',name
               print('Native origin OK:',name)
           PYCODE
       - name: Bundle application and generate Android project
@@ -55,6 +46,8 @@ jobs:
       - name: Build installable test APK and instrumentation
         working-directory: android
         run: bash ./gradlew  :app:assembleDebug :app:assembleDebugAndroidTest :app:lintDebug --no-daemon
+      - name: Wait for the shared website revision before native integration tests
+        run: python tools/wait_live_site.py
       - name: Enable hardware acceleration for this runner
         run: sudo chown "$(id -un)" /dev/kvm
       - name: Verify Android Keystore and bundled login on emulator

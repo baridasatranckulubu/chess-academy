@@ -5,7 +5,7 @@ import android.view.WindowManager;
 import com.getcapacitor.BridgeActivity;
 public class MainActivity extends BridgeActivity {
  @Override public void onCreate(Bundle state){registerPlugin(SecureLoginPlugin.class);super.onCreate(state);
-  if(state==null)getBridge().getWebView().loadUrl("https://localhost/"+(getIntent().hasExtra("notification_id")?"academy.html":"index.html"));
+  if(state==null&&getIntent().hasExtra("notification_id"))getBridge().getWebView().loadUrl(LiveSite.ORIGIN+"/academy.html");
   getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
  }
  @Override protected void onNewIntent(Intent intent){setIntent(intent);super.onNewIntent(intent);}
