@@ -9,14 +9,14 @@ class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)));Thread(target=server.serve_forever,daemon=True).start()
 HTML="""<body><iframe id=f style='width:390px;height:1000px' src='puzzles.html?assignment=00000000-0000-4000-8000-000000000003&theme=all&target=2'></iframe><script>
-const aid='00000000-0000-4000-8000-000000000003',fen='rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2';window.results=[];window.closed=0;
+const aid='00000000-0000-4000-8000-000000000003',fen='rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2';window.results=[];window.__homeworkClosed=0;
 function send(x){document.getElementById('f').contentWindow.postMessage({assignmentId:aid,...x},location.origin)}
 window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==document.getElementById('f')?.contentWindow)return;const m=e.data;
 if(m.type==='barida-puzzle-context')e.source.postMessage({type:'barida-puzzle-rating',user:'test-user',history:['UNRELATED1','UNRELATED2','UNRELATED3'],rating:1000},location.origin);
 if(m.type==='barida-assignment-ready')send({type:'chess-academy-assignment-progress-init',items:[],puzzles:[['HW1',fen,['g2g4','d8h4'],725,['all']],['HW2',fen,['g2g4','d8h4'],725,['all']]],otherIds:[]});
 if(m.type==='chess-academy-assignment-claim')send({...m,type:'chess-academy-assignment-claim-ack',ok:true});
 if(m.type==='chess-academy-assignment-result')results.push(m);
-if(m.type==='chess-academy-assignment-close'){window.closed++;document.getElementById('f').remove()}
+if(m.type==='chess-academy-assignment-close'){window.__homeworkClosed++;document.getElementById('f').remove()}
 });
 window.ack=()=>{const m=results.at(-1);send({...m,type:'chess-academy-assignment-progress-ack',total:results.length,ok:true})};
 </script>"""
@@ -33,6 +33,6 @@ try:
     assert f.locator('#assignment-completion').count()==0,'Duplicate ACK must not finish homework early'
    else:
     f.get_by_text('Ödeviniz tamamlandı!',exact=True).wait_for();assert page.locator('#f').count()==1,'Completion must be visible before closing'
-  page.locator('#f').wait_for(state='detached',timeout=10000);assert page.evaluate('closed')==1
+  page.locator('#f').wait_for(state='detached',timeout=10000);assert page.evaluate('__homeworkClosed')==1
   assert not errors,errors;b.close();print('PASS homework save ACK, automatic next, duplicate ACK, completion notice and automatic close')
 finally:server.shutdown()
