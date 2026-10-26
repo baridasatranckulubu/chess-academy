@@ -12,6 +12,7 @@ HTML="""<body><iframe id=f style='width:390px;height:1000px' src='puzzles.html?a
 const aid='00000000-0000-4000-8000-000000000003',fen='rnbqkbnr/pppp1ppp/8/4p3/8/5P2/PPPPP1PP/RNBQKBNR w KQkq - 0 2';window.results=[];window.closed=0;
 function send(x){document.getElementById('f').contentWindow.postMessage({assignmentId:aid,...x},location.origin)}
 window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==document.getElementById('f')?.contentWindow)return;const m=e.data;
+if(m.type==='barida-puzzle-context')e.source.postMessage({type:'barida-puzzle-rating',user:'test-user',history:['UNRELATED1','UNRELATED2','UNRELATED3'],rating:1000},location.origin);
 if(m.type==='barida-assignment-ready')send({type:'chess-academy-assignment-progress-init',items:[],puzzles:[['HW1',fen,['g2g4','d8h4'],725,['all']],['HW2',fen,['g2g4','d8h4'],725,['all']]],otherIds:[]});
 if(m.type==='chess-academy-assignment-claim')send({...m,type:'chess-academy-assignment-claim-ack',ok:true});
 if(m.type==='chess-academy-assignment-result')results.push(m);
