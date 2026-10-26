@@ -18,3 +18,5 @@ Verified:
 - Existing mobile integration checks passed; generated Capacitor project detects the native FCM plugin.
 
 Pending: publish reviewed application changes, run Android APK build/instrumentation, install update on a real device, sign in, grant notification permission, assign homework from another device while the recipient app is closed, and test the notification tap. No claim of real-device closed-app delivery is made until that test passes. Android force-stop and disabled notification permissions can prevent delivery.
+
+Inactivity reminders: eligible active students who have not used the app/site for 24 hours get at most one automatic reminder per local day. Each student has a stable random five-minute slot between 09:00 and 20:55 Europe/Istanbul; Cron checks every five minutes. Admin manual reminders have no time/count limit and never modify presence or automatic reminder state. Repeated clicks create new requests; retrying one failed request remains idempotent.

@@ -113,8 +113,17 @@ async function toggleNotificationPanel(){
  const {error}=await authClient.from('academy_notifications').update({read_at:new Date().toISOString()}).in('id',ids);
  if(!error){notificationCache.forEach(x=>{if(ids.includes(x.id))x.read_at=new Date().toISOString()});const badge=$('caAdminBellCount');if(badge)badge.hidden=true;renderNotificationPanel()}
 }
+function trainingReminderControl(view){
+ if(realProfile?.role!=='admin'||!realUser)return;
+ const panel=node('section','card'),status=node('p','muted',''),send=button('♟ Sporculara çalışma hatırlatması gönder',async()=>{
+  if(send.disabled)return;send.disabled=true;status.textContent='Hatırlatmalar gönderiliyor…';
+  try{request=request||crypto.randomUUID();const {data:count,error}=await authClient.rpc('academy_send_training_reminder',{p_request:request});if(error)throw error;status.textContent='✓ '+count+' aktif sporcuya çalışma hatırlatması gönderildi.';request=null}catch(e){status.textContent='Gönderilemedi: '+e.message}finally{send.disabled=false}
+ },'btn gold');let request=null;
+ send.id='sendTrainingReminder';status.id='trainingReminderStatus';status.setAttribute('role','status');panel.append(send,node('p','muted','Otomatik hatırlatmalar 09.00–21.00 arasında, son 24 saatte giriş yapmamış sporculara günde bir kez gönderilir. Manuel gönderim bu düzeni değiştirmez.'),status);view.append(panel);
+}
 async function adminMessages(){
  const view=$('view');if(realProfile?.role!=='admin'||!realUser){view.append(node('p','auth-error','Yalnızca yönetici mesaj gönderebilir.'));return}
+ trainingReminderControl(view);
  const form=node('form','ca-message-form');form.noValidate=false;
  const header=node('div','ca-message-head');
  header.append(node('div','ca-message-eyebrow','♟ BARIDA SATRANÇ KULÜBÜ · YÖNETİM'),node('h2','','✉️ Bildirim ve Mesaj Gönder'),node('p','','Sporculara, antrenörlere veya seçtiğiniz kişiye platform içi duyuru gönderin.'));
@@ -512,6 +521,7 @@ async function staffDashboard(){
  view.append(node('h1','club-personal-title',admin?'Kulüp Yönetim Merkezi':'Antrenör Çalışma Alanı'));
  const hero=node('section','sd-hero');hero.append(node('div','sd-kicker','♟ BARIDA SATRANÇ KULÜBÜ · '+(admin?'YÖNETİM':'ANTRENÖR')+' PANELİ'),node('h2','',admin?'👑 Kulüp Yönetim Merkezi':'📚 Antrenör Çalışma Alanı'),node('p','',admin?'Antrenörlerini ve akademinin antrenman sonuçlarını tek yerden takip et.':'Sporcularını, çalışmalarını ve sınıfının gelişimini buradan takip et.'));view.append(hero);baridaBanner(hero,admin?'admin':'teacher');
  if(!admin){hero.classList.add('sd-teacher-hero');const teacherBadge=node('div','sd-teacher-badge','♛ ANTRENÖRÜ ÇALIŞMA ALANI');hero.prepend(teacherBadge)}else{hero.classList.add('sd-admin-hero')}
+ if(admin)trainingReminderControl(view);
  const status=node('p','sd-note','Güncel kayıtlar yükleniyor…');view.append(status);
  const stats=node('div','sd-stats'),panels=node('div','sd-panels'),detail=node('section','sd-panel'),quick=node('section','sd-panel');view.append(stats,panels);panels.append(detail,quick);
  function stat(emoji,value,label){const card=node('article','sd-stat');card.append(node('div','',emoji),node('strong','',String(value)),node('span','',label));stats.append(card)}

@@ -14,7 +14,7 @@
   const {data,error}=await c.from('academy_notifications').select('id,category,assignment_id').eq('id',p.notification_id).eq('recipient_id',u.id).maybeSingle();
   if(c!==client||u!==user||p!==pending||error)return;
   if(!data){pending=null;sessionStorage.removeItem('barida-push-open');return;}
-  const route=(data.assignment_id||/^(assignment|homework)/i.test(data.category||''))?'assignments':data.category==='teacher_password_reset'?'admin-teacher-list':'club-home';
+  const route=(data.assignment_id||/^(assignment|homework)/i.test(data.category||''))?'assignments':data.category==='training_reminder'?'tactics':data.category==='teacher_password_reset'?'admin-teacher-list':'club-home';
   if(window.baridaNavigate?.(route)){pending=null;sessionStorage.removeItem('barida-push-open');window.dispatchEvent(new CustomEvent('barida-push-open',{detail:data.id}));}
  }
  const initialized=(async()=>{
