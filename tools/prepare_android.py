@@ -18,7 +18,7 @@ print('Prepared bundled Android UI:',len(list(OUT.rglob('*'))),'entries')
 
 # The large archive is fetched selectively from the working public mirror.
 p=OUT/'assignment-bank.js'
-p.write_text(p.read_text().replace('const r=await fetch(url);',"const r=await fetch(url.startsWith('puzzle-full/')?'https://baridasatranckulubu.github.io/chess-academy/'+url:url);"))
+p.write_text(p.read_text().replace('fetch(url,',"fetch(url.startsWith('puzzle-full/')?'https://baridasatranckulubu.github.io/chess-academy/'+url:url,"))
 
 
 # Public landing opens first. Native enhancements remain native-only.

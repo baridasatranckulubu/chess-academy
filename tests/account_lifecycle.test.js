@@ -1,0 +1,23 @@
+'use strict';
+const assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const defer=()=>{let resolve;return {promise:new Promise(r=>resolve=r),resolve:(...a)=>resolve(...a)}};
+const turn=()=>new Promise(r=>setImmediate(r));
+(async()=>{
+ const storage=new Map(),events=[],handlers={},first=defer();let identity='one',calls=[],rating=[],blocked=true;
+ const client={auth:{getSession:async()=>({data:{session:{user:{id:identity}}}})},rpc:async(name,args)=>{calls.push(args.p_item);if(blocked){blocked=false;await first.promise}return {data:12,error:null}}};
+ const w={addEventListener:(n,f)=>handlers[n]=f,dispatchEvent:e=>events.push(e)};
+ vm.runInNewContext(fs.readFileSync('result-sync.js','utf8'),{window:w,localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},navigator:{onLine:true},setInterval:()=>{},CustomEvent:class{constructor(type){this.type=type}}});
+ const api=w.BaridaResultSync,old=api.push(client,'one','puzzle','old',true,null,1100,v=>rating.push(v));await turn();
+ api.disconnect();identity='two';await api.push(client,'two','puzzle','new',true,null,1100,v=>rating.push('new:'+v));
+ assert.deepEqual(calls,['old','new'],'New account must not wait for the old network request');first.resolve();await old;
+ assert.deepEqual(rating,['new:12'],'Old account must never update the new rating display');
+ await api.push(client,'two','puzzle','repeat',true);assert.equal(JSON.parse(storage.get('barida-result-outbox:two')).length,0);
+ const registrationGate=defer(),pushEvents={};let registrations=0,removed=0,permissionBlocked=true;
+ const push={addListener:async(n,f)=>pushEvents[n]=f,createChannel:async()=>{},checkPermissions:async()=>{if(permissionBlocked){permissionBlocked=false;await registrationGate.promise}return {receive:'granted'}},register:async()=>{registrations++;pushEvents.registration({value:'test-token'})},unregister:async()=>removed++,removeAllDeliveredNotifications:async()=>{}};
+ const pw={Capacitor:{isNativePlatform:()=>true,Plugins:{PushNotifications:push}},dispatchEvent:()=>{}};
+ vm.runInNewContext(fs.readFileSync('native-push.js','utf8'),{window:pw,sessionStorage:{getItem:()=>null,setItem:()=>{},removeItem:()=>{}},location:{pathname:'/academy.html'},Event:class{},CustomEvent:class{}});
+ const pc={rpc:async()=>({})};const connecting=pw.BaridaPush.connect(pc,{id:'one'});await turn();await pw.BaridaPush.disconnect();registrationGate.resolve();await connecting;
+ assert.equal(registrations,0,'Sign-out during permission dialog must cancel late registration');
+ await pw.BaridaPush.connect(pc,{id:'two'});assert.equal(registrations,1);assert.equal(removed,1);
+ console.log('PASS concurrent account outboxes, stale rating isolation, and sign-out during push permission');
+})().catch(e=>{console.error(e);process.exitCode=1});

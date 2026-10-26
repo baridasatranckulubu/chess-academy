@@ -3,11 +3,11 @@
  const C=window.Capacitor;if(!C?.isNativePlatform?.())return;
  const push=C.Plugins?.PushNotifications||C.registerPlugin('PushNotifications');
  const launch=C.Plugins?.SecureLogin;
- let client=null,user=null,token='',pending=null,ready=false,work=Promise.resolve();
+ let client=null,user=null,token='',pending=null,ready=false,work=Promise.resolve(),generation=0;
  const uuid=x=>typeof x==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(x);
  try{pending=JSON.parse(sessionStorage.getItem('barida-push-open')||'null')}catch{}
  function serial(fn){work=work.then(fn).catch(()=>{});return work}
- function save(){const c=client,u=user,t=token;if(c&&u&&t)return serial(async()=>{const {error}=await c.rpc('academy_register_push_device',{p_token:t});if(error)throw error})}
+ function save(){const c=client,u=user,t=token,g=generation;if(c&&u&&t)return serial(async()=>{if(g!==generation||c!==client||u!==user)return;const {error}=await c.rpc('academy_register_push_device',{p_token:t});if(error)throw error})}
  async function openPending(){
   const p=pending,c=client,u=user;if(!p||!c||!u)return;
   // Never trust a route, recipient or message body received in a push payload.
@@ -33,8 +33,8 @@
   ready=true;
  })().catch(()=>{});
  window.BaridaPush={
-  async connect(c,u){client=c;user=u;await initialized;if(!ready)return;await openPending();let permission=await push.checkPermissions();if(permission.receive==='prompt'||permission.receive==='prompt-with-rationale')permission=await push.requestPermissions();if(permission.receive==='granted'){await push.register();await save()}},
+  async connect(c,u){const g=++generation;client=c;user=u;await initialized;if(!ready||g!==generation)return;await openPending();if(g!==generation)return;let permission=await push.checkPermissions();if(g!==generation)return;if(permission.receive==='prompt'||permission.receive==='prompt-with-rationale')permission=await push.requestPermissions();if(g!==generation)return;if(permission.receive==='granted'){await serial(async()=>{if(g===generation)await push.register()});if(g===generation)await save()}},
   async resume(){await initialized;if(pending&&client&&user)await openPending();},
-  async disconnect(){const c=client,t=token;client=null;user=null;pending=null;sessionStorage.removeItem('barida-push-open');if(c&&t)await serial(async()=>{await c.rpc('academy_unregister_push_device',{p_token:t})});if(ready){await push.removeAllDeliveredNotifications();await push.unregister();token='';}}
+  async disconnect(){const c=client,t=token;++generation;client=null;user=null;pending=null;sessionStorage.removeItem('barida-push-open');await serial(async()=>{try{if(c&&t){const {error}=await c.rpc('academy_unregister_push_device',{p_token:t});if(error)throw error}}catch{window.dispatchEvent(new Event('barida-push-error'))}finally{if(ready){try{await push.removeAllDeliveredNotifications()}finally{await push.unregister();token='';}}}});}
  };
 })();

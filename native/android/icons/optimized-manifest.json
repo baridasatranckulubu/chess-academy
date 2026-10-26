@@ -1,0 +1,35 @@
+{
+  "source_sha256": "dadcc23d2eac982ae4ab3734234887f093cbb06e26f1cf810d69820822fee658",
+  "files": {
+    "art": {
+      "size": 432,
+      "bytes": 188636,
+      "sha256": "768f8687b1efa0a09b7242cb3fd691191903b3818a2004eda8226911d2f3a72a"
+    },
+    "mdpi": {
+      "size": 48,
+      "bytes": 3546,
+      "sha256": "2a5cb5b0a94fb09347bc89be028e6eab3a02cc08b449a846c46fadadfa2563eb"
+    },
+    "hdpi": {
+      "size": 72,
+      "bytes": 6996,
+      "sha256": "f8571c6acc52fc932329dc4db28f652b1b452ddea11d0e6384abafd7104351c4"
+    },
+    "xhdpi": {
+      "size": 96,
+      "bytes": 11275,
+      "sha256": "db3a16be9803fe1bdbcac2d338c2c20142f9dac4a72443211a0935f1ca19c495"
+    },
+    "xxhdpi": {
+      "size": 144,
+      "bytes": 23001,
+      "sha256": "9ec9519318facb890a00e6e07bd22fdf03ab7088c3dc13622323e39f7cb0a738"
+    },
+    "xxxhdpi": {
+      "size": 192,
+      "bytes": 39146,
+      "sha256": "294c173253b12e83933c26be0b009f34fe90e1358a5a0116df4deb95259c31b7"
+    }
+  }
+}

@@ -10,6 +10,8 @@ on:
       - 'mobile.*'
       - 'native-push.js'
       - 'puzzles.js'
+      - 'assignment-bank.js'
+      - 'result-sync.js'
       - 'shared-chess-board.js'
       - 'premium-board.css'
       - '.github/workflows/android-apk.yml'
