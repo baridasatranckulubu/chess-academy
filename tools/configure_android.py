@@ -17,7 +17,8 @@ for density in ['mdpi','hdpi','xhdpi','xxhdpi','xxxhdpi']:
  d=res/('mipmap-'+density);d.mkdir(exist_ok=True)
  for name in ['barida_launcher','barida_launcher_round']:
   shutil.copy2(icons/('barida-launcher-'+density+'.png'),d/(name+'.png'))
-foreground='<layer-list xmlns:android="http://schemas.android.com/apk/res/android"><item android:width="84dp" android:height="84dp" android:gravity="center"><bitmap android:src="@drawable/barida_icon_art" android:gravity="fill"/></item></layer-list>'
+# Percentage insets scale with launcher bounds; fixed dp sizes clipped the knight on small icons.
+foreground='<inset xmlns:android="http://schemas.android.com/apk/res/android" android:insetLeft="22%" android:insetTop="22%" android:insetRight="22%" android:insetBottom="22%"><bitmap android:src="@drawable/barida_icon_art" android:gravity="fill" android:filter="true"/></inset>'
 (res/'drawable/barida_launcher_foreground.xml').write_text(foreground)
 d=res/'mipmap-anydpi-v26';d.mkdir(exist_ok=True)
 for name in ['barida_launcher','barida_launcher_round']:
@@ -36,4 +37,5 @@ print('Configured Barida identity, encrypted login vault, backup exclusions and 
 # Keep the generated package-context test aligned with the actual application ID.
 p=root/'android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java'
 if p.exists():p.write_text(p.read_text().replace('com.getcapacitor.app','com.baridasatranckulubu.academy'))
+
 
