@@ -27,3 +27,9 @@ p=OUT/'index.html';p.write_text(p.read_text().replace('</head>','<link rel="styl
 import hashlib,json,os
 manifest={"revision":os.environ.get("GITHUB_SHA","local"),"files":{str(p.relative_to(OUT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in OUT.rglob('*') if p.is_file() and p.suffix in {'.js','.css','.html'}}}
 (OUT/'app-build.json').write_text(json.dumps(manifest,separators=(',',':')))
+
+for name in ['index.html','academy.html']:
+ p=OUT/name;p.write_text(p.read_text().replace('</head>','<script src="native-push.js"></script></head>'))
+# Rebuild the manifest after injecting the native push entrypoint.
+manifest["files"]={str(p.relative_to(OUT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in OUT.rglob('*') if p.is_file() and p.suffix in {'.js','.css','.html'}}
+(OUT/'app-build.json').write_text(json.dumps(manifest,separators=(',',':')))

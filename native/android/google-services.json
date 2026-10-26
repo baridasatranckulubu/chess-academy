@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "199827343027",
+    "project_id": "barida-satranc",
+    "storage_bucket": "barida-satranc.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:199827343027:android:637f6641c93eec1fce92c6",
+        "android_client_info": {
+          "package_name": "com.baridasatranckulubu.academy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKAgBDaAgynXUHgUBYiTR1CzsVe2RFx8E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

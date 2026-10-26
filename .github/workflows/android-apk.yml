@@ -8,6 +8,7 @@ on:
       - 'native/**'
       - 'tools/*android*'
       - 'mobile.*'
+      - 'native-push.js'
       - '.github/workflows/android-apk.yml'
       - 'site-presence.js'
       - 'academy.js'

@@ -40,3 +40,10 @@ p=root/'android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumen
 if p.exists():p.write_text(p.read_text().replace('com.getcapacitor.app','com.baridasatranckulubu.academy'))
 
 
+
+# Firebase public app configuration; server credentials must never be bundled.
+shutil.copy2(root/'native/android/google-services.json',root/'android/app/google-services.json')
+
+p=app/'AndroidManifest.xml'
+s=p.read_text().replace('<application','<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n    <application',1)
+p.write_text(s)
