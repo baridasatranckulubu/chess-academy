@@ -21,9 +21,11 @@ def swipe(page,board):
  before=page.evaluate('scrollY')
  client=page.context.new_cdp_session(page)
  client.send('Input.dispatchTouchEvent',{'type':'touchStart','touchPoints':[{'x':x,'y':y}]})
+ samples=[before]
  for step in range(1,9):
-  client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*22}]});page.wait_for_timeout(20)
+  client.send('Input.dispatchTouchEvent',{'type':'touchMove','touchPoints':[{'x':x,'y':y-step*22}]});page.wait_for_timeout(20);samples.append(page.evaluate('scrollY'))
  client.send('Input.dispatchTouchEvent',{'type':'touchEnd','touchPoints':[]});page.wait_for_timeout(200);client.detach()
+ assert all(b>=a-2 for a,b in zip(samples,samples[1:])),('Swipe must never oscillate backwards',samples)
  assert page.evaluate('scrollY')>before+40,('Vertical swipe starting on the chessboard must scroll the page',before,page.evaluate('scrollY'),r,x,y)
 def pinch(page,board,frame=None):
  board.scroll_into_view_if_needed();r=board.bounding_box();x=r['x']+r['width']*.5;y=min(r['y']+r['height']*.5,520)
@@ -72,7 +74,7 @@ try:
   page.locator('#board [data-square="e5"]').tap();page.wait_for_function("document.getElementById('status').textContent.includes('devam hamlesini')")
   page.locator('#board [data-square="b8"]').tap();page.locator('#board [data-square="c6"]').tap()
   page.wait_for_function("document.getElementById('status').textContent.includes('doğru hamleyle tamamlandı')")
-  page.locator('#next').tap();page.wait_for_function("document.getElementById('status').textContent==='Sıra sende'")
+  page.wait_for_function("document.getElementById('status').textContent==='Sıra sende'")
   assert page.evaluate('window.__selections')==2,'Next puzzle should use the single prepared candidate'
   assert not errors,errors
   print('PASS temporary pinch/reset, touchscreen scrolling, legal taps, puzzle DOM reuse and prepared next question')

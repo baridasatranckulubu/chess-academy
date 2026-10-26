@@ -115,14 +115,16 @@ const touchZoomBoards=new WeakSet();
 function enableTouchZoom(root){
  if(!root||touchZoomBoards.has(root))return;touchZoomBoards.add(root);
  let active=null,resetTimer=null,suppressUntil=0,restore=null,pan=null,momentum=null;
+ const fingerY=t=>Number.isFinite(t.screenY)?t.screenY:t.clientY;
  const scrollHost=(()=>{try{return parent!==window&&parent.location.origin===location.origin?parent:null}catch{return null}})();
  // Embedded boards hand a one-finger swipe to their outer page, avoiding iframe scroll traps.
- if(scrollHost)root.style.setProperty('touch-action','none','important');
+ root.style.setProperty('touch-action',scrollHost?'none':'pan-y','important');
+ root.classList.toggle('barida-embedded-touch-board',!!scrollHost);
  function movePan(e){
-  if(!pan||e.touches.length!==1)return;const t=e.touches[0],now=performance.now(),dy=pan.y-t.clientY;
-  if(!pan.moved&&Math.abs(t.clientY-pan.startY)>8){pan.moved=true;suppressUntil=Date.now()+350}
+  if(!pan||e.touches.length!==1)return;const t=e.touches[0],now=performance.now(),dy=pan.y-fingerY(t);
+  if(!pan.moved&&Math.abs(fingerY(t)-pan.startY)>8){pan.moved=true;suppressUntil=Date.now()+350}
   if(pan.moved){if(e.cancelable)e.preventDefault();scrollHost.scrollBy({top:dy,behavior:'instant'});pan.velocity=Math.max(-2.5,Math.min(2.5,dy/Math.max(8,now-pan.time)))}
-  pan.y=t.clientY;pan.time=now;
+  pan.y=fingerY(t);pan.time=now;
  }
  function endPan(){
   if(!pan)return;const old=pan;pan=null;if(!old.moved)return;suppressUntil=Date.now()+350;
@@ -145,7 +147,7 @@ function enableTouchZoom(root){
  root.addEventListener('touchstart',e=>{
   if(momentum){cancelAnimationFrame(momentum);momentum=null}
   if(e.touches.length===1)suppressUntil=0;
-  if(scrollHost&&e.touches.length===1){pan={y:e.touches[0].clientY,startY:e.touches[0].clientY,time:performance.now(),velocity:0,moved:false};return}
+  if(scrollHost&&e.touches.length===1){pan={y:fingerY(e.touches[0]),startY:fingerY(e.touches[0]),time:performance.now(),velocity:0,moved:false};return}
   pan=null;
   if(e.touches.length!==2||active||root.classList.contains('ca-spin'))return;
   if(e.cancelable)e.preventDefault();clearTimeout(resetTimer);restore?.();

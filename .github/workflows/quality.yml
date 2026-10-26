@@ -70,6 +70,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install playwright beautifulsoup4
           timeout 180s python -m playwright install chromium
+      - name: Otomatik soru geçişi ve dokunmatik kaydırma
+        run: |
+          python tests/browser_puzzle_auto_qa.py
+          python tests/browser_homework_auto_qa.py
+          python tests/browser_touch_qa.py
       - name: Herkese açık ana sayfa, iletişim ve giriş bağlantısı
         run: python tests/browser_public_home_qa.py
       - name: Ödev hızı ve yavaş istatistik servisi regresyonu

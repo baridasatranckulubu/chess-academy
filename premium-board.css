@@ -70,3 +70,7 @@
 
 /* Selection reacts on the chosen square without shifting other pieces. */
 .board .sq.selected .ca-canonical-piece{filter:drop-shadow(0 0 5px #f0c978)!important}
+
+/* Use one gesture owner: iframe boards forward swipes; standalone boards scroll natively. */
+@media(pointer:coarse){.ca-grid .board:not(.barida-embedded-touch-board),.ca-grid .board:not(.barida-embedded-touch-board)>.sq{touch-action:pan-y!important}}
+.ca-grid .board.barida-embedded-touch-board,.ca-grid .board.barida-embedded-touch-board>.sq{touch-action:none!important}

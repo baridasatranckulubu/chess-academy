@@ -17,5 +17,12 @@ public class SecureLoginPlugin extends Plugin {
   JSONObject data=new CredentialVault(getContext()).load();JSObject result=new JSObject();
   if(data!=null){result.put("identity",data.getString("identity"));result.put("password",data.getString("password"));result.put("role",data.getString("role"));}call.resolve(result);
  }catch(Exception e){new CredentialVault(getContext()).clear();call.resolve(new JSObject());}});}
+ @PluginMethod public void consumeNotification(PluginCall call){getActivity().runOnUiThread(()->{if(!trusted(call))return;
+  JSObject result=new JSObject();android.content.Intent intent=getActivity().getIntent();
+  if(intent!=null){String id=intent.getStringExtra("notification_id");
+   if(id!=null&&id.matches("(?i)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))result.put("notification_id",id);
+   intent.removeExtra("notification_id");
+  }call.resolve(result);
+ });}
  @PluginMethod public void clear(PluginCall call){getActivity().runOnUiThread(()->{if(!trusted(call))return;new CredentialVault(getContext()).clear();call.resolve();});}
 }

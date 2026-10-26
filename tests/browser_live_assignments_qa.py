@@ -61,5 +61,6 @@ try:
   f.get_by_text('Ödeviniz tamamlandı!',exact=True).wait_for(timeout=10000)
   teacher.locator('[data-tab=completed]').filter(has_text='(1)').wait_for(timeout=10000);teacher.locator('[data-tab=completed]').click();teacher.locator('#realAssignmentList .assignment:visible').wait_for()
   assert state['assignments'][0]['status']=='completed'
+  student.locator('#assignment-puzzle-frame').wait_for(state='detached',timeout=10000)
   browser.close();print('PASS two-account live follow, self-recipient exclusion, real zoom, one-click frozen Lichess assignment and automatic coach completion')
 finally:server.shutdown()
