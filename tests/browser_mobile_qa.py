@@ -34,10 +34,15 @@ try:
   assert page.locator('#authTeacherTab').get_attribute('class').find('active')>=0
   assert page.evaluate('window.__saved')==0,'Restoring must not automatically sign in or rewrite credentials'
   page.locator('#baridaBoot').wait_for(state='hidden')
-  for width,height in [(320,740),(360,800),(412,915),(844,390)]:
+  for width,height in [(320,740),(360,800),(412,915),(844,390),(800,1280),(1280,800)]:
    page.set_viewport_size({'width':width,'height':height})
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+2'),(width,height)
    assert page.locator('#authPassword').is_visible()
+   login=page.locator('#entry').evaluate("el=>{const r=el.getBoundingClientRect(),s=getComputedStyle(el);return {width:r.width,height:r.height,background:s.backgroundSize,transform:s.transform}}")
+   assert login['height']>=height-2,(width,height,login)
+   assert abs(login['width']-width)<=2 and all(size.strip()=='cover' for size in login['background'].split(',')) and login['transform']=='none',(width,height,login)
+  page.set_viewport_size({'width':412,'height':915})
+  (ROOT/'qa-artifacts').mkdir(exist_ok=True);page.screenshot(path=str(ROOT/'qa-artifacts/native-login-full-height.png'),full_page=True)
   page.set_viewport_size({'width':360,'height':800})
   page.locator('#authSubmit').click();page.locator('#club-title').wait_for()
   page.wait_for_function('window.__saved===1')
