@@ -113,7 +113,9 @@ jobs:
       - name: İlk giriş bildirimi, sakin tahta ve kaldırılan arena
         run: python tests/browser_club_updates_qa.py
       - name: Canlı analiz, Lichess Cloud, notasyon ve gerçek Stockfish
-        run: python tests/browser_analysis_qa.py
+        run: |
+          python tests/browser_analysis_qa.py
+          python tests/browser_analysis_drag_qa.py
       - name: Lichess ses dosyaları, başlangıç ve son 10 saniye tik tak
         run: python tests/browser_sound_qa.py
       - name: Mobil giriş, güvenli saklama ve gezinme

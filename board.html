@@ -128,12 +128,12 @@ body.embedded-arena .chess-board-ranks>span,body.embedded-arena .chess-board-fil
 
 .ca-piece-carry{position:fixed;z-index:99999;pointer-events:none;transform:translate(-50%,-50%);width:clamp(38px,6vw,72px);height:clamp(38px,6vw,72px);filter:drop-shadow(0 8px 6px #0009);opacity:.9}.ca-piece-carry .piece-3d{width:100%!important;height:100%!important;display:block!important}.ca-piece-carry svg{width:100%!important;height:100%!important}
 
-.ca-piece-carry{opacity:.72!important;transition:opacity .12s ease,filter .12s ease;filter:drop-shadow(0 9px 8px #0008)!important;will-change:left,top;user-select:none;-webkit-user-select:none;touch-action:none}
+.ca-piece-carry{opacity:.72!important;transition:opacity .12s ease,filter .12s ease;filter:drop-shadow(0 9px 8px #0008)!important;will-change:transform;user-select:none;-webkit-user-select:none;touch-action:none}
 body.embedded-arena #board .sq{touch-action:none;-webkit-user-select:none;user-select:none}
 
-/* Lift the real piece visually while dragging; source square stays empty until drop. */
-#board .sq.ca-source-lifted .piece-3d,#board .sq.ca-source-lifted svg{visibility:hidden!important}
-.ca-piece-carry{opacity:.94!important;pointer-events:none!important;transition:none!important;transform:translate(-50%,-50%)!important;filter:drop-shadow(0 12px 8px #0008)!important;z-index:99999!important;animation:ca-lift .14s ease-out both}
+/* Keep a transparent source silhouette while the full piece follows the pointer. */
+#board .sq.ca-source-lifted .piece-3d,#board .sq.ca-source-lifted svg{visibility:visible!important;opacity:.24!important}
+.ca-piece-carry{opacity:.94!important;pointer-events:none!important;transition:none!important;filter:drop-shadow(0 12px 8px #0008)!important;z-index:99999!important;animation:ca-lift .14s ease-out both}
 @keyframes ca-lift{from{opacity:.5;scale:.92}to{opacity:.94;scale:1}}
 
 /* Floating piece must use the exact same SVG/text scale as a piece on the board. */
@@ -312,6 +312,3 @@ html body.embedded-studio button:not(.sq):not(.barida-promotion-choice):not(.bar
 </style><style id="barida-transparent-studio-canvas">
 html.barida-canvas-linked:has(body.embedded-studio),html.barida-canvas-linked body.embedded-studio{background:transparent!important;background-image:none!important}
 </style></body></html>
-
-
-
