@@ -66,6 +66,7 @@ jobs:
             adb shell screencap -p /sdcard/barida-login.png
             adb pull /sdcard/barida-login.png "$GITHUB_WORKSPACE/barida-login.png"
             python tools/check_android_tablets.py
+            adb exec-out run-as com.baridasatranckulubu.academy cat files/barida-icon-preview.png > barida-icon-preview.png
       - name: Upload tested installable APK
         uses: actions/upload-artifact@v4
         with:
@@ -82,5 +83,7 @@ jobs:
             android/app/build/reports/
             android/app/build/outputs/androidTest-results/
             barida-login.png
+            barida-icon-preview.png
             barida-tablet-*.png
           retention-days: 14
+
