@@ -1,5 +1,5 @@
 {
-  "source": "https://github.com/lichess-org/lila/blob/master/modules/puzzle/src/main/PuzzleTheme.scala",
+  "source": "https://raw.githubusercontent.com/lichess-org/lila/master/modules/puzzle/src/main/PuzzleTheme.scala",
   "keys": [
     "advancedPawn",
     "advantage",

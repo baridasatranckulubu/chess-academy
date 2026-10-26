@@ -1,7 +1,7 @@
 {
   "source": "https://lichess.org/training/themes",
   "taxonomySource": "https://github.com/lichess-org/lila/blob/master/modules/puzzle/src/main/PuzzleTheme.scala",
-  "checkedAt": "2026-10-24",
+  "checkedAt": "2026-10-26",
   "groups": [
     {
       "id": "recommended",
