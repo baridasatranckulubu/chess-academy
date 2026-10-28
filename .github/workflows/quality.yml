@@ -139,5 +139,9 @@ jobs:
           else
             echo "v0.22 tarayıcı testi henüz depoda yok; atlanıyor."
           fi
+      - name: Özel bildirim görsel ve dosya ekleri
+        run: |
+          node tests/notification_files.test.js
+          python tests/browser_notification_files_qa.py
       - name: Statik site kaynak kontrolü
         run: python tools/check_site_assets.py
