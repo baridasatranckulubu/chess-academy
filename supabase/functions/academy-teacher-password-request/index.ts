@@ -8,7 +8,7 @@ Deno.serve(async req=>{
  if(req.method!=="POST")return reply({error:"İstek desteklenmiyor."},405);
  try{
   const {username}=await req.json(),name=String(username||"").trim().toLocaleLowerCase("tr");
-  if(name.length<2||name.length>40)return reply({error:"Lütfen öğretmen kullanıcı adınızı girin."},400);
+  if(!name)return reply({error:"Lütfen öğretmen kullanıcı adınızı girin."},400);
   const url=Deno.env.get("SUPABASE_URL"),key=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
   if(!url||!key)return reply({error:"Servis şu anda kullanılamıyor."},503);
   const admin=createClient(url,key);

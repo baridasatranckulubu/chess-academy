@@ -93,7 +93,9 @@ jobs:
       - name: Merkezi istatistik, puan ve sınıf entegrasyonu
         run: python tests/browser_integration_oct25_qa.py
       - name: Kayıt servisi, doğrulama ve hesap temizliği
-        run: node tests/registration.test.js
+        run: |
+          node tests/registration.test.js
+          node tests/credential_lengths.test.js
       - name: Hesaba bağlı bulmaca geçmişi ve tekrarsız soru seçimi
         run: python tests/browser_puzzle_history_qa.py
       - name: Tek Rating, soru başına bir sonuç ve puana göre zorluk

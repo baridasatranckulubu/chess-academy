@@ -1,3 +1,4 @@
+import {newPasswordAttributes,changedPasswordAttributes,passwordForLogin} from "../_shared/passwords.ts";
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
 Deno.serve(async req=>{
  const headers={"content-type":"application/json","access-control-allow-origin":"*","access-control-allow-headers":"authorization,apikey,content-type,x-client-info","access-control-allow-methods":"POST,OPTIONS"};
@@ -26,11 +27,11 @@ Deno.serve(async req=>{
  }
  const username=String(body.username||"").trim().toLocaleLowerCase("tr"),display_name=String(body.display_name||"").trim()||username,password=String(body.password||"");
  if(action==="create"){
-  if(!/^[\p{L}\p{N}_.-]{3,40}$/u.test(username)||display_name.length<2||display_name.length>60||password.length<12||password.length>128)return reply({error:"Kullanıcı adı, isim veya şifre geçersiz (şifre en az 12 karakter)"},400);
+  if(!/^[\p{L}\p{N}_.-]+$/u.test(username)||!display_name||!password)return reply({error:"Kullanıcı adı, isim ve şifre boş bırakılamaz."},400);
   const {data:existing}=await admin.from("profiles").select("id").eq("username",username).maybeSingle();
   if(existing)return reply({error:"Kullanıcı adı kullanılıyor"},409);
   const email="teacher-"+crypto.randomUUID()+"@teachers.invalid";
-  const {data:created,error:err}=await admin.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{display_name}});
+  const {data:created,error:err}=await admin.auth.admin.createUser({email,...await newPasswordAttributes(password),email_confirm:true,user_metadata:{display_name}});
   if(err||!created.user){console.error("teacher account creation failed",err?.code,err?.status);return reply({error:"Antrenör hesabı oluşturulamadı. Lütfen bilgileri kontrol edip yeniden deneyin."},500);}
   const {error:profileError}=await admin.from("profiles").update({username,display_name,role:"teacher"}).eq("id",created.user.id);
   if(profileError){await admin.auth.admin.deleteUser(created.user.id);return reply({error:"Öğretmen profili kaydedilemedi"},500)}
@@ -41,10 +42,10 @@ Deno.serve(async req=>{
  const {data:target}=await admin.from("profiles").select("id,role").eq("id",id).maybeSingle();
  if(target?.role!=="teacher")return reply({error:"Yalnızca öğretmen hesapları yönetilebilir"},403);
  if(action==="update"){
-  if(!/^[\p{L}\p{N}_.-]{3,40}$/u.test(username)||display_name.length<2||display_name.length>60||(password&&password.length<12))return reply({error:"Bilgiler geçersiz"},400);
+  if(!/^[\p{L}\p{N}_.-]+$/u.test(username)||!display_name)return reply({error:"Bilgiler geçersiz"},400);
   const {error:changeError}=await admin.from("profiles").update({username,display_name}).eq("id",id);
   if(changeError)return reply({error:"Kullanıcı adı kullanılıyor veya güncelleme başarısız"},409);
-  if(password){const {error:pwError}=await admin.auth.admin.updateUserById(id,{password});if(pwError)return reply({error:"Şifre güncellenemedi"},500)}
+  if(password){const {error:pwError}=await admin.auth.admin.updateUserById(id,await changedPasswordAttributes(admin,id,password));if(pwError)return reply({error:"Şifre güncellenemedi"},500)}
   const {error:detailsError}=await admin.from("teacher_details").upsert({user_id:id,...details});if(detailsError)return reply({error:"Mesleki bilgiler kaydedilemedi"},500);return reply({ok:true});
  }
  if(action==="delete"){

@@ -1,3 +1,4 @@
+import {newPasswordAttributes,changedPasswordAttributes,passwordForLogin} from "../_shared/passwords.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
 Deno.serve(async (req) => {
  const origin = "*";
@@ -18,7 +19,7 @@ Deno.serve(async (req) => {
  const {data:profile}=await privileged.from("profiles").select("role").eq("id",user.id).single();
  if(!["admin","teacher"].includes(profile?.role))return reply({error:"Forbidden"},403);
  const body=await req.json();
-const teacher_id=profile.role==="teacher"?user.id:String(body.teacher_id||"");
+ const teacher_id=profile.role==="teacher"?user.id:String(body.teacher_id||"");
  const class_name=String(body.class_name||"A").trim();
  const {data:coach}=await privileged.from("profiles").select("id").eq("id",teacher_id).eq("role","teacher").maybeSingle();
  if(!coach||!class_name||class_name.length>40)return reply({error:"Geçerli bir antrenör ve sınıf seçin."},400);
@@ -32,9 +33,9 @@ const teacher_id=profile.role==="teacher"?user.id:String(body.teacher_id||"");
  if(birth_date&&(!/^\d{4}-\d{2}-\d{2}$/.test(birth_date)||Number.isNaN(Date.parse(birth_date))))return reply({error:"Geçersiz doğum tarihi"},400);
  if(tc_identity_no&&!/^[0-9]{11}$/.test(tc_identity_no))return reply({error:"T.C. kimlik numarası 11 rakam olmalıdır"},400);
  const password=String(body.password||"");
- if(display_name.length<3||display_name.length>60||(phone&&!/^\+[1-9][0-9]{7,14}$/.test(phone))||password.length<12||password.length>128)return reply({error:"Ad soyad en az 3, şifre en az 12 karakter olmalı. Telefon girildiğinde +90 ile başlayan geçerli bir numara kullanın."},400);
+ if(!display_name||(phone&&!/^\+[1-9][0-9]{7,14}$/.test(phone))||!password)return reply({error:"Ad soyad ve şifre boş bırakılamaz. Telefon girildiğinde +90 ile başlayan geçerli bir numara kullanın."},400);
  const email="student-"+crypto.randomUUID()+"@students.invalid";
- const {data:created,error:creationError}=await privileged.auth.admin.createUser({email,password,email_confirm:true,user_metadata:{display_name,phone}});
+ const {data:created,error:creationError}=await privileged.auth.admin.createUser({email,...await newPasswordAttributes(password),email_confirm:true,user_metadata:{display_name,phone}});
  if(creationError||!created.user){console.error("student account creation failed",creationError?.code,creationError?.status);return reply({error:"Sporcu hesabı oluşturulamadı. Bilgileri kontrol edip yeniden deneyin."},500);}
  const {error:linkError}=await privileged.from("teacher_students").insert({teacher_id,student_id:created.user.id,class_name});
  if(linkError){await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Sporcu antrenöre bağlanamadı; hesap oluşturulmadı. Tekrar deneyin."},500)}
@@ -42,3 +43,4 @@ const teacher_id=profile.role==="teacher"?user.id:String(body.teacher_id||"");
  if(detailsError){await privileged.from("teacher_students").delete().eq("student_id",created.user.id);await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Öğrenci bilgileri güvenli şekilde kaydedilemedi"},500)}
  return reply({ok:true,student_id:created.user.id,display_name});
 });
+
