@@ -82,3 +82,11 @@ html.barida-native body main #entry.entry .entry-content{position:relative!impor
 html.barida-native body main #entry.entry:not([hidden])::before{content:""!important;display:block!important;position:absolute!important;inset:0 0 auto!important;width:100%!important;height:min(75svh,140vw)!important;background:url("barida-hero-club-v4.webp?v=20261024-club") center top / auto 100% no-repeat!important;mask-image:linear-gradient(#000 65%,transparent 100%)!important;-webkit-mask-image:linear-gradient(#000 65%,transparent 100%)!important;pointer-events:none!important;z-index:0!important}
 
 html.barida-native body main #entry.entry:not([hidden])::before{filter:none!important;opacity:1!important;transform:none!important;animation:none!important;border-radius:0!important}
+
+/* Unbounded account names must wrap without pushing controls off screen. */
+html body .topbar .top-right{min-width:0}
+html body #profileName{min-width:0;max-width:min(28vw,32rem);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+html body #roleLabel{min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+html body #view :is(h1,h2,h3,p,strong,td,th,.student-card,.teacher-card,.barida-student-detail-line){overflow-wrap:anywhere}
+html body #view :is(.student-card,.teacher-card,.barida-student-detail-line)>*{min-width:0}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}html body :is(.barida-smoke-overlay,.barida-logo-light,.smoke-cloud){display:none!important}}

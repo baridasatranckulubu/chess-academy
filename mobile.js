@@ -2,7 +2,8 @@
 (()=>{'use strict';
  const C=window.Capacitor,native=!!C?.isNativePlatform?.();
  const vault=native?(C.Plugins?.SecureLogin||C.registerPlugin?.('SecureLogin')):null;
- let savedRole='student';
+ let savedRole='student',credentialRevision=0;
+ const stored=key=>{try{return localStorage.getItem(key)}catch{return null}};
  function message(text){let el=document.getElementById('mobileStatus');if(!el){el=document.createElement('p');el.id='mobileStatus';el.setAttribute('role','status');document.body.append(el)}el.textContent=text;el.hidden=!text;}
  function network(){message(navigator.onLine?'':'Çevrimdışısın. Giriş ve kayıt işlemleri için bağlantı gerekiyor. Açık çalışmalarını sürdürebilirsin.');}
  window.addEventListener('online',network);window.addEventListener('offline',network);network();
@@ -11,14 +12,16 @@
   App.addListener('backButton',()=>{if(window.baridaHandleBack?.())return;if(location.pathname.endsWith('academy.html')){location.href='index.html';return}App.minimizeApp();});
  }
  async function restore(explicit=false){
+  const revision=++credentialRevision,identityField=document.getElementById('authEmail'),passwordField=document.getElementById('authPassword');
+  if(!identityField||!passwordField)return false;const before=[identityField.value,passwordField.value];
   try{
    let item;
    if(vault)item=await vault.load();
    else if(explicit&&navigator.credentials&&window.PasswordCredential)item=await navigator.credentials.get({password:true,mediation:'optional'});
-   if(!item)return false;
+   if(!item||revision!==credentialRevision||identityField.value!==before[0]||passwordField.value!==before[1]||document.getElementById('app')?.hidden===false)return false;
    const identity=item.identity||item.id,password=item.password;
    if(!identity||!password)return false;
-   savedRole=item.role||localStorage.getItem('barida-login-role')||'student';
+   savedRole=item.role||stored('barida-login-role')||'student';
    document.getElementById(savedRole==='teacher'?'authTeacherTab':'authLoginTab')?.click();
    document.getElementById('authEmail').value=identity;document.getElementById('authPassword').value=password;document.getElementById('authRemember').checked=true;
    return true;
@@ -26,12 +29,12 @@
  }
  window.BaridaLoginMemory={
   async save(identity,password,role){
-   savedRole=role||'student';localStorage.setItem('chess-academy-identity',identity);localStorage.setItem('barida-login-role',savedRole);
+   credentialRevision++;savedRole=role||'student';try{localStorage.setItem('chess-academy-identity',identity);localStorage.setItem('barida-login-role',savedRole)}catch{}
    if(vault){await vault.save({identity,password,role:savedRole});return true;}
    if(navigator.credentials&&window.PasswordCredential){await navigator.credentials.store(new PasswordCredential({id:identity,password,name:identity}));return true;}
    return false;
   },
-  async clear(){localStorage.removeItem('chess-academy-identity');localStorage.removeItem('barida-login-role');if(vault)await vault.clear();},
+  async clear(){credentialRevision++;try{localStorage.removeItem('chess-academy-identity');localStorage.removeItem('barida-login-role')}catch{}if(vault)await vault.clear();},
   restore
  };
  let nativeUiScheduled=false;
@@ -53,7 +56,9 @@
  document.addEventListener('DOMContentLoaded',()=>{
   if(native&&document.getElementById('hero-title')){const links=document.createElement('nav');links.id='nativePublicShortcuts';links.setAttribute('aria-label','Kulüp kısayolları');for(const [title,url] of [['Sporcu / Antrenör Girişi','academy.html'],['Kulübümüz','#biz-kimiz'],['İletişim','#iletisim']]){const a=document.createElement('a');a.textContent=title;a.href=url;links.append(a)}document.getElementById('hero-title').after(links);document.querySelectorAll('video').forEach(v=>{v.autoplay=false;v.preload='none'})}
   const form=document.getElementById('authForm');if(!form)return;
-  const saved=localStorage.getItem('barida-login-role');if(saved==='teacher')document.getElementById('authTeacherTab')?.click();
+  for(const event of ['input','change'])form.addEventListener(event,()=>{credentialRevision++});
+  for(const id of ['authLoginTab','authTeacherTab'])document.getElementById(id)?.addEventListener('click',()=>{credentialRevision++});
+  const saved=stored('barida-login-role');if(saved==='teacher')document.getElementById('authTeacherTab')?.click();
   if(native){
    restore();const nav=document.createElement('nav');nav.id='nativeBottomNav';nav.setAttribute('aria-label','Uygulama gezinmesi');
    for(const [icon,title,route] of [['⌂','Ana Sayfa','club-home'],['♞','Analiz','home'],['✓','Ödevler','assignments'],['↗','Rating','progress']]){
