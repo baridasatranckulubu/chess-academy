@@ -16,5 +16,5 @@ if(toggle&&panel){
  document.addEventListener('click',e=>{if(!panel.hidden&&!panel.contains(e.target)&&!toggle.contains(e.target))setOpen(false)});
 }
 const copy=document.getElementById('copyClubAddress'),feedback=document.getElementById('addressCopyStatus');
-copy?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('İstiklal Mahallesi, Doğan Kımıllı Caddesi No: 1, Merkez / Isparta (Tren Garı’nın karşı köşesi)');feedback.textContent='Adres kopyalandı.'}catch{feedback.textContent='Adres kopyalanamadı; yukarıdaki adresi seçebilirsiniz.'}});
+copy?.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('İstiklal Mahallesi, Doğan Kımıllı Caddesi No: 1, Merkez / Isparta (Tren Garı’nın karşı köşesi; Ajans Özüm ile aynı bina, giriş katı)');feedback.textContent='Adres kopyalandı.'}catch{feedback.textContent='Adres kopyalanamadı; yukarıdaki adresi seçebilirsiniz.'}});
 })();
