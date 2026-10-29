@@ -11,11 +11,15 @@ async function verify(host:string,payload:string,signature:Uint8Array,refresh=fa
  }
  return crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},entry.key,signature,new TextEncoder().encode(payload));
 }
+let active=0;
 Deno.serve(async req=>{
  const reply=(status:number)=>new Response(null,{status,headers:{'cache-control':'no-store'}});
  if(req.method!=='POST')return reply(405);
+ if(active>=32)return reply(503);active++;let reader,timer;
  try{
-  const raw=await req.text();if(raw.length>16000)return reply(413);
+  reader=req.body?.getReader();if(!reader)return reply(400);
+  const timeout=new Promise((_,reject)=>{timer=setTimeout(()=>{reader.cancel().catch(()=>{});reject(Error('timeout'))},3000)});
+  let raw='',size=0;const decoder=new TextDecoder();while(true){const {done,value}=await Promise.race([reader.read(),timeout]);if(done)break;size+=value.byteLength;if(size>16000){await reader.cancel();return reply(413)}raw+=decoder.decode(value,{stream:true})}raw+=decoder.decode();clearTimeout(timer);
   const {payload,signature}=JSON.parse(raw);if(typeof payload!=='string'||typeof signature!=='string'||payload.length>10000||signature.length>200)return reply(400);
   const event=JSON.parse(payload);if(!hosts.has(event.host)||Math.abs(Date.now()-event.at)>120000)return reply(403);
   const sig=Uint8Array.from(atob(signature),c=>c.charCodeAt(0));
@@ -27,5 +31,5 @@ Deno.serve(async req=>{
   delete event.authorization;
   const {data,error}=await admin.rpc('barida_traffic_record',{p_event:event,p_user:user,p_session:session});
   return reply(error?500:data?204:429);
- }catch{return reply(400)}
+ }catch{return reply(400)}finally{clearTimeout(timer);reader?.releaseLock();active--}
 });

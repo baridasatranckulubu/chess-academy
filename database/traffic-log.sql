@@ -24,8 +24,8 @@ begin
  v_ip:=nullif(p_event->>'ip','')::inet;
  if v_ip is not null then
   insert into private.barida_traffic_limits as l values(v_ip,date_trunc('minute',now()),1)
-  on conflict(ip) do update set attempts=case when l.window_start=date_trunc('minute',now()) then least(l.attempts+1,121) else 1 end,window_start=date_trunc('minute',now()) returning attempts into v_count;
-  if v_count>120 then return false;end if;
+  on conflict(ip) do update set attempts=case when l.window_start=date_trunc('minute',now()) then least(l.attempts+1,6001) else 1 end,window_start=date_trunc('minute',now()) returning attempts into v_count;
+  if v_count>6000 then return false;end if;
  end if;
  if p_user is not null then
   if not exists(select 1 from auth.sessions s where s.id=p_session and s.user_id=p_user and (s.not_after is null or s.not_after>now())) then p_user:=null;end if;

@@ -19,10 +19,11 @@
   url.pathname='/';history.replaceState(history.state,'',url.pathname+url.search+url.hash);
  }else{
   let active=false;try{active=sessionStorage.getItem(key)==='panel'}catch{}
-  if(active&&url.pathname==='/'&&!url.hash){
+  const reload=typeof performance!=='undefined'&&performance.getEntriesByType?.('navigation')?.[0]?.type==='reload';
+  if(active&&reload&&url.pathname==='/'&&!url.hash){
    document.documentElement.style.visibility='hidden';
    url.pathname='/academy';location.replace(url.href);
-  }else if(url.pathname!=='/'||url.hash){
+  }else{
    try{sessionStorage.removeItem(key)}catch{}
    url.pathname='/';history.replaceState(history.state,'',url.pathname+url.search+url.hash);
   }
