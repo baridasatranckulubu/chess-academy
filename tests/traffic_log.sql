@@ -1,0 +1,20 @@
+begin;
+do $$declare r jsonb;v_id uuid:=gen_random_uuid();v_event jsonb;begin
+ if has_table_privilege('anon','private.barida_traffic_events','select') or has_table_privilege('authenticated','private.barida_traffic_events','select') then raise exception 'Raw traffic exposed';end if;
+ if has_function_privilege('authenticated','public.barida_traffic_record(jsonb,uuid,uuid)','execute') then raise exception 'Write RPC exposed';end if;
+ perform set_config('request.jwt.claims','{"role":"service_role"}',true);
+ v_event:=jsonb_build_object('event_id',v_id,'visitor_id',gen_random_uuid(),'event','visit','page','qa-traffic','device','Tablet','host','qa.invalid','ip','192.0.2.10');
+ if not public.barida_traffic_record(v_event) then raise exception 'Record rejected';end if;
+ perform public.barida_traffic_record(v_event);
+ if (select count(*) from private.barida_traffic_events where event_id=v_id)<>1 then raise exception 'Duplicate counted';end if;
+ perform set_config('request.jwt.claims',jsonb_build_object('sub',(select id from public.profiles where role='admin' limit 1),'role','authenticated')::text,true);
+ r:=public.barida_traffic_report((now() at time zone 'Europe/Istanbul')::date,(now() at time zone 'Europe/Istanbul')::date,'visit','Tablet',0);
+ if (r->>'total')::int<1 or not (r->'rows' @> '[{"page":"qa-traffic"}]'::jsonb) then raise exception 'Admin report failed';end if;
+ perform set_config('request.jwt.claims','{"sub":"00000000-0000-0000-0000-000000000001","role":"authenticated"}',true);
+ begin perform public.barida_traffic_report(current_date,current_date);raise exception 'Nonadmin allowed';exception when insufficient_privilege then null;end;
+ insert into private.barida_traffic_events(event_id,visitor_id,event,page,device,host,created_at) values(gen_random_uuid(),gen_random_uuid(),'visit','qa-expired','Tablet','qa.invalid',now()-interval '3 months');
+ perform barida_security.prune_traffic_logs();
+ if exists(select 1 from private.barida_traffic_events where page='qa-expired') or not exists(select 1 from private.barida_traffic_events where event_id=v_id) then raise exception 'Retention failed';end if;
+ if (date_trunc('month','2027-03-01 00:00'::timestamp)-interval '1 month')::date<>'2027-02-01'::date then raise exception 'Calendar retention failed';end if;
+end$$;
+rollback;

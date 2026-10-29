@@ -1,5 +1,5 @@
 /* Request validation is defense in depth, not a replacement for upstream DDoS filtering. */
-const ORIGINS=new Set(['https://baridasatranc.pages.dev','https://baridachess.pages.dev','https://baridasatranckulubu.github.io','https://hskgsuygar32-boop.github.io','https://chess-academy.hskgsuygar32.workers.dev','https://localhost']);
+const ORIGINS=new Set(['https://baridasatranc.com','https://www.baridasatranc.com','https://baridasatranc.pages.dev','https://baridachess.pages.dev','https://baridasatranckulubu.github.io','https://hskgsuygar32-boop.github.io','https://chess-academy.hskgsuygar32.workers.dev','https://localhost']);
 const MAX_BODY=256*1024;
 export function protect(handler){
  let active=0;

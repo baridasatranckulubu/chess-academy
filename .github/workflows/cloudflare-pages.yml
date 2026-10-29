@@ -33,13 +33,13 @@ jobs:
         shell: python
         run: |
           from pathlib import Path
-          import shutil,json,os
+          import shutil
           root = Path(".")
           out = Path("_pages")
           out.mkdir()
           extensions = {".html", ".css", ".js", ".webp", ".png", ".ico", ".svg"}
           for p in root.iterdir():
-              if p.is_file() and (p.suffix in extensions or p.name in {"_headers", "_redirects"}):
+              if p.is_file() and (p.suffix in extensions or p.name in {"_headers", "_redirects", "_routes.json"}):
                   shutil.copy2(p, out / p.name)
           for name in ["assets", "data", "puzzle-data", "puzzle-full", "engines", "i18n"]:
               if (root / name).is_dir():
@@ -47,19 +47,15 @@ jobs:
           assert sum(1 for p in out.rglob("*") if p.is_file()) < 20000
           assert (out / "index.html").is_file()
           assert (out / "academy.html").is_file()
-          revision = os.environ["GITHUB_SHA"]
-          # workflow_run checks out the tested SHA rather than the workflow's default SHA.
-          import subprocess
-          revision = subprocess.check_output(["git","rev-parse","HEAD"],text=True).strip()
-          (out / "site-version.json").write_text(json.dumps({"revision":revision}))
-          for page in out.glob("*.html"):
-              content=page.read_text()
-              page.write_text(content.replace("</head>",'<meta name="barida-revision" content="'+revision+'"></head>',1))
           assert all(p.stat().st_size < 25 * 1024 * 1024 for p in out.rglob("*") if p.is_file())
       - name: Ensure the exact Barida Satranc address exists
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
         run: node scripts/ensure-pages-project.mjs
+      - name: Configure private traffic signing
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: node scripts/configure-traffic.mjs
       - name: Deploy production
         uses: cloudflare/wrangler-action@v4
         with:

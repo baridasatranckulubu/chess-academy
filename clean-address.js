@@ -18,10 +18,10 @@
   });
  }else{
   let active=false;try{active=sessionStorage.getItem(key)==='panel'}catch{}
-  if(active&&url.pathname==='/'){
+  if(active&&url.pathname==='/'&&!url.hash){
    document.documentElement.style.visibility='hidden';
    url.pathname='/academy';location.replace(url.href);
-  }else if(url.pathname!=='/'){
+  }else if(url.pathname!=='/'||url.hash){
    // An explicit visit to the public page also leaves the panel route.
    try{sessionStorage.removeItem(key)}catch{}
    url.pathname='/';history.replaceState(history.state,'',url.pathname+url.search+url.hash);
