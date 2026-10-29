@@ -151,5 +151,7 @@ jobs:
         run: |
           node tests/notification_files.test.js
           python tests/browser_notification_files_qa.py
+      - name: Yönetici hesapları, kurtarma, sporcu kartı ve mobil duyuru
+        run: python tests/browser_admin_accounts_qa.py
       - name: Statik site kaynak kontrolü
         run: python tools/check_site_assets.py
