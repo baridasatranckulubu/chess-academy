@@ -155,3 +155,10 @@
 @media(max-width:650px){.contact-top-with-app{gap:26px}.mobile-app-teaser{padding:23px 18px;border-radius:18px;min-height:230px}.mobile-app-teaser h3{font-size:24px}.mobile-app-teaser p{font-size:11px}.mobile-app-brand{font-size:7px}.mobile-app-teaser img{right:-22px;bottom:-10px;width:59%;height:94%}}
 
 .wordmark .brand-wordmark{display:inline-flex;flex-direction:column;align-items:center;text-align:center;min-width:0}.wordmark .brand-wordmark-main{display:block;width:100%;text-align:center;letter-spacing:.09em;text-indent:.09em;line-height:1.25}.wordmark .brand-wordmark small{width:100%;text-align:center;text-indent:.16em;line-height:1.5}
+
+/* Full artwork: preserve the complete phone and tablet announcement at every width. */
+.mobile-app-teaser.mobile-app-teaser-art{display:block;padding:0;min-height:0;aspect-ratio:3/2;width:100%;max-width:none;border-radius:24px;background:#09291e}
+.mobile-app-teaser.mobile-app-teaser-art img{position:static;display:block;width:100%;height:auto;object-fit:contain;filter:none}
+.mobile-app-teaser-art .mobile-app-teaser-copy{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-width:1000px){.mobile-app-teaser.mobile-app-teaser-art{max-width:760px}}
+@media(max-width:650px){.mobile-app-teaser.mobile-app-teaser-art{border-radius:18px}}
