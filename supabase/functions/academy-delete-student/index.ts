@@ -1,3 +1,4 @@
+import {canManageStudent} from "../_shared/student-access.ts";
 import {protect} from "../_shared/protection.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
 Deno.serve(protect(async(req)=>{
@@ -20,8 +21,7 @@ Deno.serve(protect(async(req)=>{
  if(!["teacher","admin"].includes(profile?.role))return reply({error:"Yetkiniz yok"},403);
  const body=await req.json(),id=String(body.student_id||"");
  if(!/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(id)||id===user.id)return reply({error:"Geçersiz öğrenci"},400);
- const {data:link}=await admin.from("teacher_students").select("student_id").eq("teacher_id",user.id).eq("student_id",id).maybeSingle();
- if(!link)return reply({error:"Bu öğrenci size atanmış değil"},403);
+ if(!await canManageStudent(admin,user.id,profile.role,id))return reply({error:"Bu sporcuya erişim yetkiniz bulunmuyor"},403);
  const {data:student}=await admin.from("profiles").select("role").eq("id",id).single();
  if(student?.role!=="student")return reply({error:"Öğrenci hesabı bulunamadı"},404);
  const {error:deleteError}=await admin.auth.admin.deleteUser(id);

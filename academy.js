@@ -223,6 +223,27 @@ async function clubClassPanel(view){
  }catch(e){panel.append(node('p','auth-error',e.message))}
 }
 
+const studentDeletions=new Set();
+async function deleteStudentAccount(st){
+ if(!realUser||!['teacher','admin'].includes(realProfile?.role))throw Error('Antrenör veya yönetici oturumu gerekli');
+ if(studentDeletions.has(st.id))return false;
+ if(!confirm(st.name+' adlı sporcunun hesabını ve kayıtlarını kalıcı olarak silmek istiyor musunuz? Bu işlem geri alınamaz.'))return false;
+ if(prompt('Silme işlemini onaylamak için SİL yazın:')!=='SİL')return false;
+ const owner=realUser.id,generation=sessionGeneration;studentDeletions.add(st.id);
+ try{
+  let {data:{session}}=await authClient.auth.getSession();if(!session||session.user.id!==owner)throw Error('Oturum bulunamadı');
+  for(let attempt=0;attempt<2;attempt++){
+   const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-delete-student',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG','authorization':'Bearer '+session.access_token},body:JSON.stringify({student_id:st.id})});
+   const result=await response.json();
+   if(response.status===401&&attempt===0){if(realUser?.id!==owner||sessionGeneration!==generation)return false;session=await refreshClubSession();continue}
+   if(!response.ok||!result.ok)throw Error(result.error||result.message||'Sporcu silinemedi');
+   if(realUser?.id!==owner||sessionGeneration!==generation)return false;
+   realRoster=realRoster.filter(x=>x.id!==st.id);if(store.students)delete store.students[st.id];paymentBadgeCache.at=0;return true;
+  }
+  throw Error('Oturumunuz sona erdi. Lütfen yeniden giriş yapın.');
+ }finally{studentDeletions.delete(st.id)}
+}
+
 async function adminStudents(){
  const view=$('view');view.replaceChildren(node('h2','','👥 Sporcu Yönetimi'),
   node('p','muted','Hesap Aktif/Pasif durumu, ödeme planı durumundan bağımsızdır. Pasif sporcular antrenör listelerinden ve ödev ekranından kaldırılır; ödev ve ödeme geçmişi korunur. Pasif sporcu giriş yaptığında yalnızca durum bilgilendirmesini görür.'));
@@ -272,7 +293,8 @@ async function adminStudents(){
           draw()
         }catch(e){toggle.disabled=false;alert('Hesap durumu değiştirilemedi: '+e.message)}
       },'btn small '+(st.active!==false?'':'gold'));
-      body.append(toggle);
+      const remove=button('🗑 Sporcu kaydını sil',async()=>{remove.disabled=true;try{if(await deleteStudentAccount(st)){const index=students.findIndex(x=>x.id===st.id);if(index>=0)students.splice(index,1);if(card.isConnected)draw()}}catch(e){alert('Sporcu silinemedi: '+e.message)}finally{remove.disabled=false}},'btn small danger');
+      body.append(toggle,remove);
       const editButton=button('✎ Bilgileri düzenle',()=>{
         const existing=body.querySelector('.barida-admin-student-edit');
         if(existing){existing.remove();return}
@@ -1127,7 +1149,7 @@ async function academyPasswordAction(payload){
 }
 async function loadTeacherStudents(){
  if(!realUser||!['teacher','admin'].includes(realProfile?.role))return;
- const {data:rows,error}=await authClient.rpc('barida_club_roster');if(error)throw error;realRoster=rows||[];
+ const owner=realUser.id,generation=sessionGeneration;const {data:rows,error}=await authClient.rpc('barida_club_roster');if(error)throw error;if(realUser?.id!==owner||sessionGeneration!==generation)return;realRoster=rows||[];
 }
 async function renderTeacherStudents(){
  const view=$('view');view.replaceChildren();const rosterToolbar=node('div','barida-roster-toolbar');rosterToolbar.append(node('h2','','👥 Sporcularım'),button('＋ Yeni sporcu kaydı',()=>openStudentRegistration(),'btn gold barida-roster-add'));view.append(rosterToolbar,node('p','muted','Yalnızca size atanmış gerçek sporcu hesapları gösterilir.'));
@@ -1188,7 +1210,7 @@ async function setupRegistrationClass(){
 function openStudentRegistration(){if(role!=='teacher'||!realUser)return;$('studentCreateMessage').textContent='';showSection('student-register')}
 function renderStudentRegistration(){const view=$('view');view.replaceChildren();view.append(node('h2','','♟ Yeni Sporcu Kaydı'),node('p','muted','Sporcu bilgilerini ve giriş şifresini bu sayfada belirleyin.'));const wrap=node('section','student-registration-page');const form=$('studentCreateForm');wrap.append(form);view.append(wrap);setupRegistrationClass().catch(e=>registrationStatus($('studentCreateMessage'),e.message,'error'));$('studentCreateCancel').textContent='←';$('studentCreateCancel').setAttribute('aria-label','Sporcu bilgilerine dön')}
 async function renderRealStudentDetail(){
- const view=$('view'),id=teacherStudent;
+ const view=$('view'),id=teacherStudent,owner=realUser?.id,generation=sessionGeneration;
  view.replaceChildren(button('← Sporcularım',()=>showSection('students'),'btn'),node('h2','','♟ Sporcu bilgileri'));
  const st=realRoster.find(x=>x.id===id);
  if(!st){view.append(node('p','auth-error','Sporcu bulunamadı.'));return}
@@ -1203,7 +1225,7 @@ async function renderRealStudentDetail(){
  try{
   const {data,error}=await authClient.rpc('academy_teacher_student_details',{p_student_id:id});
   if(error)throw error;
-  if(section!=='student-detail'||teacherStudent!==id)return;
+  if(section!=='student-detail'||teacherStudent!==id||realUser?.id!==owner||sessionGeneration!==generation||!details.isConnected)return;
   info=data||{};
  }catch(e){status.textContent='Sporcu bilgileri yüklenemedi: '+e.message;return}
  status.remove();
@@ -1256,18 +1278,7 @@ async function renderRealStudentDetail(){
  const actionArea=node('div','barida-student-detail-bottom');
  actionArea.append(node('p','muted','🔒 Sporcu mevcut şifresi görüntülenemez. Antrenör yeni şifre belirleyebilir.'));
  details.append(button('🔑 Yeni şifre belirle',()=>openStudentPasswordDialog(st),'btn gold'));
- details.append(button('🗑 Sporcu kaydını sil',async()=>{
-  if(!confirm(st.name+' adlı sporcunun hesabını ve kayıtlarını kalıcı olarak silmek istiyor musunuz? Bu işlem geri alınamaz.'))return;
-  const typed=prompt('Silme işlemini onaylamak için SİL yazın:');
-  if(typed!=='SİL')return;
-  try{
-   const {data:{session}}=await authClient.auth.getSession();
-   if(!session)throw Error('Antrenör oturumu gerekli');
-   const response=await fetch('https://kbqupsfylankcjgtjzld.supabase.co/functions/v1/academy-delete-student',{method:'POST',headers:{'content-type':'application/json','apikey':'sb_publishable_BCw6h-WGENfTHeyMa2qqYw_E-f-1QdG','authorization':'Bearer '+session.access_token},body:JSON.stringify({student_id:id})});
-   const result=await response.json();if(!response.ok||!result.ok)throw Error(result.error||'Silme işlemi başarısız');
-   realRoster=realRoster.filter(x=>x.id!==id);alert('Sporcu kaydı silindi.');showSection('students');
-  }catch(e){alert('Sporcu silinemedi: '+e.message)}
- },'btn'));
+ const remove=button('🗑 Sporcu kaydını sil',async()=>{remove.disabled=true;try{if(await deleteStudentAccount(st))showSection('students')}catch(e){alert('Sporcu silinemedi: '+e.message)}finally{remove.disabled=false}},'btn danger');details.append(remove);
 
  details.append(actionArea);showInfo();
 }

@@ -1,3 +1,4 @@
+import {canManageStudent} from "../_shared/student-access.ts";
 import {protect} from "../_shared/protection.ts";
 import {newPasswordAttributes,changedPasswordAttributes,passwordForLogin} from "../_shared/passwords.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
@@ -30,8 +31,9 @@ Deno.serve(protect(async (req) => {
  if(!/^[0-9a-f-]{36}$/i.test(studentId)||!password)return reply({error:"Invalid input"},400);
  const {data:profile}=await admin.from("profiles").select("role").eq("id",user.id).single();
  if(!["teacher","admin"].includes(profile?.role))return reply({error:"Forbidden"},403);
- const {data:assignment}=await admin.from("teacher_students").select("student_id").eq("teacher_id",user.id).eq("student_id",studentId).maybeSingle();
- if(!assignment)return reply({error:"Student is not assigned to this teacher"},403);
+ if(!await canManageStudent(admin,user.id,profile.role,studentId))return reply({error:"Bu sporcuya erişim yetkiniz bulunmuyor"},403);
+ const {data:target}=await admin.from('profiles').select('role').eq('id',studentId).maybeSingle();
+ if(target?.role!=='student')return reply({error:'Sporcu bulunamadı'},404);
  const {error:updateError}=await admin.auth.admin.updateUserById(studentId,await changedPasswordAttributes(admin,studentId,password));
  if(updateError)return reply({error:"Password update failed"},500);
  await admin.from("student_password_requests").update({status:"resolved",resolved_at:new Date().toISOString()}).eq("teacher_id",user.id).eq("student_id",studentId).eq("status","pending");

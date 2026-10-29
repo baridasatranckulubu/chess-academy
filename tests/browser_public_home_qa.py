@@ -16,7 +16,7 @@ try:
   context.add_init_script("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copiedAddress=text}}})")
   page=context.new_page();errors=[];requests=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url));url=f'http://127.0.0.1:{server.server_port}/'
   page.goto(url);assert not re.search(r'\b(eğitim\w*|okul\w*|öğrenci\w*|ders\w*)\b',page.locator('body').inner_text(),re.I);assert page.url==url;assert 'Barida' in page.title();assert page.locator('#authForm').count()==0
-  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 1']:assert page.get_by_text(text,exact=False).count()>0,text
+  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 62']:assert page.get_by_text(text,exact=False).count()>0,text
   assert page.locator('a[href^="https://wa.me/905548998845"]').count()>=3
   assert page.locator('a[href="https://www.instagram.com/baridasatranc/"]').count()==1
   assert page.locator('a[href="https://www.youtube.com/@Baridasatranc"]').count()==1
@@ -46,7 +46,7 @@ try:
   assert panel.locator('a[href^="https://wa.me/905548998845"]').count()==3
   page.keyboard.press('Escape');assert not panel.is_visible();assert launcher.get_attribute('aria-expanded')=='false'
   launcher.click();panel.get_by_role('button',name='Mesaj penceresini kapat',exact=True).click();assert not panel.is_visible()
-  page.locator('#copyClubAddress').click();page.wait_for_function("window.__copiedAddress?.includes('Doğan Kımıllı Caddesi No: 1')")
+  page.locator('#copyClubAddress').click();page.wait_for_function("window.__copiedAddress?.includes('Doğan Kımıllı Caddesi No: 62')")
   assert page.locator('#addressCopyStatus').inner_text()=='Adres kopyalandı.'
   page.evaluate('scrollTo(0,0)')
   assert not any('supabase.co' in u for u in requests)
