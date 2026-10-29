@@ -34,14 +34,14 @@
    const prev=el('button','← Önceki'),next=el('button','Sonraki →'),position=el('span');prev.className=next.className='btn';nav.append(prev,position,next);view.append(status,summary,daily,wrap,nav);
    let offset=0,revision=0;
    async function load(){const rev=++revision;submit.disabled=prev.disabled=next.disabled=true;status.textContent='Yükleniyor…';summary.replaceChildren();daily.replaceChildren();wrap.replaceChildren();
-    try{const {data,error}=await c.rpc('barida_traffic_report',{p_from:from.value,p_to:to.value,p_event:event.value,p_device:device.value,p_offset:offset});if(!view.isConnected||rev!==revision)return;if(error)throw error;
+    try{const {data,error}=await c.rpc('barida_traffic_report',{p_from:from.value,p_to:to.value,p_event:event.value,p_device:device.value,p_offset:offset});if(!controls.isConnected||rev!==revision)return;if(error)throw error;
      status.textContent=data.total?'':'Bu aralıkta kayıt yok. Kayıtlar bu özellik yayımlandıktan sonra oluşur.';
      for(const [name,key] of [['Ziyaret','visits'],['Tekil sekme','visitors'],['Giriş','logins'],['Çıkış yap','logouts'],['Ayrılma','leaves'],['Toplam olay','total']]){const card=el('div');card.append(el('strong',String(data[key]||0)),el('span',name));summary.append(card)}
      const details=el('details');details.append(el('summary','Günlük toplamlar'));for(const d of data.daily||[])details.append(el('p',`${d.day} · ${d.visits} ziyaret · ${d.logins} giriş · ${d.logouts} çıkış · ${d.events} olay`));daily.append(details);
      const table=el('table'),head=el('thead'),tr=el('tr');for(const h of ['Tarih / Saat','Olay','Kullanıcı adı','Ad Soyad','Bölüm','Cihaz','Platform / Tarayıcı','Ülke','Şehir','IP','Alan adı'])tr.append(el('th',h));head.append(tr);table.append(head);const body=el('tbody');
      const labels={visit:'Ziyaret',page:'Sayfa / bölüm',login:'Giriş',logout:'Çıkış yap',leave:'Ayrılma'};
      for(const row of data.rows||[]){const tr=el('tr');for(const value of [new Date(row.created_at).toLocaleString('tr-TR',{timeZone:'Europe/Istanbul'}),labels[row.event]||row.event,row.username||'Ziyaretçi',row.display_name||'—',row.page,row.device,[row.platform,row.browser].filter(Boolean).join(' / '),row.country||'Tespit edilemedi',row.city||'Tespit edilemedi',row.ip||'Tespit edilemedi',row.host])tr.append(el('td',String(value||'—')));body.append(tr)}table.append(body);wrap.append(table);prev.disabled=offset===0;next.disabled=offset+100>=data.total;position.textContent=`${data.total?offset+1:0}–${Math.min(offset+100,data.total)} / ${data.total}`;
-    }catch(e){if(rev===revision&&view.isConnected){status.textContent='Kayıtlar alınamadı: '+e.message;prev.disabled=next.disabled=true}}finally{if(rev===revision)submit.disabled=false}
+    }catch(e){if(rev===revision&&controls.isConnected){status.textContent='Kayıtlar alınamadı: '+e.message;prev.disabled=next.disabled=true}}finally{if(rev===revision)submit.disabled=false}
    }
    controls.onsubmit=e=>{e.preventDefault();offset=0;load()};prev.onclick=()=>{offset=Math.max(0,offset-100);load()};next.onclick=()=>{offset+=100;load()};load();
   }
