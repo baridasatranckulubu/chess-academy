@@ -1,6 +1,7 @@
+import {protect} from "../_shared/protection.ts";
 import {signInPassword} from "../_shared/passwords.ts";
 import {createClient} from "npm:@supabase/supabase-js@2.57.0";
-Deno.serve(async req=>{
+Deno.serve(protect(async req=>{
  const headers={"content-type":"application/json","access-control-allow-origin":(["https://chess-academy.hskgsuygar32.workers.dev","https://hskgsuygar32-boop.github.io","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost"].includes(req.headers.get("origin")||"")?(req.headers.get("origin")||""):"https://chess-academy.hskgsuygar32.workers.dev"),"access-control-allow-headers":"apikey,content-type","access-control-allow-methods":"POST,OPTIONS"};
  const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers});
@@ -22,4 +23,4 @@ Deno.serve(async req=>{
   if(error||!data.session)return reply({error:"Kullanıcı adı veya şifre hatalı."},401);
   return reply({session:data.session});
  }catch{return reply({error:"Giriş başarısız."},400)}
-});
+}));

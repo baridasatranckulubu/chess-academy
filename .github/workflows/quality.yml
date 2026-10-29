@@ -45,6 +45,7 @@ jobs:
           node tests/live_site_updates.test.js
           node tests/general_integration.test.js
           node tests/progress_account_isolation.test.js
+          node tests/request_protection.test.js
           node tests/notification_upload_lifecycle.test.js
       - name: Satranç motoru
         run: node tests/engine.test.js

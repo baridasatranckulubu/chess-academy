@@ -1,5 +1,6 @@
-import { createClient } from "npm:@supabase/supabase-js@2";
-Deno.serve(async(req)=>{
+import {protect} from "../_shared/protection.ts";
+import { createClient } from "npm:@supabase/supabase-js@2.57.0";
+Deno.serve(protect(async(req)=>{
  const requestedOrigin=req.headers.get("origin")||"";
  const allowedOrigins=["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost"];
  const origin=allowedOrigins.includes(requestedOrigin)?requestedOrigin:allowedOrigins[0];
@@ -27,4 +28,4 @@ Deno.serve(async(req)=>{
  if(deleteError)return reply({error:"Öğrenci silinemedi: "+deleteError.message},500);
  return reply({ok:true});
  }catch{return reply({error:"İşlem tamamlanamadı"},500)}
-});
+}));

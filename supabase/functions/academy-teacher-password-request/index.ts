@@ -1,5 +1,6 @@
-import {createClient} from "npm:@supabase/supabase-js@2";
-Deno.serve(async req=>{
+import {protect} from "../_shared/protection.ts";
+import {createClient} from "npm:@supabase/supabase-js@2.57.0";
+Deno.serve(protect(async req=>{
  const origin=req.headers.get("origin")||"";
  const allowed=["https://hskgsuygar32-boop.github.io","https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost"];
  const headers={"content-type":"application/json","access-control-allow-origin":allowed.includes(origin)?origin:allowed[0],"access-control-allow-headers":"apikey,content-type","access-control-allow-methods":"POST,OPTIONS","vary":"Origin"};
@@ -26,4 +27,4 @@ Deno.serve(async req=>{
   }
   return reply({message:"Bu kullanıcı adına bağlı bir öğretmen hesabı varsa şifre sıfırlama talebi kulüp yönetimine iletildi."});
  }catch{return reply({error:"Talep gönderilemedi. Lütfen tekrar deneyin."},400)}
-});
+}));

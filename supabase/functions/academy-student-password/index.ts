@@ -1,6 +1,7 @@
+import {protect} from "../_shared/protection.ts";
 import {newPasswordAttributes,changedPasswordAttributes,passwordForLogin} from "../_shared/passwords.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
-Deno.serve(async (req) => {
+Deno.serve(protect(async (req) => {
  const headers={"Content-Type":"application/json","Access-Control-Allow-Origin":(["https://chess-academy.hskgsuygar32.workers.dev","https://baridasatranckulubu.github.io","https://baridachess.pages.dev","https://baridasatranc.pages.dev","https://localhost","https://hskgsuygar32-boop.github.io"].includes(req.headers.get("origin")||"")?(req.headers.get("origin")||""):"https://hskgsuygar32-boop.github.io"),"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST,OPTIONS"};
  const reply=(body,status=200)=>new Response(JSON.stringify(body),{status,headers});
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers});
@@ -35,4 +36,4 @@ Deno.serve(async (req) => {
  if(updateError)return reply({error:"Password update failed"},500);
  await admin.from("student_password_requests").update({status:"resolved",resolved_at:new Date().toISOString()}).eq("teacher_id",user.id).eq("student_id",studentId).eq("status","pending");
  return reply({ok:true});
-});
+}));

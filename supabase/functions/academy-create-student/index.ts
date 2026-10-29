@@ -1,6 +1,7 @@
+import {protect} from "../_shared/protection.ts";
 import {newPasswordAttributes,changedPasswordAttributes,passwordForLogin} from "../_shared/passwords.ts";
 import { createClient } from "npm:@supabase/supabase-js@2.57.0";
-Deno.serve(async (req) => {
+Deno.serve(protect(async (req) => {
  const origin = "*";
  const headers = {"Content-Type":"application/json","Access-Control-Allow-Origin":origin,"Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info","Access-Control-Allow-Methods":"POST,OPTIONS"};
  const reply=(data,status=200)=>new Response(JSON.stringify(data),{status,headers});
@@ -42,5 +43,4 @@ Deno.serve(async (req) => {
  const {error:detailsError}=await privileged.rpc("academy_save_student_details",{p_student_id:created.user.id,p_birth_date:birth_date,p_gender:gender,p_has_license:has_license,p_tc_identity_no:tc_identity_no});
  if(detailsError){await privileged.from("teacher_students").delete().eq("student_id",created.user.id);await privileged.auth.admin.deleteUser(created.user.id);return reply({error:"Öğrenci bilgileri güvenli şekilde kaydedilemedi"},500)}
  return reply({ok:true,student_id:created.user.id,display_name});
-});
-
+}));
