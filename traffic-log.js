@@ -47,6 +47,5 @@
   }
  };
  if(supported){let first=true;try{const last=Number(sessionStorage.getItem('barida-traffic-last')||0);first=Date.now()-last>1800000;sessionStorage.setItem('barida-traffic-last',String(Date.now()))}catch{}send(first?'visit':'page');window.addEventListener('pagehide',()=>send('leave',true));
-  const note=document.createElement('small');note.className='traffic-privacy-note';note.textContent='Güvenlik ve trafik takibi için IP, yaklaşık konum, cihaz ve ziyaret zamanı kayıtları mevcut ay ve önceki ay boyunca saklanır. Kayıtları yalnızca kulüp yönetimi görebilir.';document.querySelector('.site-footer')?.append(note);
  }
 })();

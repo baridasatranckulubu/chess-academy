@@ -139,3 +139,12 @@
  .contact-grid-buttons .contact-social .social-button:nth-of-type(2){grid-row:4}
  .contact-grid-buttons .copy-feedback{grid-row:5;margin:0}
 }
+
+/* Keep the public footer and social labels simple and visually aligned. */
+.site-footer{display:flex;justify-content:center;align-items:center;text-align:center;gap:0}
+.site-footer .footer-brand{display:block;text-align:center}
+.contact-grid-buttons .social-button{display:flex;align-items:center;gap:12px}
+.contact-grid-buttons .social-button-icon{display:flex;align-items:center;justify-content:center;align-self:center}
+.contact-grid-buttons .social-button-icon svg{display:block;flex:none}
+.contact-grid-buttons .social-button-copy{display:flex;align-items:center;justify-content:flex-start;line-height:1}
+.contact-grid-buttons .social-button-copy strong{display:block;line-height:1}
