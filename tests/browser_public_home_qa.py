@@ -16,10 +16,17 @@ try:
   context.add_init_script("Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async text=>{window.__copiedAddress=text}}})")
   page=context.new_page();errors=[];requests=[];page.on('pageerror',lambda e:errors.append(str(e)));page.on('request',lambda r:requests.append(r.url));url=f'http://127.0.0.1:{server.server_port}/'
   page.goto(url);assert not re.search(r'\b(eğitim\w*|okul\w*|öğrenci\w*|ders\w*)\b',page.locator('body').inner_text(),re.I);assert page.url==url;assert 'Barida' in page.title();assert page.locator('#authForm').count()==0
-  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 1','@baridasatranc','@Baridasatranc']:assert page.get_by_text(text,exact=False).count()>0,text
+  for text in ['Bir hamleden','VİZYONUMUZ','MİSYONUMUZ','İstiklal Mahallesi','Doğan Kımıllı Caddesi No: 1']:assert page.get_by_text(text,exact=False).count()>0,text
   assert page.locator('a[href^="https://wa.me/905548998845"]').count()>=3
   assert page.locator('a[href="https://www.instagram.com/baridasatranc/"]').count()==1
   assert page.locator('a[href="https://www.youtube.com/@Baridasatranc"]').count()==1
+  assert page.locator('.site-footer').inner_text()=='Barida Satranç Kulübü'
+  assert page.locator('.site-footer > *').count()==1
+  assert page.locator('.wordmark > span:last-child').inner_text().startswith('BARİDA')
+  assert page.locator('.social-button-copy small').count()==0
+  for social in page.locator('.social-button').all():
+   icon=social.locator('.social-button-icon').bounding_box();label=social.locator('strong').bounding_box()
+   assert abs((icon['y']+icon['height']/2)-(label['y']+label['height']/2))<=1
   assert page.locator('#basarilar').count()==0
   assert page.locator('.brand-emblem img').get_attribute('src')=='barida-hero-club-v4.webp'
   assert page.locator('.brand-emblem img').evaluate("el=>getComputedStyle(el).animationName")=='none'
