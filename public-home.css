@@ -144,7 +144,7 @@
 .site-footer{display:flex;justify-content:center;align-items:center;text-align:center;gap:0}
 .site-footer .footer-brand{display:block;text-align:center}
 .contact-grid-buttons .social-button{display:flex;align-items:center;gap:12px}
-.contact-grid-buttons .social-button-icon{display:flex;align-items:center;justify-content:center;align-self:center}
+.contact-grid-buttons .social-button-icon{display:flex;align-items:center;justify-content:center;align-self:center;margin:0}
 .contact-grid-buttons .social-button-icon svg{display:block;flex:none}
 .contact-grid-buttons .social-button-copy{display:flex;align-items:center;justify-content:flex-start;line-height:1}
 .contact-grid-buttons .social-button-copy strong{display:block;line-height:1}

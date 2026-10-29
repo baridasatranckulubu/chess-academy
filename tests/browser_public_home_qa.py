@@ -26,7 +26,7 @@ try:
   assert page.locator('.social-button-copy small').count()==0
   for social in page.locator('.social-button').all():
    icon=social.locator('.social-button-icon').bounding_box();label=social.locator('strong').bounding_box()
-   assert abs((icon['y']+icon['height']/2)-(label['y']+label['height']/2))<=1
+   assert abs((icon['y']+icon['height']/2)-(label['y']+label['height']/2))<=1,(icon,label)
   assert page.locator('#basarilar').count()==0
   assert page.locator('.brand-emblem img').get_attribute('src')=='barida-hero-club-v4.webp'
   assert page.locator('.brand-emblem img').evaluate("el=>getComputedStyle(el).animationName")=='none'
