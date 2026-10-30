@@ -162,3 +162,9 @@
 .mobile-app-teaser-art .mobile-app-teaser-copy{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 @media(max-width:1000px){.mobile-app-teaser.mobile-app-teaser-art{max-width:340px;justify-self:start}}
 @media(max-width:650px){.mobile-app-teaser.mobile-app-teaser-art{border-radius:18px}}
+
+/* Keep the announcement beside the contact copy, including tablet/desktop-mode phones. */
+.contact-top.contact-top-with-app{grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:28px;align-items:center}
+.contact-top-with-app>.contact-intro{grid-column:1;grid-row:1;min-width:0}
+.contact-top-with-app>.mobile-app-teaser-art{grid-column:2;grid-row:1;justify-self:end;min-width:0;max-width:340px}
+@media(max-width:650px){.contact-top.contact-top-with-app{grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:14px}.contact-top-with-app .contact-intro h2{font-size:clamp(22px,4.5vw,30px);line-height:1.15;margin-bottom:16px}.contact-top-with-app .contact-intro>.eyebrow{font-size:9px;margin-bottom:14px}.contact-top-with-app .contact-intro>p:last-child{font-size:12px;line-height:1.7;margin-bottom:0}.contact-top-with-app>.mobile-app-teaser-art{border-radius:12px}}
