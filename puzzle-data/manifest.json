@@ -1,7 +1,7 @@
 {
   "source": "Lichess Open Database (CC0)",
   "source_url": "https://database.lichess.org/#puzzles",
-  "count": 145769,
+  "count": 145662,
   "scanned": "Lichess full source stream",
   "shards": [
     "part-beginner.json",
