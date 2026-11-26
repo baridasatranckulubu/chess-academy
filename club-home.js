@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'27 KASIM 2026 · YOL TARİFİ',title:'Kulübe Google Haritalar ile yol tarifi',items:['Ana sayfadaki “Yol tarifi alın” düğmesi, Google Haritalar’da Barida 32 Satranç Spor Kulübü hedefi seçili olarak açılır.']},
   {tag:'30 EKİM 2026 · İLETİŞİM GÖRSELİ HİZALAMASI',title:'Uygulama reklamı 5. bölümde yazının sağına hizalandı',items:['Telefon ve tablet reklamı Tanışalım bölümündeki başlığın sağında, aynı satırda tutulur.','Tablet ve telefonda masaüstü görünümünde görselin metnin altına düşmesine neden olan tek sütun kuralı düzeltildi. Dar ekranlarda yazı ve görsel ölçüleri birlikte uyarlanır.']},
   {tag:'30 EKİM 2026 · DUYURU YERLEŞİMİ',title:'Uygulama reklamı sağdaki boşluğa uygun küçültüldü',items:['İletişim bölümündeki telefon ve tablet görseli 340 piksel genişlikle sınırlandırılarak sağdaki boşluğa hizalandı.','Dar ekranlarda da büyümeden, taşmadan ve kırpılmadan gösterilir.']},
   {tag:'30 EKİM 2026 · MOBİL VE TABLET DUYURUSU',title:'Telefon ve tablet uygulamamız çok yakında',items:['Genel ana sayfadaki uygulama reklamı telefon ve tabletin birlikte göründüğü yeni tasarımla güncellendi.','Kulüp logosunun beyaz zemini kaldırılıp koyu yeşil temayla bütünleştirildi. Profil görselleri çerçevesiz siyah ve beyaz satranç taşlarıyla değiştirildi.','Antrenmanlar, Özel Sorular ve Turnuvalar menüleri ile belirgin ÇOK YAKINDA duyurusu görselde yer alır. Görsel farklı ekran genişliklerinde kırpılmadan gösterilir.']},
