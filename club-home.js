@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'27 KASIM 2026 · SEKME SİMGESİ BOYUTU',title:'Sekmedeki Barida atı büyütüldü',items:['Abanoz at sekme simgesinde daha fazla yer kaplıyor. Pembe ve yeşil vurgular korunuyor.']},
   {tag:'27 KASIM 2026 · SEKME SİMGESİ',title:'Barida tarayıcı sekmesi simgesi yenilendi',items:['Abanoz görünümlü satranç atı ile pembe ve yeşil karelerden oluşan yeni simge eklendi.','Simge 16, 32 ve 48 piksel boyutlarında hazırlandı ve kontrol edildi.']},
   {tag:'27 KASIM 2026 · YOL TARİFİ',title:'Kulübe Google Haritalar ile yol tarifi',items:['Ana sayfadaki “Yol tarifi alın” düğmesi, Google Haritalar’da Barida 32 Satranç Spor Kulübü hedefi seçili olarak açılır.']},
   {tag:'30 EKİM 2026 · İLETİŞİM GÖRSELİ HİZALAMASI',title:'Uygulama reklamı 5. bölümde yazının sağına hizalandı',items:['Telefon ve tablet reklamı Tanışalım bölümündeki başlığın sağında, aynı satırda tutulur.','Tablet ve telefonda masaüstü görünümünde görselin metnin altına düşmesine neden olan tek sütun kuralı düzeltildi. Dar ekranlarda yazı ve görsel ölçüleri birlikte uyarlanır.']},
