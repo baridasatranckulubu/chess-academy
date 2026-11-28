@@ -4,7 +4,7 @@ from http.server import SimpleHTTPRequestHandler,ThreadingHTTPServer
 from functools import partial
 from threading import Thread
 import ast,json
-from playwright.sync_api import sync_playwright
+from playwright.sync_api import expect,sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 (ROOT/'qa-artifacts').mkdir(exist_ok=True)
 tree=ast.parse((ROOT/'tests/browser_club_qa.py').read_text())
@@ -13,9 +13,65 @@ class Quiet(SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=ThreadingHTTPServer(('127.0.0.1',0),partial(Quiet,directory=str(ROOT)));Thread(target=server.serve_forever,daemon=True).start()
 uid='00000000-0000-4000-8000-000000000001';second='00000000-0000-4000-8000-000000000002'
+
+def check_admin_login_routing(browser):
+    context = browser.new_context(viewport={'width':1280,'height':1000})
+    context.add_init_script('''window.supabase = {createClient: () => ({auth: {
+        getSession: async () => ({data: {session: null}}),
+        onAuthStateChange: () => {},
+    }})};''')
+    context.route('https://cdn.jsdelivr.net/**', lambda route: route.fulfill(status=200, content_type='application/javascript', body=''))
+    calls = []
+    password = 'test-password'
+
+    def endpoint(route):
+        name = route.request.url.rsplit('/', 1)[-1]
+        if route.request.method == 'POST' and name in {'academy-teacher-login', 'academy-student-login', 'academy-teacher-password-request'}:
+            calls.append((name, route.request.post_data_json))
+            if name == 'academy-teacher-password-request':
+                route.fulfill(status=200, json={'message':'Test kurtarma isteği alındı.'})
+            else:
+                route.fulfill(status=401, json={'error':'Test giriş reddi.'})
+            return
+        route.fulfill(status=200, json={})
+
+    context.route('https://**.supabase.co/**', endpoint)
+    try:
+        page = context.new_page()
+        page.goto(f'http://127.0.0.1:{server.server_port}/academy.html')
+        page.locator('#baridaBoot').wait_for(state='hidden')
+        assert page.locator('#authLoginTab.active').is_visible()
+        page.locator('#authEmail').fill('baridayönetim')
+        page.locator('#authPassword').fill(password)
+        page.locator('#authSubmit').click()
+        expect(page.locator('#authMessage')).to_have_text('Test giriş reddi.')
+        assert calls == [('academy-teacher-login', {'username':'baridayönetim', 'password':password})]
+        assert page.locator('#authTeacherTab.active').is_visible()
+        assert page.locator('#app').is_hidden()
+        page.locator('#authReset').click()
+        expect(page.locator('#authMessage')).to_have_text('Test kurtarma isteği alındı.')
+        assert calls[-1] == ('academy-teacher-password-request', {'username':'baridayönetim'})
+
+        page.locator('#authLoginTab').click()
+        page.locator('#authEmail').fill('Deneme Sporcu')
+        page.locator('#authPassword').fill(password)
+        page.locator('#authSubmit').click()
+        expect(page.locator('#authMessage')).to_have_text('Test giriş reddi.')
+        assert calls[-1] == ('academy-student-login', {'name':'Deneme Sporcu', 'password':password})
+        assert page.locator('#authLoginTab.active').is_visible()
+        assert page.locator('#authReset').is_hidden()
+
+        page.goto(f'http://127.0.0.1:{server.server_port}/academy.html?giris=antrenor')
+        page.locator('#baridaBoot').wait_for(state='hidden')
+        assert page.locator('#authTeacherTab.active').is_visible()
+        assert page.locator('#authReset').is_visible()
+    finally:
+        context.close()
+
 try:
  with sync_playwright() as p:
   browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
+  check_admin_login_routing(browser)
   for width in [1280,390]:
    ctx=browser.new_context(viewport={'width':width,'height':1000});ctx.add_init_script(BASE.replace('ROLE','"admin"'));ctx.route('https://cdn.jsdelivr.net/**',lambda r:r.fulfill(status=200,content_type='application/javascript',body=''))
    accounts=[{'id':uid,'username':'yonetim','display_name':'Yönetim'}];calls=[]
