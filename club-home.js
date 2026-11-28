@@ -1,6 +1,7 @@
 /* BARIDA club home: identical content for every authenticated role. */
 (()=>{'use strict';
  const releases=[
+  {tag:'28 KASIM 2026 · YÖNETİCİ HESAPLARI',title:'Yönetici oluşturma ve panelden şifre güncelleme',items:['Yönetici kartlarında kullanıcı adı gösterilir. Yeni yönetici oluştururken ve kayıtlı yöneticinin şifresini değiştirirken şifre tekrar alanı eşleşmeyi kontrol eder.','Yöneticiler şifreyi hesap listesinden güncelleyebilir. Kendi şifresini değiştiren yöneticiye giriş ekranında kaydetme sonucu gösterilir.']},
   {tag:'28 KASIM 2026 · YÖNETİM GİRİŞİ',title:'Barida Yönetim girişi ve şifre kurtarma',items:['Antrenör ve yönetim giriş sekmesi açıkça adlandırıldı. Barida Yönetim kullanıcı adı sporcu sekmesine yazıldığında yönetim girişi seçilir.','Kurtarma bağlantısı kulüp ana sayfasına döndüğünde yeni şifre ekranı açılır. Yeni şifre, bağlantı doğrulandıktan sonra ortak hesap servisiyle kaydedilir.']},
   {tag:'27 KASIM 2026 · SEKME SİMGESİ BOYUTU',title:'Sekmedeki Barida atı büyütüldü',items:['Abanoz at sekme simgesinde daha fazla yer kaplıyor. Pembe ve yeşil vurgular korunuyor.']},
   {tag:'27 KASIM 2026 · SEKME SİMGESİ',title:'Barida tarayıcı sekmesi simgesi yenilendi',items:['Abanoz görünümlü satranç atı ile pembe ve yeşil karelerden oluşan yeni simge eklendi.','Simge 16, 32 ve 48 piksel boyutlarında hazırlandı ve kontrol edildi.']},

@@ -1,1 +1,27 @@
-.admin-accounts-view{max-width:1040px;margin:auto}.admin-account-form{display:grid;gap:14px}.admin-account-form h3,.admin-account-card h4{margin:0}.admin-account-field{display:grid;gap:7px;font-weight:650;min-width:0}.admin-account-field input{width:100%;min-width:0;box-sizing:border-box;padding:12px;border:1px solid #568a78;border-radius:10px;background:#102a24;color:#f7fff9;font:inherit}.admin-account-list{display:grid;gap:16px;margin-top:26px}.admin-account-card{min-width:0;overflow-wrap:anywhere}.admin-account-form .btn{justify-self:start;max-width:100%;white-space:normal}.admin-account-feedback{margin:0;min-height:1.4em;overflow-wrap:anywhere}.admin-account-card form{grid-template-columns:minmax(0,1fr) auto;align-items:end}.admin-account-card form p{grid-column:1/-1}[data-academy-theme="light"] .admin-account-field input{background:#fff;color:#163b2f}@media(max-width:600px){.admin-account-card form{grid-template-columns:minmax(0,1fr)}.admin-account-form .btn{width:100%}}
+.admin-accounts-view{max-width:1040px;margin:auto}
+.admin-accounts-view .panel.admin-account-form,.admin-accounts-view .panel.admin-account-card{
+ padding:clamp(16px,3vw,26px);border:1px solid #568a7855;border-radius:16px
+}
+.admin-account-form{display:grid;gap:14px}
+.admin-account-form h3,.admin-account-card h4{margin:0}
+.admin-account-field{display:grid;gap:7px;font-weight:650;min-width:0}
+.admin-account-field input{
+ width:100%;min-width:0;box-sizing:border-box;padding:12px;border:1px solid #568a78;
+ border-radius:10px;background:#102a24;color:#f7fff9;font:inherit
+}
+.admin-account-list,.admin-account-cards{display:grid;gap:16px}
+.admin-account-list{margin-top:26px}
+.admin-account-list h3{margin:0}
+.admin-account-card{min-width:0;overflow-wrap:anywhere}
+.admin-account-form .btn{justify-self:start;max-width:100%;white-space:normal}
+.admin-account-feedback{margin:0;min-height:1.4em;overflow-wrap:anywhere}
+.admin-account-feedback:empty{min-height:0}
+.admin-account-feedback[data-state="error"]{color:#ffb6c2}
+.admin-account-card form{grid-template-columns:repeat(2,minmax(0,1fr));align-items:end}
+.admin-account-card form .btn,.admin-account-card form p{grid-column:1/-1}
+[data-academy-theme="light"] .admin-account-field input{background:#fff;color:#163b2f}
+[data-academy-theme="light"] .admin-account-feedback[data-state="error"]{color:#9e253d}
+@media(max-width:600px){
+ .admin-account-card form{grid-template-columns:minmax(0,1fr)}
+ .admin-account-form .btn{width:100%}
+}
